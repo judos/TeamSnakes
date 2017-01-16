@@ -21,7 +21,8 @@ public class PlayerControls {
 		PointF mousePoint = new PointF(this.inputController.getMousePosition());
 		Dimension screenSize = this.inputController.getScreenSize();
 		PointF middleOfScreen = new PointF(screenSize.width / 2, screenSize.height / 2);
-		this.snake.headAngle = mousePoint.getAAngleTo(middleOfScreen).turnClockwise(
-			Angle.A_180);
+		Angle targetAngle = mousePoint.getAAngleTo(middleOfScreen).turnClockwise(Angle.A_180);
+		this.snake.headAngle.approachAngle(targetAngle, Angle.fromDegree(snake
+			.getMaxTurningSpeed()));
 	}
 }

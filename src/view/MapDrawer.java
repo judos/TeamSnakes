@@ -30,6 +30,7 @@ public class MapDrawer implements Drawable2d {
 		this.snakeDrawer.drawAllSnakes(g);
 
 		g.setColor(Color.white);
+		g.fillOval(1920 / 2 - 2, 1080 / 2 - 2, 4, 4);
 		g.setFont(text);
 		g.drawString("some text ", 20, 20);
 	}
