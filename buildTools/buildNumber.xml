@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: judos -->
+<project name="shipMaster" default="main">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<property name="propertyFile" value="generated.properties.txt" />
+
+	<property file="${propertyFile}" />
+	<property file="manual.properties.txt" />
+
+	<property name="changelog.file.name" value="last_changelog.txt" />
+	<property name="project.name" value="ShipMaster" />
+
+	<target name="main" depends="">
+		<property name="verboseFlag" value="0" />
+		<script language="javascript">
+		    var logger = project.getBuildListeners().firstElement();
+		    var verboseMode = project.getProperty( "verboseFlag" )
+		    if ( ! "1".equals( verboseMode ) )
+		        logger.setMessageOutputLevel( 1 );
+		</script>
+		<antcallback target="current-version" return="version" />
+		<echo>Current build version: ${version}</echo>
+		<antcall target="compile">
+			<param name="version" value="${version}" />
+		</antcall>
+	</target>
+
+	<target name="compile">
+		<property name="releaseDir" value="../../Releases/${project.name}-${version}" />
+		<mkdir dir="${releaseDir}" />
+		<jar destfile="${releaseDir}/${project.name}-${version}.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="Launcher" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="../bin" />
+			<!--<zipfileset excludes="META-INF/*.SF" src="../libs/junit-4.12.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="../libs/hamcrest-all-1.3.jar" />-->
+		</jar>
+		<copydir src="../data" dest="${releaseDir}/data" />
+		<antcall target="createChangelog">
+			<param name="version" value="${version}" />
+		</antcall>
+		<copyfile src="${changelog.file.name}" dest="${releaseDir}/changelog.txt" />
+	</target>
+
+	<target name="createChangelog">
+		<!-- include system path variable to execute git in cmd -->
+		<echo>Fetching commit messages since commit for last build: ${version.last.commit}</echo>
+		<property name="git.command" value='git log --pretty="%cn - %cd (commit: %h) %n%B" --date="short" ${version.last.commit}..' />
+		<var name="output" unset="true" />
+		<antcallback target="execCommand" return="output">
+			<param name="command" value="${git.command}" />
+		</antcallback>
+		<property name="changelog" value="${output}" />
+		<loadfile property="previousChangelog" srcFile="${changelog.file.name}" failonerror="no" />
+		<condition property="previousChangelog" value="">
+			<not>
+				<isset property="previousChangelog" />
+			</not>
+		</condition>
+		<echo file="${changelog.file.name}">${version}
+${changelog}_________________________
+				
+${previousChangelog}</echo>
+
+		<var name="output" unset="true" />
+		<antcallback target="execCommand" return="output">
+			<param name="command" value='git log --pretty="%h" -n 1' />
+		</antcallback>
+		<propertyfile file="${propertyFile}">
+			<entry key="version.last.commit" value="${output}" />
+		</propertyfile>
+	</target>
+
+	<target name="execCommand">
+		<property environment="env" />
+		<exec executable="cmd" outputproperty="output" failonerror="false">
+			<arg value="/c" />
+			<arg value='${command}' />
+		</exec>
+	</target>
+
+	<target name="current-version">
+		<antcallback target="get-revision" return="version.revision" />
+		<antcallback target="get-minor" return="version.minor" />
+		<property name="version" value="${version.major}.${version.minor}.${version.revision}" />
+	</target>
+
+	<target name="get-revision">
+		<!-- include system path variable to execute git in cmd -->
+		<property environment="env" />
+		<!--<echo message="${env.Path}" />-->
+		<exec executable="cmd" outputproperty="version.revision" failonerror="true">
+			<arg value="/c" />
+			<arg value="git rev-list HEAD --count" />
+		</exec>
+	</target>
+
+	<target name="get-minor">
+		<condition property="version.increment.minor">
+			<equals arg1="${version.major}" arg2="${version.major.last}" />
+		</condition>
+		<antcallback target="minor-increment" return="version.minor">
+			<param name="version.minor.last" value="${version.minor.last}" />
+		</antcallback>
+		<antcallback target="minor-reset" return="version.minor">
+			<param name="version.minor.last" value="${version.minor.last}" />
+		</antcallback>
+		<propertyfile file="${propertyFile}">
+			<entry key="version.minor.last" value="${version.minor}" />
+			<entry key="version.major.last" value="${version.major}" />
+		</propertyfile>
+	</target>
+
+	<target name="minor-increment" if="version.increment.minor">
+		<math operation="+" operand1="${version.minor.last}" operand2="1" result="version.minor" datatype="int" />
+	</target>
+
+	<target name="minor-reset" unless="version.increment.minor">
+		<property name="version.minor" value="0" />
+	</target>
+</project>

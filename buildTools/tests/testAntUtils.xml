@@ -1,0 +1,10 @@
+<project default="test" name="testAntUtils">
+	<target name="test">
+		<javac srcdir="." destdir="." source="1.8" target="1.8" includeantruntime="false" />
+		<java classname="AntUtils">
+			<arg value="-lc ${version.last.commit}" />
+			<arg value="test" />
+			<classpath path="." />
+		</java>
+	</target>
+</project>

@@ -1,0 +1,25 @@
+0.1.1.16
+judos - 2015-09-04 (commit: d16bfd5) 
+setup proper ant task in build to add changelog to releases
+
+judos - 2015-09-04 (commit: 1969ed9) 
+added build tool support for automatic changelog creation
+updated feature list
+
+judos - 2015-09-02 (commit: 0decf4e) 
+added new images, gfx for dock material
+
+judos - 2015-09-02 (commit: 40ec766) 
+added some example sounds for ships
+
+judos - 2015-09-02 (commit: fd269cb) 
+added various images and graphics to the game
+
+judos - 2015-08-30 (commit: 2396fc2) 
+first build with corrected build version
+_________________________
+
+0.1.0.10
+path drawing for ships leaving the dock
+path drawing goes into the dock and deselects ship
+path drawing stops on land

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="testCallback" name="adsf">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+		
+	<target name="testCallback" description="Test CallBack">
+		<antcallback target="-testcb" return="a, b" />
+		<echo>a = ${a}</echo>
+		<echo>b = ${b}</echo>
+
+		<for list="a,b,c,d,e" param="letter">
+			<sequential>
+				<echo>Letter @{letter}</echo>
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-testcb">
+		<property name="a" value="A" />
+		<property name="b" value="B" />
+	</target>
+</project>

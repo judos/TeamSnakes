@@ -1,0 +1,43 @@
+<project>
+  <property name="foo" value="22"/>
+  <echo>foo = ${foo}</echo>
+
+  <!-- create macrodef -->
+  <macrodef name="math">
+   <attribute name="operation"/>
+   <attribute name="operator1"/>
+   <attribute name="operator2"/>
+   <attribute name="result"/>
+   <sequential>
+    <script language="javascript">
+     tmp = 0;
+     switch ("@{operation}")
+     {
+      case "+" :
+       tmp = parseInt("@{operator1}") + parseInt("@{operator2}");
+       break;
+      case "-" :
+       tmp = parseInt("@{operator1}") - parseInt("@{operator2}");
+       break;
+      case "*" :
+       tmp = parseInt("@{operator1}") * parseInt("@{operator2}");
+       break;
+      case "/" :
+       tmp = parseInt("@{operator1}") / parseInt("@{operator2}");
+       break;
+     }
+     project.setProperty("@{result}", tmp);
+    </script>
+   </sequential>
+ </macrodef>
+
+  <!-- create new properties -->
+  <math operation="/" operator1="${foo}" operator2="11" result="divide"/>
+  <math operation="+" operator1="${foo}" operator2="21" result="add"/>
+	
+  <echo>
+  	foo / 11 = ${divide}
+  	foo + 21 = ${add}
+  	foo = ${foo}
+  </echo> 
+</project>

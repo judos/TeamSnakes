@@ -1,0 +1,18 @@
+A) INSTALLATION APACHE ANT
+1. download apache ant 1.9.6 + from:
+	http://ant.apache.org/bindownload.cgi
+2. extract the zip into c:/programme
+3. add the bin path to your system environment path variable
+	  e.g. PATH += C:/programme/apache-ant1.9.6/bin
+				 ANT_HOME = C:/programme/apache-ant1.9.6
+4. check your ant installation by typing "ant -version" in your command line tool
+
+B) ANT-CONTRIB (extension for ant)
+1. download ant-contrib from:
+	http://sourceforge.net/projects/ant-contrib/files/ant-contrib/1.0b3/
+2. extract the "ant-contrib-1.0b3.jar" to your c:/programme/ant.../lib folder
+
+
+C) CONFIGURE ECLIPSE:
+1. window/preferences/ant/runtime/classpath/
+2. press button "Ant Home" and relocate it to your ant installation.
