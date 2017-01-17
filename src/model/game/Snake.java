@@ -62,7 +62,7 @@ public class Snake {
 		double delta = this.headAngle.approachAngle(targetAngle, Angle
 			.fromDegree(getMaxTurningSpeed()));
 
-		if (delta == this.lastAngle) {
+		if (delta == this.lastAngle && delta != 0) {
 			if (this.bonusTick < 10)
 				this.bonusTick++;
 		}
