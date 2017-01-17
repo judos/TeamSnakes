@@ -5,6 +5,6 @@ Control over snake
 maximal turning speed
 Snake pulls tight
 screen scrolling with snake
+Snake eyes
 
-+ Snake eyes
 + Field Hashmap for collision detection

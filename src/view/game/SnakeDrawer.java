@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import model.Map;
 import model.game.Snake;
+import ch.judos.generic.data.geometry.Angle;
 import ch.judos.generic.data.geometry.PointF;
 
 public class SnakeDrawer {
@@ -38,6 +39,14 @@ public class SnakeDrawer {
 			PointF point = points.get(i);
 			g.fillOval(point.getXI() - s / 2, point.getYI() - s / 2, s, s);
 		}
+		// eyes
+		g.setColor(Color.BLACK);
+		PointF head = points.get(0).clone();
+		head.movePointI(snake.headAngle.turnClockwise(Angle.A_90), s / 4);
+		head.movePointI(snake.headAngle, s / 6);
+		g.fillOval(head.getXI() - s / 6, head.getYI() - s / 6, s / 3, s / 3);
+		head.movePointI(snake.headAngle.turnClockwise(Angle.A_270), s / 2);
+		g.fillOval(head.getXI() - s / 6, head.getYI() - s / 6, s / 3, s / 3);
 	}
 
 }

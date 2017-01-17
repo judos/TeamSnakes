@@ -28,7 +28,6 @@ public class MapDrawer implements Drawable2d {
 
 	@Override
 	public void paint(Graphics2D g) {
-
 		AffineTransform originalTransformation = g.getTransform();
 		this.controller.setOffset(g);
 		this.snakeDrawer.drawAllSnakes(g);
