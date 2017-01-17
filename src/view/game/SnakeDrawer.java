@@ -36,21 +36,21 @@ public class SnakeDrawer {
 			c(1.1f), c(1.16f), c(1.19f), c(1.16f), c(1.1f)};
 
 		ArrayList<PointF> points = snake.getPoints();
-		int s = (int) Snake.circleSize;
+		int s = snake.getTileRadius();
 		for (int i = points.size() - 1; i >= 0; i--) {
 			g.setColor(c[i % c.length]);
 			PointF point = points.get(i);
-			g.fillOval(point.getXI() - s / 2, point.getYI() - s / 2, s, s);
+			g.fillOval(point.getXI() - s, point.getYI() - s, s * 2, s * 2);
 		}
 		// eyes
 		g.setColor(Color.BLACK);
 		PointF head = points.get(0).clone();
 		Angle direction = snake.getHeadAngle();
-		head.movePointI(direction.turnClockwise(Angle.A_90), s / 4);
-		head.movePointI(direction, s / 6);
-		g.fillOval(head.getXI() - s / 6, head.getYI() - s / 6, s / 3, s / 3);
-		head.movePointI(direction.turnClockwise(Angle.A_270), s / 2);
-		g.fillOval(head.getXI() - s / 6, head.getYI() - s / 6, s / 3, s / 3);
+		head.movePointI(direction.turnClockwise(Angle.A_90), s / 2);
+		head.movePointI(direction, s / 3);
+		g.fillOval(head.getXI() - s / 3, head.getYI() - s / 3, s / 2, s / 2);
+		head.movePointI(direction.turnClockwise(Angle.A_270), s);
+		g.fillOval(head.getXI() - s / 3, head.getYI() - s / 3, s / 2, s / 2);
 	}
 
 	private Color c(float scale) {

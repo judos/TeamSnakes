@@ -8,6 +8,13 @@ screen scrolling with snake
 Snake eyes
 Colored snake
 Speed bonus for turns
+Field Hashmap for collision detection
 
-+ Field Hashmap for collision detection
++ spawn points
++ draw points
++ snakes eat small points on map
++ snakes can grow and shrink
++ speedup when holding mouse button
++ snakes die on collision
++ dying snakes spawn extra points
 + Network implementation

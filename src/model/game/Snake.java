@@ -13,13 +13,16 @@ public class Snake {
 	private ArrayList<PointF> points;
 	private int bonusTick;
 	private double lastAngle;
+	private int index;
 
 	public static final float maxSpeed = 3;
 	public static final float spaceBetweenParts = 10;
-	public static final float circleSize = 40;
+	private static int currentIndex = 0;
 
 	public Snake(PointF point, Angle angle, int size) {
 		this.points = new DynamicList<PointF>(point);
+		this.index = currentIndex;
+		currentIndex++;
 		for (int i = 0; i < size; i++) {
 			this.points.add(this.points.get(i).movePoint(angle.turnClockwise(Angle.A_180),
 				spaceBetweenParts));
@@ -70,5 +73,18 @@ public class Snake {
 			this.bonusTick--;
 		}
 		this.lastAngle = delta;
+	}
+
+	public int getTileRadius() {
+		return 20;
+	}
+
+	public static int getMaxTileRadius() {
+		return 60;
+	}
+
+	@Override
+	public String toString() {
+		return "Snake " + this.index;
 	}
 }
