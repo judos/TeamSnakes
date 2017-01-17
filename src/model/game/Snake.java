@@ -13,7 +13,7 @@ public class Snake {
 	private ArrayList<PointF> points;
 
 	public static final float maxSpeed = 3;
-	public static final float spaceBetweenParts = 15;
+	public static final float spaceBetweenParts = 10;
 	public static final float circleSize = 40;
 
 	public Snake(PointF point, Angle angle, int size) {
@@ -26,7 +26,7 @@ public class Snake {
 	}
 
 	public Color getColor() {
-		return Color.red;
+		return new Color(1 / 1.2f, 0, 0);
 	}
 
 	public Angle getHeadAngle() {
