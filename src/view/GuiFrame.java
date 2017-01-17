@@ -23,12 +23,10 @@ public class GuiFrame extends JFrame implements InputProvider {
 	public GuiFrame(Drawable2d drawable, GraphicsDevice deviceUsed) {
 		super(deviceUsed.getDefaultConfiguration());
 		this.drawable = drawable;
-		this.setTitle("ShipMaster");
-		// this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setTitle("TeamSnakes");
 		this.setSize(1920, 1080);
 		this.setAlwaysOnTop(false);
 		this.setIgnoreRepaint(true);
-		// this.setResizable(false);
 		this.setFocusTraversalKeysEnabled(false);
 
 		this.getContentPane().requestFocusInWindow();

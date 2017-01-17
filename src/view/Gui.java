@@ -163,6 +163,7 @@ public class Gui implements Drawable2d {
 	@Override
 	public void paint(Graphics2D g) {
 		Rectangle size = g.getClipBounds();
+		g.setBackground(Color.black);
 		g.clearRect(0, 0, size.width, size.height);
 		if (this.drawable != null)
 			this.drawable.paint(g);
@@ -186,4 +187,5 @@ public class Gui implements Drawable2d {
 		this.frame.setVisible(false);
 		this.frame.dispose();
 	}
+
 }

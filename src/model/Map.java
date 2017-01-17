@@ -3,7 +3,6 @@ package model;
 import model.game.Snake;
 import view.MapDrawer;
 import ch.judos.generic.data.DynamicList;
-import ch.judos.generic.graphics.Drawable2d;
 
 /**
  * @author Julian Schelker
@@ -11,13 +10,15 @@ import ch.judos.generic.graphics.Drawable2d;
 public class Map {
 
 	public DynamicList<Snake> snakes;
+	private MapDrawer drawer;
 
 	public Map() {
 		this.snakes = new DynamicList<Snake>();
+		this.drawer = new MapDrawer(this);
 	}
 
-	public Drawable2d getDrawable() {
-		return new MapDrawer(this);
+	public MapDrawer getMapDrawer() {
+		return this.drawer;
 	}
 
 }

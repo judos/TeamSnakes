@@ -1,6 +1,7 @@
 package controller.game;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 
 import model.game.Snake;
 import ch.judos.generic.data.geometry.Angle;
@@ -25,4 +26,10 @@ public class PlayerControls {
 		this.snake.headAngle.approachAngle(targetAngle, Angle.fromDegree(snake
 			.getMaxTurningSpeed()));
 	}
+
+	public void setOffset(Graphics2D g) {
+		PointF head = this.snake.getPoints().get(0);
+		g.translate(-head.x, -head.y);
+	}
+
 }

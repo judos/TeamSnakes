@@ -3,7 +3,8 @@ new features:
 Snake representation
 Control over snake
 maximal turning speed
-Snake pulls together
+Snake pulls tight
+screen scrolling with snake
 
 + Snake eyes
 + Field Hashmap for collision detection

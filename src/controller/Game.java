@@ -52,6 +52,7 @@ public class Game extends KeyAdapter {
 		this.mouseController = new MouseController(this.map, gui.getComponent());
 		this.snakeController = new SnakeController(this.map);
 		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.mouseController);
+		this.map.getMapDrawer().setController(this.playerControls);
 
 		this.synchronousEventController.addMouseListener(this.mouseController);
 		this.synchronousEventController.addKeyListener(this);
@@ -64,7 +65,7 @@ public class Game extends KeyAdapter {
 	}
 
 	public void start() {
-		this.gui.setDrawable(this.map.getDrawable());
+		this.gui.setDrawable(this.map.getMapDrawer());
 		// this.gui.startFullScreen(FPS);
 		// this.gui.startViewUndecorated(FPS);
 		this.gui.startView(FPS);
