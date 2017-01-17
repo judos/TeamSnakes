@@ -10,7 +10,8 @@ import ch.judos.generic.data.geometry.PointF;
 import ch.judos.generic.data.geometry.PointI;
 
 public class CollisionController {
-	private static final int gridSize = 100;
+	public static final int gridSize = 100;
+
 	private HashMapList<Integer, SnakeTile> snakeCollisionMap;
 
 	public CollisionController() {

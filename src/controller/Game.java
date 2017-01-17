@@ -3,10 +3,12 @@ package controller;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import model.Map;
-import view.Gui;
 import controller.game.PlayerControls;
 import controller.game.SnakeController;
+import model.Map;
+import model.game.Options;
+import view.Gui;
+import view.MapDrawer;
 
 /**
  * @author Julian Schelker
@@ -27,32 +29,25 @@ public class Game extends KeyAdapter {
 
 	private PlayerControls playerControls;
 
-	private static Game instance;
+	private Options options;
 
-	public synchronized static Game initializeGame(Map m, Gui gui) {
-		if (instance != null)
-			throw new RuntimeException("Game can only be initialized once");
-		return instance = new Game(m, gui);
-	}
+	private MapDrawer mapDrawer;
 
-	public static double getGameTime() {
-		if (instance == null)
-			return 0;
-		return instance.gameTime;
-	}
-
-	private Game(Map m, Gui gui) {
+	public Game(Map m, Gui gui) {
 		this.map = m;
 		this.gui = gui;
 		this.gameIsPaused = false;
 
+		this.options = new Options();
 		this.synchronousEventController = new SynchronousEventController(this.gui
 			.getInputProvider());
+		this.mapDrawer = new MapDrawer(this.map);
+		this.gui.setDrawable(this.mapDrawer);
 
 		this.mouseController = new MouseController(this.map, gui.getComponent());
 		this.snakeController = new SnakeController(this.map);
 		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.mouseController);
-		this.map.getMapDrawer().setController(this.playerControls);
+		this.mapDrawer.setController(this.playerControls);
 
 		this.synchronousEventController.addMouseListener(this.mouseController);
 		this.synchronousEventController.addKeyListener(this);
@@ -65,7 +60,7 @@ public class Game extends KeyAdapter {
 	}
 
 	public void start() {
-		this.gui.setDrawable(this.map.getMapDrawer());
+		this.mapDrawer.initializeForDrawing();
 		// this.gui.startFullScreen(FPS);
 		// this.gui.startViewUndecorated(FPS);
 		this.gui.startView(FPS);
@@ -87,6 +82,8 @@ public class Game extends KeyAdapter {
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 			this.gui.quit();
+		if (e.getKeyChar() == KeyEvent.VK_F5)
+			this.options.toggleDebugOptions();
 	}
 
 }

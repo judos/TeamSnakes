@@ -50,6 +50,7 @@ public class Gui implements Drawable2d {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
+				Gui.this.update.run();
 				Gui.this.frame.renderScreen();
 			}
 		};

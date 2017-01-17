@@ -27,7 +27,7 @@ public class Launcher {
 		Optional<Runnable> shutdown = Optional.of(() -> System.exit(0));
 		Gui gui = new Gui(shutdown);
 
-		Game game = Game.initializeGame(map, gui);
+		Game game = new Game(map, gui);
 		Assets.waitUntilAssetsAreLoaded();
 		game.start();
 	}
