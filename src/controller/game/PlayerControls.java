@@ -23,8 +23,7 @@ public class PlayerControls {
 		Dimension screenSize = this.inputController.getScreenSize();
 		PointF middleOfScreen = new PointF(screenSize.width / 2, screenSize.height / 2);
 		Angle targetAngle = mousePoint.getAAngleTo(middleOfScreen).turnClockwise(Angle.A_180);
-		this.snake.headAngle.approachAngle(targetAngle, Angle.fromDegree(snake
-			.getMaxTurningSpeed()));
+		this.snake.turnIntoDirection(targetAngle);
 	}
 
 	public void setOffset(Graphics2D g) {

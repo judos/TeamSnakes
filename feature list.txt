@@ -6,5 +6,8 @@ maximal turning speed
 Snake pulls tight
 screen scrolling with snake
 Snake eyes
+Colored snake
+Speed bonus for turns
 
 + Field Hashmap for collision detection
++ Network implementation

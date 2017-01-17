@@ -45,10 +45,11 @@ public class SnakeDrawer {
 		// eyes
 		g.setColor(Color.BLACK);
 		PointF head = points.get(0).clone();
-		head.movePointI(snake.headAngle.turnClockwise(Angle.A_90), s / 4);
-		head.movePointI(snake.headAngle, s / 6);
+		Angle direction = snake.getHeadAngle();
+		head.movePointI(direction.turnClockwise(Angle.A_90), s / 4);
+		head.movePointI(direction, s / 6);
 		g.fillOval(head.getXI() - s / 6, head.getYI() - s / 6, s / 3, s / 3);
-		head.movePointI(snake.headAngle.turnClockwise(Angle.A_270), s / 2);
+		head.movePointI(direction.turnClockwise(Angle.A_270), s / 2);
 		g.fillOval(head.getXI() - s / 6, head.getYI() - s / 6, s / 3, s / 3);
 	}
 

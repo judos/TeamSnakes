@@ -9,8 +9,10 @@ import ch.judos.generic.data.geometry.PointF;
 
 public class Snake {
 
-	public Angle headAngle;
+	private Angle headAngle;
 	private ArrayList<PointF> points;
+	private int bonusTick;
+	private double lastAngle;
 
 	public static final float maxSpeed = 3;
 	public static final float spaceBetweenParts = 10;
@@ -30,7 +32,7 @@ public class Snake {
 	}
 
 	public Angle getHeadAngle() {
-		return this.headAngle;
+		return this.headAngle.clone();
 	}
 
 	public ArrayList<PointF> getPoints() {
@@ -40,15 +42,33 @@ public class Snake {
 	public void move() {
 		for (int i = this.points.size() - 1; i > 1; i--) {
 			float d = this.points.get(i).distanceTo(this.points.get(i - 1));
-			float speed = (d - spaceBetweenParts) / 3 + maxSpeed;
+			float speed = (d - spaceBetweenParts) / 3 + getMaxSpeed();
 			this.points.get(i).approachPoint(this.points.get(i - 1), speed);
 		}
 		float d = this.points.get(1).distanceTo(this.points.get(0));
 		this.points.get(1).approachPoint(this.points.get(0), d - spaceBetweenParts);
-		this.points.get(0).movePointI(this.headAngle, maxSpeed);
+		this.points.get(0).movePointI(this.headAngle, getMaxSpeed());
 	}
 
-	public double getMaxTurningSpeed() {
+	private float getMaxSpeed() {
+		return (float) (maxSpeed * (1 + 0.04 * this.bonusTick));
+	}
+
+	private double getMaxTurningSpeed() {
 		return 3;
+	}
+
+	public void turnIntoDirection(Angle targetAngle) {
+		double delta = this.headAngle.approachAngle(targetAngle, Angle
+			.fromDegree(getMaxTurningSpeed()));
+
+		if (delta == this.lastAngle) {
+			if (this.bonusTick < 10)
+				this.bonusTick++;
+		}
+		else if (this.bonusTick > 0) {
+			this.bonusTick--;
+		}
+		this.lastAngle = delta;
 	}
 }
