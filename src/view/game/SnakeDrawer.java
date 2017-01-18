@@ -2,14 +2,12 @@ package view.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
-import model.Map;
-import model.game.Snake;
 import ch.judos.generic.data.geometry.Angle;
 import ch.judos.generic.data.geometry.PointF;
+import model.game.Map;
+import model.game.Snake;
 
 public class SnakeDrawer {
 
@@ -21,19 +19,15 @@ public class SnakeDrawer {
 	}
 
 	public void drawAllSnakes(Graphics2D g) {
-		AffineTransform originalTransform = g.getTransform();
-		Rectangle rect = g.getClipBounds();
-		g.translate(rect.width / 2, rect.height / 2);
 		for (Snake s : this.map.snakes) {
 			drawSnake(s, g);
 		}
-		g.setTransform(originalTransform);
 	}
 
 	private void drawSnake(Snake snake, Graphics2D g) {
 		this.currentSnake = snake;
-		Color[] c = new Color[]{c(1), c(0.9f), c(0.84f), c(0.81f), c(0.84f), c(0.9f), c(1),
-			c(1.1f), c(1.16f), c(1.19f), c(1.16f), c(1.1f)};
+		Color[] c = new Color[]{c(1), c(0.9f), c(0.84f), c(0.81f), c(0.84f), c(0.9f), c(1), c(
+			1.1f), c(1.16f), c(1.19f), c(1.16f), c(1.1f)};
 
 		ArrayList<PointF> points = snake.getPoints();
 		int s = snake.getTileRadius();

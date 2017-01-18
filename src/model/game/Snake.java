@@ -14,6 +14,7 @@ public class Snake {
 	private int bonusTick;
 	private double lastAngle;
 	private int index;
+	public float speedupModifier = 1;
 
 	public static final float maxSpeed = 3;
 	public static final float spaceBetweenParts = 10;
@@ -54,7 +55,7 @@ public class Snake {
 	}
 
 	private float getMaxSpeed() {
-		return (float) (maxSpeed * (1 + 0.04 * this.bonusTick));
+		return (float) (maxSpeed * (1 + 0.04 * this.bonusTick) * speedupModifier);
 	}
 
 	private double getMaxTurningSpeed() {
@@ -62,8 +63,8 @@ public class Snake {
 	}
 
 	public void turnIntoDirection(Angle targetAngle) {
-		double delta = this.headAngle.approachAngle(targetAngle, Angle
-			.fromDegree(getMaxTurningSpeed()));
+		double delta = this.headAngle.approachAngle(targetAngle, Angle.fromDegree(
+			getMaxTurningSpeed()));
 
 		if (delta == this.lastAngle && delta != 0) {
 			if (this.bonusTick < 10)

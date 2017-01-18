@@ -1,16 +1,19 @@
 package controller.game;
 
-import model.Map;
+import controller.GameI;
+import model.game.Map;
 import model.game.Snake;
 
 public class SnakeController {
 
 	private Map map;
 	private CollisionController collisionController;
+	private GameI game;
 
-	public SnakeController(Map map) {
-		this.map = map;
-		this.collisionController = new CollisionController();
+	public SnakeController(GameI game) {
+		this.map = game.getMap();
+		this.game = game;
+		this.collisionController = new CollisionController(game);
 	}
 
 	public void update() {
@@ -21,7 +24,6 @@ public class SnakeController {
 		}
 		for (Snake s : this.map.snakes) {
 			if (this.collisionController.doesSnakeDie(s)) {
-				System.out.println("Collision++++++!!!!!");
 			}
 		}
 	}

@@ -5,15 +5,15 @@ import java.awt.event.KeyEvent;
 
 import controller.game.PlayerControls;
 import controller.game.SnakeController;
-import model.Map;
+import model.game.Map;
 import model.game.Options;
 import view.Gui;
-import view.MapDrawer;
+import view.game.MapDrawer;
 
 /**
  * @author Julian Schelker
  */
-public class Game extends KeyAdapter {
+public class Game extends KeyAdapter implements GameI {
 
 	public static final int FPS = 60;
 
@@ -45,8 +45,8 @@ public class Game extends KeyAdapter {
 		this.gui.setDrawable(this.mapDrawer);
 
 		this.mouseController = new MouseController(this.map, gui.getComponent());
-		this.snakeController = new SnakeController(this.map);
 		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.mouseController);
+		this.snakeController = new SnakeController(this);
 		this.mapDrawer.setController(this.playerControls);
 
 		this.synchronousEventController.addMouseListener(this.mouseController);
@@ -82,8 +82,28 @@ public class Game extends KeyAdapter {
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 			this.gui.quit();
-		if (e.getKeyChar() == KeyEvent.VK_F5)
+		if (e.getKeyCode() == KeyEvent.VK_F5)
 			this.options.toggleDebugOptions();
+	}
+
+	@Override
+	public MapDrawer getMapDrawer() {
+		return this.mapDrawer;
+	}
+
+	@Override
+	public Map getMap() {
+		return this.map;
+	}
+
+	@Override
+	public Options getOptions() {
+		return this.options;
+	}
+
+	@Override
+	public PlayerControls getControls() {
+		return this.playerControls;
 	}
 
 }

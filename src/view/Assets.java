@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class Assets {
 
 	private static boolean isLoaded = false;
 	private static boolean isLoading = false;
+	public static Font font;
 
 	public static boolean isLoaded() {
 		return isLoaded;
@@ -62,7 +64,7 @@ public class Assets {
 	 */
 	private static void loadAllAssets() {
 		TimerJS loadAssestsTimer = new TimerJS();
-
+		font = new Font("Arial", 0, 16);
 		Log.info("loading Assets: " + loadAssestsTimer.getMS() + " ms");
 	}
 

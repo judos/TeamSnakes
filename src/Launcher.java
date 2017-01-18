@@ -1,7 +1,7 @@
 import java.util.Optional;
 
-import model.Map;
-import model.MapGenerator;
+import model.game.Map;
+import model.game.MapGenerator;
 import view.Assets;
 import view.Gui;
 import ch.judos.generic.control.Log;

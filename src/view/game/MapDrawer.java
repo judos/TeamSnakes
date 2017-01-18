@@ -1,4 +1,4 @@
-package view;
+package view.game;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -11,11 +11,9 @@ import java.util.stream.Stream;
 import ch.judos.generic.data.HashMapList;
 import ch.judos.generic.data.geometry.PointF;
 import ch.judos.generic.graphics.Drawable2d;
-import controller.game.CollisionController;
 import controller.game.PlayerControls;
-import model.Map;
 import model.game.DrawingLayer;
-import view.game.SnakeDrawer;
+import model.game.Map;
 
 /**
  * @author Julian Schelker
@@ -26,7 +24,7 @@ public class MapDrawer implements Drawable2d {
 	private SnakeDrawer snakeDrawer;
 	private PlayerControls controller;
 	public HashMapList<DrawingLayer, Drawable2d> drawables;
-	public Drawable2d[] drawableRuntime;
+	private Drawable2d[] drawableRuntime;
 	private static Font text = new Font("Arial", 0, 24);
 
 	public MapDrawer(Map map) {
@@ -49,21 +47,18 @@ public class MapDrawer implements Drawable2d {
 	public void paint(Graphics2D g) {
 		AffineTransform originalTransformation = g.getTransform();
 
+		Rectangle rect = g.getClipBounds();
+		g.translate(rect.width / 2, rect.height / 2);
+		PointF center = this.controller.getFocusPoint();
+		g.translate(-center.getXI(), -center.getYI());
+
 		for (Drawable2d d : this.drawableRuntime) {
 			d.paint(g);
 		}
 
-		PointF center = this.controller.getFocusPoint();
-		int grid = CollisionController.gridSize;
-		int lines = g.getClipBounds().width / grid;
-		g.setColor(Color.gray);
-		int offsetX = center.getXI() % grid;
-		int offsetY = center.getYI() % grid;
-		for (int i = 0; i <= lines; i++) {
-			g.fillRect(i * grid - offsetX, 0, 1, 1080);
-			g.fillRect(0, i * grid - offsetY, 1920, 1);
-		}
-		g.translate(-center.getXI(), -center.getYI());
+		g.setColor(Color.red);
+		g.fillRect(0, 0, 1920, 1);
+		g.fillRect(0, 0, 1, 1080);
 		this.snakeDrawer.drawAllSnakes(g);
 
 		g.setTransform(originalTransformation);

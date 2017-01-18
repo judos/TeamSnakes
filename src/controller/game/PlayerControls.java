@@ -2,10 +2,10 @@ package controller.game;
 
 import java.awt.Dimension;
 
-import model.game.Snake;
 import ch.judos.generic.data.geometry.Angle;
 import ch.judos.generic.data.geometry.PointF;
 import controller.MouseController;
+import model.game.Snake;
 
 public class PlayerControls {
 
@@ -18,6 +18,15 @@ public class PlayerControls {
 	}
 
 	public void update() {
+		// speed up snake
+		if (this.inputController.isMouseButtonPressed(1)) {
+			this.snake.speedupModifier = 1;
+		}
+		else {
+			this.snake.speedupModifier = 0;
+		}
+
+		// turning snake
 		PointF mousePoint = new PointF(this.inputController.getMousePosition());
 		Dimension screenSize = this.inputController.getScreenSize();
 		PointF middleOfScreen = new PointF(screenSize.width / 2, screenSize.height / 2);

@@ -1,6 +1,5 @@
-package model;
+package model.game;
 
-import model.game.Snake;
 import ch.judos.generic.data.DynamicList;
 
 /**
