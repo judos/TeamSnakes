@@ -15,8 +15,8 @@ spawn points
 draw points
 snakes eat small points on map
 snakes can grow and shrink
+snakes shrink on speeding up
 
 + snakes die on collision
-+ snakes shrink on speeding up
 + dying snakes spawn extra points
 + Network implementation
