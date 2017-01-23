@@ -1,11 +1,11 @@
 import java.util.Optional;
 
+import ch.judos.generic.control.Log;
+import controller.Game;
 import model.game.Map;
 import model.game.MapGenerator;
 import view.Assets;
 import view.Gui;
-import ch.judos.generic.control.Log;
-import controller.Game;
 
 /**
  * @author Julian Schelker
@@ -19,8 +19,8 @@ public class Launcher {
 
 		Launcher launcher = new Launcher();
 		launcher.init();
-
 	}
+
 	void init() {
 		Assets.load();
 		Map map = MapGenerator.getMap();

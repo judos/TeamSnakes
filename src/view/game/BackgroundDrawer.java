@@ -4,39 +4,37 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import ch.judos.generic.data.HashMapList;
 import ch.judos.generic.data.geometry.PointF;
-import ch.judos.generic.data.geometry.PointI;
 import ch.judos.generic.graphics.Drawable2d;
 import controller.GameI;
-import controller.game.CollisionController;
 import controller.game.PlayerControls;
+import model.game.Map;
 import model.game.Options;
 import model.game.SnakeTile;
-import model.game.helper.GridHashing;
+import model.game.space.GridHashing;
 import view.Assets;
 
 public class BackgroundDrawer implements Drawable2d {
 
 	private Options options;
 	private PlayerControls controller;
-	private HashMapList<Integer, SnakeTile> hashMap;
+	private Map map;
 
-	public BackgroundDrawer(GameI game, HashMapList<Integer, SnakeTile> snakeCollisionMap) {
+	public BackgroundDrawer(GameI game) {
 		this.options = game.getOptions();
 		this.controller = game.getControls();
-		this.hashMap = snakeCollisionMap;
+		this.map = game.getMap();
 	}
 
 	@Override
 	public void paint(Graphics2D g) {
 		PointF center = this.controller.getFocusPoint();
-		int grid = CollisionController.gridSize;
+		int grid = GridHashing.gridSize;
 		int gridsWidth = g.getClipBounds().width / grid;
 		int gridsHeight = g.getClipBounds().height / grid;
 		int gridOffsetX = center.getXI() / grid;
 		int gridOffsetY = center.getYI() / grid;
-		g.setColor(Color.gray);
+		g.setColor(Color.darkGray);
 		for (int x = -gridsWidth / 2 - 1; x <= gridsWidth / 2 + 1; x++) {
 			g.fillRect((x + gridOffsetX) * grid, center.getYI() - 540, 1, 1080);
 		}
@@ -55,8 +53,7 @@ public class BackgroundDrawer implements Drawable2d {
 				int gx = x + gridOffsetX;
 				int gy = y + gridOffsetY;
 				g.drawString(gx + "/" + gy, px, py);
-				ArrayList<SnakeTile> tiles = this.hashMap.getList(GridHashing.hashPointIntoMap(
-					new PointI(gx, gy)));
+				ArrayList<SnakeTile> tiles = this.map.snakeCollisionMap.forAllInGrid(gy, gy);
 				String t = "";
 				if (tiles != null)
 					t = "T: " + tiles.size();

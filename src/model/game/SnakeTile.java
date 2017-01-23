@@ -1,8 +1,10 @@
 package model.game;
 
 import ch.judos.generic.data.geometry.PointF;
+import ch.judos.generic.data.geometry.PointI;
+import model.game.space.Locatable;
 
-public class SnakeTile {
+public class SnakeTile implements Locatable {
 
 	private Snake snake;
 	private PointF point;
@@ -18,5 +20,10 @@ public class SnakeTile {
 		PointF head = snake.getPoints().get(0);
 		double dist = head.distance(point);
 		return dist < this.snake.getTileRadius() + snake.getTileRadius();
+	}
+
+	@Override
+	public PointI getLocation() {
+		return this.point.getPoint();
 	}
 }

@@ -4,7 +4,7 @@ import ch.judos.generic.control.Log;
 
 public class Options {
 
-	private boolean debuggingEnabled = true;
+	private boolean debuggingEnabled = false;
 
 	public boolean isDebuggingEnabled() {
 		return this.debuggingEnabled;

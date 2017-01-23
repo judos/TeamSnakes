@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import controller.game.PlayerControls;
+import controller.game.PointController;
 import controller.game.SnakeController;
 import model.game.Map;
 import model.game.Options;
@@ -33,6 +34,8 @@ public class Game extends KeyAdapter implements GameI {
 
 	private MapDrawer mapDrawer;
 
+	private PointController pointController;
+
 	public Game(Map m, Gui gui) {
 		this.map = m;
 		this.gui = gui;
@@ -46,6 +49,7 @@ public class Game extends KeyAdapter implements GameI {
 
 		this.mouseController = new MouseController(this.map, gui.getComponent());
 		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.mouseController);
+		this.pointController = new PointController(this);
 		this.snakeController = new SnakeController(this);
 		this.mapDrawer.setController(this.playerControls);
 
@@ -73,6 +77,7 @@ public class Game extends KeyAdapter implements GameI {
 			this.mouseController.update();
 			this.playerControls.update();
 			this.snakeController.update();
+			this.pointController.update();
 
 			this.gameTime += 1. / FPS;
 		}

@@ -1,5 +1,5 @@
 package model.game;
 
 public enum DrawingLayer {
-	Background, Main, Text;
+	Background, EatablePoints, Snakes, Text;
 }
