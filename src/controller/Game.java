@@ -20,7 +20,7 @@ public class Game extends KeyAdapter implements GameI {
 
 	private Map map;
 	private Gui gui;
-	private MouseController mouseController;
+	private InputController inputController;
 	private boolean gameIsPaused;
 	private double gameTime;
 
@@ -47,13 +47,15 @@ public class Game extends KeyAdapter implements GameI {
 		this.mapDrawer = new MapDrawer(this.map);
 		this.gui.setDrawable(this.mapDrawer);
 
-		this.mouseController = new MouseController(this.map, gui.getComponent());
-		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.mouseController);
+		this.inputController = new InputController(this.map, gui.getComponent());
+
+		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.inputController);
 		this.pointController = new PointController(this);
 		this.snakeController = new SnakeController(this);
 		this.mapDrawer.setController(this.playerControls);
 
-		this.synchronousEventController.addMouseListener(this.mouseController);
+		this.synchronousEventController.addMouseListener(this.inputController);
+		this.synchronousEventController.addKeyListener(this.inputController);
 		this.synchronousEventController.addKeyListener(this);
 
 		this.gameTime = 0d;
@@ -74,7 +76,6 @@ public class Game extends KeyAdapter implements GameI {
 	private void updateBeforeDrawing() {
 		this.synchronousEventController.distributeEvents();
 		if (!this.gameIsPaused) {
-			this.mouseController.update();
 			this.playerControls.update();
 			this.snakeController.update();
 			this.pointController.update();

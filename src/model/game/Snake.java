@@ -14,9 +14,9 @@ public class Snake {
 	private int bonusTick;
 	private double lastAngle;
 	private int index;
+	private int size;
 
 	public float speedupModifier = 1;
-	public int size;
 
 	public static final float maxSpeed = 3;
 	public static final float spaceBetweenParts = 10;
@@ -34,6 +34,14 @@ public class Snake {
 		this.headAngle = angle;
 	}
 
+	public int getSize() {
+		return this.size;
+	}
+
+	public void changeSize(int addition) {
+		this.size += addition;
+	}
+
 	public Color getColor() {
 		return new Color(1 / 1.2f, 0, 0);
 	}
@@ -47,14 +55,22 @@ public class Snake {
 	}
 
 	public void move() {
+		PointF lastPos = this.points.get(this.points.size() - 1);
 		for (int i = this.points.size() - 1; i > 1; i--) {
 			float d = this.points.get(i).distanceTo(this.points.get(i - 1));
 			float speed = (d - spaceBetweenParts) / 3 + getMaxSpeed();
 			this.points.get(i).approachPoint(this.points.get(i - 1), speed);
 		}
+		if (this.size / 2 > this.points.size()) {
+			this.points.add(lastPos.clone());
+		}
+		else if (this.size / 2 < this.points.size()) {
+			this.points.remove(this.points.size() - 1);
+		}
 		float d = this.points.get(1).distanceTo(this.points.get(0));
 		this.points.get(1).approachPoint(this.points.get(0), d - spaceBetweenParts);
 		this.points.get(0).movePointI(this.headAngle, getMaxSpeed());
+
 	}
 
 	private float getMaxSpeed() {
@@ -62,7 +78,10 @@ public class Snake {
 	}
 
 	private double getMaxTurningSpeed() {
-		return 3;
+		double turn = 8 - (float) this.size / 2500 * 6;
+		if (turn < 2)
+			turn = 2;
+		return turn;
 	}
 
 	public void turnIntoDirection(Angle targetAngle) {
@@ -80,7 +99,7 @@ public class Snake {
 	}
 
 	public int getTileRadius() {
-		return 20;
+		return (int) ((float) this.size / 2500 * 40 + 10);
 	}
 
 	public static int getMaxTileRadius() {
@@ -91,4 +110,5 @@ public class Snake {
 	public String toString() {
 		return "Snake " + this.index;
 	}
+
 }

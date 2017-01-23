@@ -14,8 +14,8 @@ debug options to draw collision detection
 spawn points
 draw points
 snakes eat small points on map
+snakes can grow and shrink
 
-+ snakes can grow and shrink
 + snakes die on collision
 + snakes shrink on speeding up
 + dying snakes spawn extra points

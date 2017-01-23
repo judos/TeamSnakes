@@ -64,7 +64,7 @@ public class MapDrawer implements Drawable2d {
 		g.setTransform(originalTransformation);
 		g.setColor(Color.white);
 		g.setFont(text);
-		g.drawString("Size: " + this.controller.getOwnSnake().size, 20, 20);
+		g.drawString("Size: " + this.controller.getOwnSnake().getSize(), 20, 20);
 	}
 
 }

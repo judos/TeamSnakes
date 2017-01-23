@@ -2,19 +2,27 @@ package controller.game;
 
 import java.awt.Dimension;
 
+import com.sun.glass.events.KeyEvent;
+
+import ch.judos.generic.control.ActionCounter;
 import ch.judos.generic.data.geometry.Angle;
 import ch.judos.generic.data.geometry.PointF;
-import controller.MouseController;
+import controller.InputController;
 import model.game.Snake;
 
 public class PlayerControls {
 
-	private Snake snake;
-	private MouseController inputController;
+	public static final int decreaseAtOnce = 1;
+	public static final int decreaseEveryMs = 250;
 
-	public PlayerControls(Snake snake, MouseController mouseController) {
+	private Snake snake;
+	private InputController inputController;
+	private ActionCounter sizeDecrease;
+
+	public PlayerControls(Snake snake, InputController mouseController) {
 		this.snake = snake;
 		this.inputController = mouseController;
+		this.sizeDecrease = new ActionCounter(decreaseEveryMs);
 	}
 
 	public Snake getOwnSnake() {
@@ -23,11 +31,19 @@ public class PlayerControls {
 
 	public void update() {
 		// speed up snake
-		if (this.inputController.isMouseButtonPressed(1)) {
-			this.snake.speedupModifier = 1;
+		if (this.inputController.isMouseButtonPressed(1) && this.snake.getSize() >= 10
+			+ decreaseAtOnce) {
+			this.snake.speedupModifier = 2f;
+			if (this.sizeDecrease.action()) {
+				this.snake.changeSize(-decreaseAtOnce);
+			}
 		}
 		else {
-			this.snake.speedupModifier = 0;
+			this.snake.speedupModifier = 1f;
+		}
+
+		if (this.inputController.isKeyPressed(KeyEvent.VK_SPACE)) {
+			this.snake.changeSize(1);
 		}
 
 		// turning snake

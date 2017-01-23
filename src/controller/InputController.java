@@ -4,26 +4,28 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
+import ch.judos.generic.control.KeyMouseAdapter;
 import model.game.Map;
 
 /**
  * @author Julian Schelker
  */
-public class MouseController extends MouseAdapter {
+public class InputController extends KeyMouseAdapter {
 
-	private Map map;
 	private Component component;
 	private boolean[] mouseButtonPressed;
+	private HashMap<Integer, Boolean> keyButtonsPressed;
 
-	public MouseController(Map map, Component component) {
-		this.map = map;
+	public InputController(Map map, Component component) {
 		this.component = component;
 		this.mouseButtonPressed = new boolean[MouseInfo.getNumberOfButtons()];
+		this.keyButtonsPressed = new HashMap<>();
 	}
 	public boolean isMouseButtonPressed(int mouseButton) {
 		return this.mouseButtonPressed[mouseButton];
@@ -49,7 +51,18 @@ public class MouseController extends MouseAdapter {
 		return this.component.getSize();
 	}
 
-	public void update() {
+	public boolean isKeyPressed(int vkSpace) {
+		return this.keyButtonsPressed.containsKey(vkSpace) && this.keyButtonsPressed.get(
+			vkSpace);
 	}
 
+	@Override
+	public void keyPressed(KeyEvent e) {
+		this.keyButtonsPressed.put(e.getKeyCode(), true);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		this.keyButtonsPressed.put(e.getKeyCode(), false);
+	}
 }
