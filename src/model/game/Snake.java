@@ -14,7 +14,9 @@ public class Snake {
 	private int bonusTick;
 	private double lastAngle;
 	private int index;
+
 	public float speedupModifier = 1;
+	public int size;
 
 	public static final float maxSpeed = 3;
 	public static final float spaceBetweenParts = 10;
@@ -24,7 +26,8 @@ public class Snake {
 		this.points = new DynamicList<PointF>(point);
 		this.index = currentIndex;
 		currentIndex++;
-		for (int i = 0; i < size; i++) {
+		this.size = size;
+		for (int i = 0; i < size / 2; i++) {
 			this.points.add(this.points.get(i).movePoint(angle.turnClockwise(Angle.A_180),
 				spaceBetweenParts));
 		}

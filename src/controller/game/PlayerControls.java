@@ -17,6 +17,10 @@ public class PlayerControls {
 		this.inputController = mouseController;
 	}
 
+	public Snake getOwnSnake() {
+		return this.snake;
+	}
+
 	public void update() {
 		// speed up snake
 		if (this.inputController.isMouseButtonPressed(1)) {

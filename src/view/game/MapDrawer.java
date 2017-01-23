@@ -63,10 +63,8 @@ public class MapDrawer implements Drawable2d {
 
 		g.setTransform(originalTransformation);
 		g.setColor(Color.white);
-		Rectangle bounds = g.getClipBounds();
-		g.fillOval(bounds.width / 2 - 2, bounds.height / 2 - 2, 4, 4);
 		g.setFont(text);
-		g.drawString("some text ", 20, 20);
+		g.drawString("Size: " + this.controller.getOwnSnake().size, 20, 20);
 	}
 
 }

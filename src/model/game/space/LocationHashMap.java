@@ -2,6 +2,7 @@ package model.game.space;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import ch.judos.generic.data.HashMapList;
@@ -30,7 +31,12 @@ public class LocationHashMap<E extends Locatable> {
 	public void forEachInRange(PointI position, int range, Function<E, Boolean> consumer) {
 		PointI min = position.subtract(new PointI(range, range));
 		PointI max = position.add(new PointI(range, range));
-		forEachInRect(min, max, consumer);
+		int rangeSq = range * range;
+		forEachInRect(min, max, element -> {
+			if (element.getLocation().distanceSq(position) <= rangeSq)
+				return consumer.apply(element);
+			return false;
+		});
 	}
 
 	public void forEachInRect(PointI min, PointI max, Function<E, Boolean> consumer) {
@@ -73,5 +79,17 @@ public class LocationHashMap<E extends Locatable> {
 		PointI min = new PointI(rectangle.getLocation());
 		PointI max = min.add(new PointI(rectangle.width, rectangle.height));
 		forEachInRect(min, max, consumer);
+	}
+
+	public void removeAll(List<E> entries) {
+		for (E entry : entries) {
+			PointI position = entry.getLocation();
+			Integer hashValue = GridHashing.hashPointIToMapIndex(position);
+			this.hashMap.removeValueForKey(hashValue, entry);
+		}
+	}
+
+	public int getSize() {
+		return this.hashMap.getSize();
 	}
 }

@@ -9,12 +9,10 @@ import view.game.EatablePointDrawer;
 
 public class PointController {
 
-	private int amountOfPoints;
 	private int maxAmountOfPoints;
 	private Map map;
 
 	public PointController(GameI game) {
-		this.amountOfPoints = 0;
 		this.maxAmountOfPoints = 1000;
 		this.map = game.getMap();
 		game.getMapDrawer().drawables.put(DrawingLayer.EatablePoints, new EatablePointDrawer(
@@ -22,10 +20,9 @@ public class PointController {
 	}
 
 	public void update() {
-		if (this.amountOfPoints < this.maxAmountOfPoints) {
+		if (this.map.eatablePoints.getSize() < this.maxAmountOfPoints) {
 			EatablePoint p = new EatablePoint(PointI.randomUniform(0, 2000, 0, 1000), 1);
 			this.map.eatablePoints.put(p);
-			this.amountOfPoints++;
 		}
 	}
 
