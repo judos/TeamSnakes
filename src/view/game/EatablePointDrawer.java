@@ -30,7 +30,7 @@ public class EatablePointDrawer implements Drawable2d {
 		this.map.eatablePoints.forEachInRect(g.getClipBounds(), eatablePoint -> {
 			int s = eatablePoint.getSize();
 			PointI pos = eatablePoint.getLocation();
-			g.fillOval(pos.x - s / 2, pos.y - s / 2, s, s);
+			g.fillOval(pos.x - (s << 2), pos.y - (s << 2), s << 3, s << 3);
 			x.x++;
 			return false;
 		});

@@ -23,7 +23,7 @@ public class PointController {
 
 	public void update() {
 		if (this.amountOfPoints < this.maxAmountOfPoints) {
-			EatablePoint p = new EatablePoint(PointI.randomUniform(0, 400, 0, 200), 2);
+			EatablePoint p = new EatablePoint(PointI.randomUniform(0, 2000, 0, 1000), 1);
 			this.map.eatablePoints.put(p);
 			this.amountOfPoints++;
 		}
