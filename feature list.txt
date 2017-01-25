@@ -1,6 +1,6 @@
 new features:
 
-Snake representation
+Snake data model
 Control over snake
 maximal turning speed
 Snake pulls tight
@@ -16,7 +16,8 @@ draw points
 snakes eat small points on map
 snakes can grow and shrink
 snakes shrink on speeding up
-
+Snake colors
+ 
 + snakes die on collision
 + dying snakes spawn extra points
 + Network implementation

@@ -3,6 +3,7 @@ package view.game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import ch.judos.generic.data.geometry.Angle;
 import ch.judos.generic.data.geometry.PointF;
@@ -26,11 +27,10 @@ public class SnakeDrawer {
 
 	private void drawSnake(Snake snake, Graphics2D g) {
 		this.currentSnake = snake;
-		Color[] c = new Color[]{c(1), c(0.9f), c(0.84f), c(0.81f), c(0.84f), c(0.9f), c(1), c(
-			1.1f), c(1.16f), c(1.19f), c(1.16f), c(1.1f)};
 
 		ArrayList<PointF> points = snake.getPoints();
 		int s = snake.getTileRadius();
+		Color[] c = colorRainbow();
 		for (int i = points.size() - 1; i >= 0; i--) {
 			g.setColor(c[i % c.length]);
 			PointF point = points.get(i);
@@ -45,6 +45,13 @@ public class SnakeDrawer {
 		g.fillOval(head.getXI() - s / 3, head.getYI() - s / 3, s / 2, s / 2);
 		head.movePointI(direction.turnClockwise(Angle.A_270), s);
 		g.fillOval(head.getXI() - s / 3, head.getYI() - s / 3, s / 2, s / 2);
+	}
+
+	public Color[] colorRainbow() {
+		double[] scales = {0.84, 0.75, 0.7, 0.68, 0.7, 0.75, 0.84, 0.92, 0.97, 1, 0.97, 0.92};
+		final Color[] colors = Arrays.stream(scales).mapToObj(d -> c((float) d)).toArray(
+			size -> new Color[size]);
+		return colors;
 	}
 
 	private Color c(float scale) {

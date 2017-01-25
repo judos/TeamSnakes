@@ -17,21 +17,27 @@ public class Snake {
 	private int size;
 
 	public float speedupModifier = 1;
+	private SnakeTeam team;
 
 	public static final float maxSpeed = 3;
 	public static final float spaceBetweenParts = 10;
 	private static int currentIndex = 0;
 
-	public Snake(PointF point, Angle angle, int size) {
+	public Snake(PointF point, Angle angle, int size, SnakeTeam team) {
+		this.team = team;
 		this.points = new DynamicList<PointF>(point);
 		this.index = currentIndex;
 		currentIndex++;
 		this.size = size;
-		for (int i = 0; i < size / 2; i++) {
+		for (int i = 0; i < getAmountOfTiles(); i++) {
 			this.points.add(this.points.get(i).movePoint(angle.turnClockwise(Angle.A_180),
 				spaceBetweenParts));
 		}
 		this.headAngle = angle;
+	}
+
+	public int getAmountOfTiles() {
+		return size / 2;
 	}
 
 	public int getSize() {
@@ -43,7 +49,7 @@ public class Snake {
 	}
 
 	public Color getColor() {
-		return new Color(1 / 1.2f, 0, 0);
+		return this.team.getColor();
 	}
 
 	public Angle getHeadAngle() {
