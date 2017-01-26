@@ -8,14 +8,15 @@ import model.game.space.LocationHashMap;
  */
 public class Map {
 
+	public static final int gridSize = 150;
 	public DynamicList<Snake> snakes;
 	public LocationHashMap<SnakeTile> snakeCollisionMap;
 	public LocationHashMap<EatablePoint> eatablePoints;
 
 	public Map() {
 		this.snakes = new DynamicList<Snake>();
-		this.snakeCollisionMap = new LocationHashMap<>();
-		this.eatablePoints = new LocationHashMap<>();
+		this.snakeCollisionMap = new LocationHashMap<>(gridSize);
+		this.eatablePoints = new LocationHashMap<>(gridSize);
 	}
 
 }

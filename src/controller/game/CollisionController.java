@@ -32,7 +32,12 @@ public class CollisionController {
 	public boolean doesSnakeDie(Snake snake) {
 		PointI head = snake.getPoints().get(0).getPoint();
 		int maxDistance = Snake.getMaxTileRadius();
+
+		// Arrays.stream(new int[] {1,2,3,4,5}).map
+
 		this.map.snakeCollisionMap.forEachInRange(head, maxDistance, snakeTile -> {
+			if (snakeTile.blocksSnake(snake)) {
+			}
 			return snakeTile.blocksSnake(snake);
 		});
 		return false;

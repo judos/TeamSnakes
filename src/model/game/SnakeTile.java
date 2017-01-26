@@ -17,6 +17,8 @@ public class SnakeTile implements Locatable {
 	public boolean blocksSnake(Snake snake) {
 		if (snake == this.snake) // don't block yourself
 			return false;
+		if (snake.getTeam() == this.snake.getTeam())
+			return false;
 		PointF head = snake.getPoints().get(0);
 		double dist = head.distance(point);
 		return dist < this.snake.getTileRadius() + snake.getTileRadius();

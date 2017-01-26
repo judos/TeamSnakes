@@ -11,7 +11,6 @@ import controller.game.PlayerControls;
 import model.game.Map;
 import model.game.Options;
 import model.game.SnakeTile;
-import model.game.space.GridHashing;
 import view.Assets;
 
 public class BackgroundDrawer implements Drawable2d {
@@ -29,7 +28,7 @@ public class BackgroundDrawer implements Drawable2d {
 	@Override
 	public void paint(Graphics2D g) {
 		PointF center = this.controller.getFocusPoint();
-		int grid = GridHashing.gridSize;
+		int grid = Map.gridSize;
 		int gridsWidth = g.getClipBounds().width / grid;
 		int gridsHeight = g.getClipBounds().height / grid;
 		int gridOffsetX = center.getXI() / grid;

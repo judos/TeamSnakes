@@ -1,5 +1,17 @@
-new features:
+Outlook:
+	V 0.2 - Starting the game
+	+ Network implementation
 
+TODO:
+
++ snakes die on collision
++ dying snakes spawn extra points
+
+BUGS:
++ points don't show in grids
+- debug options doesn't show correct collision tiles amount
+
+V 0.1 - Working Core components
 Snake data model
 Control over snake
 maximal turning speed
@@ -17,7 +29,3 @@ snakes eat small points on map
 snakes can grow and shrink
 snakes shrink on speeding up
 Snake colors
- 
-+ snakes die on collision
-+ dying snakes spawn extra points
-+ Network implementation

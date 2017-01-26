@@ -117,4 +117,8 @@ public class Snake {
 		return "Snake " + this.index;
 	}
 
+	public SnakeTeam getTeam() {
+		return this.team;
+	}
+
 }

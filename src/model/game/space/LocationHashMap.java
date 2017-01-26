@@ -3,22 +3,28 @@ package model.game.space;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import ch.judos.generic.data.HashMapList;
 import ch.judos.generic.data.geometry.PointI;
 
 public class LocationHashMap<E extends Locatable> {
-	private HashMapList<Integer, E> hashMap;
+	private HashMapList<PointI, E> hashMap;
+	private int gridSize;
 
-	public LocationHashMap() {
-		this.hashMap = new HashMapList<Integer, E>();
+	public LocationHashMap(int gridSize) {
+		this.gridSize = gridSize;
+		this.hashMap = new HashMapList<PointI, E>();
 	}
 
 	public void put(E entity) {
 		PointI position = entity.getLocation();
-		Integer hashValue = GridHashing.hashPointIToMapIndex(position);
-		this.hashMap.put(hashValue, entity);
+		PointI gridPoint = hashPointToGridIndex(position);
+		this.hashMap.put(gridPoint, entity);
 	}
 
 	/**
@@ -39,13 +45,22 @@ public class LocationHashMap<E extends Locatable> {
 		});
 	}
 
+	public Stream<E> streamForRect(PointI min, PointI max) {
+		PointI minGridIndex = hashPointToGridIndex(min);
+		PointI maxGridIndex = hashPointToGridIndex(max);
+		int width = maxGridIndex.x - minGridIndex.x + 1;
+		int height = maxGridIndex.y - minGridIndex.y + 1;
+		return StreamSupport.stream(new RectangleSpliterator(minGridIndex, width, height),
+			true);
+	}
+
 	public void forEachInRect(PointI min, PointI max, Function<E, Boolean> consumer) {
-		PointI minGridIndex = GridHashing.hashPointToGridIndex(min);
-		PointI maxGridIndex = GridHashing.hashPointToGridIndex(max);
+		PointI minGridIndex = hashPointToGridIndex(min);
+		PointI maxGridIndex = hashPointToGridIndex(max);
 		for (int x = minGridIndex.x; x <= maxGridIndex.x; x++) {
 			for (int y = minGridIndex.y; y <= maxGridIndex.y; y++) {
-				int index = GridHashing.hashGridPointIntoMapIndex(new PointI(x, y));
-				ArrayList<E> list = this.hashMap.getList(index);
+				PointI gridIndex = hashPointToGridIndex(new PointI(x, y));
+				ArrayList<E> list = this.hashMap.getList(gridIndex);
 				if (list != null) {
 					for (E element : list) {
 						if (consumer.apply(element))
@@ -67,8 +82,7 @@ public class LocationHashMap<E extends Locatable> {
 	}
 
 	public ArrayList<E> forAllInGrid(int x, int y) {
-		int index = GridHashing.hashGridPointIntoMapIndex(new PointI(x, y));
-		ArrayList<E> list = this.hashMap.getList(index);
+		ArrayList<E> list = this.hashMap.getList(new PointI(x, y));
 		if (list != null) {
 			return list;
 		}
@@ -84,12 +98,67 @@ public class LocationHashMap<E extends Locatable> {
 	public void removeAll(List<E> entries) {
 		for (E entry : entries) {
 			PointI position = entry.getLocation();
-			Integer hashValue = GridHashing.hashPointIToMapIndex(position);
-			this.hashMap.removeValueForKey(hashValue, entry);
+			PointI gridIndex = hashPointToGridIndex(position);
+			this.hashMap.removeValueForKey(gridIndex, entry);
 		}
 	}
 
 	public int getSize() {
 		return this.hashMap.getSize();
+	}
+
+	public PointI hashPointToGridIndex(PointI point) {
+		return new PointI(Math.floorDiv(point.x, this.gridSize), Math.floorDiv(point.y,
+			this.gridSize));
+	}
+
+	private class RectangleSpliterator implements Spliterator<E> {
+		private int width;
+		private int height;
+		private PointI minGridIndex;
+		private int maxIndex;
+		private int currentIndex;
+
+		public RectangleSpliterator(PointI minGridIndex, int width, int height) {
+			this.minGridIndex = minGridIndex;
+			this.width = width;
+			this.height = height;
+			this.currentIndex = 0;
+			this.maxIndex = width * height - 1;
+		}
+
+		@Override
+		public boolean tryAdvance(Consumer<? super E> action) {
+			int ax = this.currentIndex % this.width;
+			int ay = this.currentIndex / this.width;
+			PointI gridIndex = this.minGridIndex.add(new PointI(ax, ay));
+			hashMap.getList(gridIndex).forEach(action);
+			this.currentIndex++;
+			return this.currentIndex <= this.maxIndex;
+		}
+
+		@Override
+		public Spliterator<E> trySplit() {
+			if (this.currentIndex == this.maxIndex)
+				return null;
+			int middleUp = (this.maxIndex - this.currentIndex + 1) / 2 + this.currentIndex;
+			RectangleSpliterator prefixIterator = new RectangleSpliterator(this.minGridIndex,
+				this.width, this.height);
+			prefixIterator.maxIndex = middleUp - 1;
+			prefixIterator.currentIndex = this.currentIndex;
+			this.currentIndex = middleUp;
+			return prefixIterator;
+		}
+
+		@Override
+		public long estimateSize() {
+			return this.maxIndex - this.currentIndex + 1;
+		}
+
+		@Override
+		public int characteristics() {
+			return CONCURRENT | DISTINCT | NONNULL | ORDERED;
+		}
+
 	}
 }
