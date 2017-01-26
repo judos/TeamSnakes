@@ -59,7 +59,7 @@ public class LocationHashMap<E extends Locatable> {
 		PointI maxGridIndex = hashPointToGridIndex(max);
 		for (int x = minGridIndex.x; x <= maxGridIndex.x; x++) {
 			for (int y = minGridIndex.y; y <= maxGridIndex.y; y++) {
-				PointI gridIndex = hashPointToGridIndex(new PointI(x, y));
+				PointI gridIndex = new PointI(x, y);
 				ArrayList<E> list = this.hashMap.getList(gridIndex);
 				if (list != null) {
 					for (E element : list) {

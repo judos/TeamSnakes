@@ -3,13 +3,11 @@ Outlook:
 	+ Network implementation
 
 TODO:
-
 + snakes die on collision
 + dying snakes spawn extra points
 
 BUGS:
-+ points don't show in grids
-- debug options doesn't show correct collision tiles amount
+-
 
 V 0.1 - Working Core components
 Snake data model

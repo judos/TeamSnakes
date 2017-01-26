@@ -52,7 +52,7 @@ public class BackgroundDrawer implements Drawable2d {
 				int gx = x + gridOffsetX;
 				int gy = y + gridOffsetY;
 				g.drawString(gx + "/" + gy, px, py);
-				ArrayList<SnakeTile> tiles = this.map.snakeCollisionMap.forAllInGrid(gy, gy);
+				ArrayList<SnakeTile> tiles = this.map.snakeCollisionMap.forAllInGrid(gx, gy);
 				String t = "";
 				if (tiles != null)
 					t = "T: " + tiles.size();
