@@ -3,3 +3,6 @@
 .idea/*
 !.idea/codeStyles/
 target
+
+# Local Environment
+application-local.properties
