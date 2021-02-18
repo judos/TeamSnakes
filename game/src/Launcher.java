@@ -1,6 +1,5 @@
 import java.util.Optional;
 
-import ch.judos.generic.control.Log;
 import controller.Game;
 import model.game.Map;
 import model.game.MapGenerator;
@@ -15,7 +14,7 @@ public class Launcher {
 		System.setProperty("sun.java2d.opengl", "True");
 		System.setProperty("sun.java2d.accthreshold", "0");
 
-		Log.setLevel(Log.Level.INFO);
+		// Log.setLevel(Log.Level.INFO);
 
 		Launcher launcher = new Launcher();
 		launcher.init();

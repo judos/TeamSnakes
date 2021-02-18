@@ -1,0 +1,4 @@
+12:05:27.787 INFO in loadAllAssets (Assets.java:68) loading Assets: 47 ms
+12:05:42.114 INFO in quit (Gui.java:178) quit
+12:05:42.130 INFO in renderingDidEnd (Gui.java:186) render thread finished
+12:05:42.130 INFO in renderingDidEnd (Gui.java:187) disposing frame

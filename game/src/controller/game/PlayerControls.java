@@ -1,8 +1,7 @@
 package controller.game;
 
 import java.awt.Dimension;
-
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 
 import ch.judos.generic.control.ActionCounter;
 import ch.judos.generic.data.geometry.Angle;
@@ -31,8 +30,8 @@ public class PlayerControls {
 
 	public void update() {
 		// speed up snake
-		if (this.inputController.isMouseButtonPressed(1) && this.snake.getSize() >= 10
-			+ decreaseAtOnce) {
+		if (this.inputController.isMouseButtonPressed(1)
+			&& this.snake.getSize() >= 10 + decreaseAtOnce) {
 			this.snake.speedupModifier = 2f;
 			if (this.sizeDecrease.action()) {
 				this.snake.changeSize(-decreaseAtOnce);
