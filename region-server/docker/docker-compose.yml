@@ -10,7 +10,7 @@ services:
       args:
         ENV: "${env}"
     volumes:
-      - /home/environments/immo/application.properties:/application.properties
+      - /home/environments/snakes/application.properties:/application.properties
     ports:
       - "${port}:8080"
     restart: unless-stopped
