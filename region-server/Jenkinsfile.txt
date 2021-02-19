@@ -16,7 +16,7 @@ node {
 			dir('region-server') {
 				sh 'pwd'
 				sh 'ls -lah'
-				sh 'which mvn'
+				// sh 'which mvn'
 				sh 'chmod +x mvnw'
 				sh './mvnw package'
 				sh 'cp target/teamsnakes-region-server.jar docker/'
