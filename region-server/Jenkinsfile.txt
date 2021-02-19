@@ -5,7 +5,7 @@ node {
 
 	// if root user is needed add '-u root'
 	// maven:3.6-adoptopenjdk-11
-	docker.image('alpine:3').inside('-v $HOME/.m2:/root/.m2 --name snakes-region-test-build') {
+	docker.image('adoptopenjdk:11-jre').inside('-v $HOME/.m2:/root/.m2 --name snakes-region-test-build') {
 		stage('Checkout') {
 			// fix some files belong to root and jenkins can't unlink them
 			//sh '[ -e src/main/generated ] || chown 1000:1000 -R src/main/generated'
