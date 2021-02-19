@@ -72,6 +72,8 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/kapt/compile" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/kaptKotlin/compile" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/inspectionProfiles" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

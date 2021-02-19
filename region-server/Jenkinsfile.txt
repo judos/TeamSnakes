@@ -1,0 +1,30 @@
+node {
+	def version="snapshot"
+	def port=11001
+	def env="test"
+
+	// if root user is needed add '-u root'
+	docker.image('maven:3.6-adoptopenjdk-11').inside('--name snakes-region-test-build') {
+		stage('Checkout') {
+			// fix some files belong to root and jenkins can't unlink them
+			//sh '[ -e src/main/generated ] || chown 1000:1000 -R src/main/generated'
+			checkout scm
+		}
+
+		stage('Build') {
+			sh './mvn package'
+			sh 'cp target/teamsnakes-region-server.jar docker/'
+		}
+
+	}
+
+	dir('docker') {
+		stage('Deploy') {
+			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region build"
+			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region stop"
+			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region up -d"
+		}
+	}
+}
+
+
