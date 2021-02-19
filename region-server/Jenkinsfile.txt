@@ -16,7 +16,7 @@ node {
 				sh 'pwd'
 				sh 'ls -lah'
 				sh 'which mvn'
-				sh './mvnw package'
+				sh 'mvn package'
 				sh 'cp target/teamsnakes-region-server.jar docker/'
 			}
 		}
