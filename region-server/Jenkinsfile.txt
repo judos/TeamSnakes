@@ -13,7 +13,7 @@ node {
 
 		stage('Build') {
 			dir('region-server') {
-				sh 'mvnw package'
+				sh './mvnw package'
 				sh 'cp target/teamsnakes-region-server.jar docker/'
 			}
 		}
