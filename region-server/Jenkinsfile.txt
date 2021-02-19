@@ -12,14 +12,16 @@ node {
 		}
 
 		stage('Build') {
-			sh 'mvnw package'
-			sh 'cp target/teamsnakes-region-server.jar docker/'
+			dir('region-server') {
+				sh 'mvnw package'
+				sh 'cp target/teamsnakes-region-server.jar docker/'
+			}
 		}
 
 	}
 
-	dir('docker') {
-		stage('Deploy') {
+	stage('Deploy') {
+		dir('region-server/docker') {
 			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region build"
 			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region stop"
 			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region up -d"
