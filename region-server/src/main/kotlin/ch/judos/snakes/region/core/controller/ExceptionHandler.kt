@@ -15,7 +15,7 @@ class ExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BusinessException::class)
 	fun handleBusinessException(exception: BusinessException): ResponseEntity<ErrorDto> {
-		return ResponseEntity.badRequest().body(ErrorDto(exception.key, exception.message, exception.details))
+		return ResponseEntity.badRequest().body(exception.toErrorDto())
 	}
 
 

@@ -1,7 +1,6 @@
 package ch.judos.snakes.region.core.config.auth
 
-import ch.judos.snakes.region.core.dto.AuthErrorDto
-import ch.judos.snakes.region.core.dto.EAuthError
+import ch.judos.snakes.region.core.dto.ErrorDto
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import org.slf4j.LoggerFactory
@@ -17,13 +16,13 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 class JwtRequestFilter @Autowired constructor(
-		private val jwtTokenUtil: JwtTokenUtil,
+	private val jwtTokenUtil: JwtTokenUtil,
 ) : OncePerRequestFilter() {
 
 	private val logger = LoggerFactory.getLogger(javaClass)!!
 
 	override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse,
-			filterChain: FilterChain) {
+		filterChain: FilterChain) {
 		val requestTokenHeader = request.getHeader("Authorization")
 
 		// JWT Token is in the form "Bearer token". Remove Bearer word and get
@@ -38,25 +37,22 @@ class JwtRequestFilter @Autowired constructor(
 						SecurityContextHolder.getContext().authentication = auth
 					}
 				} catch (e: ExpiredJwtException) {
-					return AuthErrorDto.jwtError(response, 401, EAuthError.EXPIRED_JWT, "JWT has expired")
+					return ErrorDto.invalidJwt("JWT has expired").writeToResponse(response)
 				} catch (e: OutdatedJwtException) {
-					return AuthErrorDto.jwtError(response, 401, EAuthError.EXPIRED_JWT,
-							"JWT has old structure: " + e.message)
+					return ErrorDto.invalidJwt("JWT has old structure: " + e.message)
+						.writeToResponse(response)
 				} catch (e: MalformedJwtException) {
-					return AuthErrorDto.jwtError(response, 401, EAuthError.INVALID_JWT,
-							"JWT has invalid form")
+					return ErrorDto.invalidJwt("JWT has invalid form").writeToResponse(response)
 				} catch (e: IllegalArgumentException) {
-					return AuthErrorDto.jwtError(response, 401, EAuthError.INVALID_JWT,
-							"Could not extract JWT data: " + e.message)
+					return ErrorDto.invalidJwt("Could not extract JWT data: " + e.message)
+						.writeToResponse(response)
 				} catch (e: SecurityException) {
-					return AuthErrorDto.jwtError(response, 401, EAuthError.INVALID_JWT,
-							"Invalid JWT signature")
+					return ErrorDto.invalidJwt("Invalid JWT signature").writeToResponse(response)
 				} catch (e: UsernameNotFoundException) {
-					return AuthErrorDto.jwtError(response, 401, EAuthError.INVALID_JWT, e.message!!)
+					return ErrorDto.invalidJwt(e.message!!).writeToResponse(response)
 				}
 			} else {
-				return AuthErrorDto.jwtError(response, 401, EAuthError.INVALID_JWT,
-						"JWT does not begin with Bearer")
+				return ErrorDto.invalidJwt("JWT does not begin with Bearer").writeToResponse(response)
 			}
 		}
 		filterChain.doFilter(request, response)
