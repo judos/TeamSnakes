@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ch.judos.ts-rs</groupId>
-	<artifactId>teamsnakes-region-server</artifactId>
+	<artifactId>region-server</artifactId>
 	<version>1.0.0</version>
-	<name>TeamSnakes Region-server</name>
+	<name>region-server</name>
 	<description>TeamSnakes Region-server</description>
 	<packaging>jar</packaging>
 
