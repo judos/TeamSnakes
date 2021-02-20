@@ -1,0 +1,9 @@
+# Alpine Linux with OpenJDK JRE
+FROM adoptopenjdk:11-jre-hotspot
+
+ADD region-server.jar region-server.jar
+
+ARG SPRINGPROFILE
+ENV SPRINGPROFILE ${SPRINGPROFILE}
+
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "-Dspring.profiles.active=${SPRINGPROFILE}", "/region-server.jar"]

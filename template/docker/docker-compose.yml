@@ -1,0 +1,16 @@
+
+version: '3.3'
+services:
+  snakes-region:
+    container_name: snakes-region
+    image: "snakes-region:${version}"
+    build:
+      context: .
+      dockerfile: Dockerfile.txt
+      args:
+        SPRINGPROFILE: "${env}"
+    volumes:
+      - /home/environments/snakes/application.properties:/application.properties
+    ports:
+      - "${port}:8080"
+    restart: unless-stopped
