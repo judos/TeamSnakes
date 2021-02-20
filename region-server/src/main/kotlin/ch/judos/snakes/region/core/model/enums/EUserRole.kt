@@ -1,5 +1,5 @@
 package ch.judos.snakes.region.core.model.enums
 
 enum class EUserRole {
-	APP, ADMIN
+	APP, ADMIN, GAME_SERVER
 }

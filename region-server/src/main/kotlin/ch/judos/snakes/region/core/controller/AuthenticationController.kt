@@ -25,8 +25,8 @@ import java.time.LocalDateTime
 
 
 @RestController
-@RequestMapping("admin/authenticate", produces = ["application/json"])
-class AuthenticationAdminController @Autowired constructor(
+@RequestMapping("/authenticate", produces = ["application/json"])
+class AuthenticationController @Autowired constructor(
 		private val authenticationManager: AuthenticationManager,
 		private val adminUserRepository: AdminUserRepository,
 		private val jwtTokenUtil: JwtTokenUtil,

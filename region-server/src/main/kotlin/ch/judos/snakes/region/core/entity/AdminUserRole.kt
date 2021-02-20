@@ -15,7 +15,7 @@ open class AdminUserRole : BaseEntity(), GrantedAuthority {
 	@JoinColumn(name = "admin_user_id")
 	open lateinit var adminUser: AdminUser
 
-	@Column(nullable = false, columnDefinition = "enum('USER','ADMIN')")
+	@Column(nullable = false, columnDefinition = "enum('USER','ADMIN','GAME_SERVER')")
 	@Enumerated(EnumType.STRING)
 	open lateinit var role: EUserRole
 

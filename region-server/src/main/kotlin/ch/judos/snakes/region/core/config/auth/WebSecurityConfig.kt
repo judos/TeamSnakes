@@ -52,19 +52,17 @@ class WebSecurityConfig @Autowired constructor(
 		httpSecurity.cors()
 
 		// Admin UI generally locked, except login method
-		httpSecurity.authorizeRequests().antMatchers("/admin/authenticate").permitAll()
-		httpSecurity.authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
+		httpSecurity.authorizeRequests().antMatchers("/authenticate").permitAll()
 
 		// App endpoints, some open, some require login
 		httpSecurity.authorizeRequests().antMatchers("/public/**").permitAll()
+		httpSecurity.authorizeRequests().antMatchers("/test/**").permitAll()
+		httpSecurity.authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
 		httpSecurity.authorizeRequests().antMatchers("/user/**").hasAuthority("APP")
 
 		httpSecurity.authorizeRequests().antMatchers("/swagger-ui.html").permitAll()
 		httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
 		httpSecurity.authorizeRequests().antMatchers("/v3/api-docs/**").permitAll()
-
-		httpSecurity.authorizeRequests().antMatchers("/test/**").permitAll()
-
 		httpSecurity.authorizeRequests().anyRequest().permitAll()
 
 		httpSecurity.exceptionHandling().authenticationEntryPoint(JwtAuthenticationEntryPoint())
