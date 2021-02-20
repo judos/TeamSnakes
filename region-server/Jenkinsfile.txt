@@ -19,10 +19,9 @@ node {
 				// sh 'which mvn'
 				sh 'chmod +x mvnw'
 				sh './mvnw package'
-				sh 'cp target/teamsnakes-region-server.jar docker/'
+				sh 'cp target/region-server.jar docker/'
 			}
 		}
-
 	}
 
 	stage('Deploy') {

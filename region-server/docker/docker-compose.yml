@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile.txt
       args:
-        ENV: "${env}"
+        SPRINGPROFILE: "${env}"
     volumes:
       - /home/environments/snakes/application.properties:/application.properties
     ports:
