@@ -1,26 +1,17 @@
+import controller.AppProperties
 import java.io.BufferedReader
-import java.io.FileReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 
 
 class GameServerLauncher() {
-	init {
-		val p = Properties()
-		val fileReader = FileReader(javaClass.getResource("application.properties").file)
-		p.load(fileReader)
-		val propertyMap = HashMap<String, String>()
-		val keys: Enumeration<*> = p.propertyNames()
-		while (keys.hasMoreElements()) {
-			val key = keys.nextElement() as String
-			propertyMap[key] = p.getProperty(key)
-		}
-		fileReader.close()
-		println(propertyMap)
 
+//	private val logger = LoggerFactory.getLogger(javaClass)!!
+
+	init {
+		val properties = AppProperties()
 		sendPostRequest("http://localhost:8080/gameserver/update", "{}")
 	}
 
@@ -28,6 +19,7 @@ class GameServerLauncher() {
 		return try {
 			val url = URL(requestUrl)
 			val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+
 			connection.setDoInput(true)
 			connection.setDoOutput(true)
 			connection.setRequestMethod("POST")
