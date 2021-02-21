@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse
 class LoggerRequestInterceptor : HandlerInterceptorAdapter() {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
+	override fun preHandle(request: HttpServletRequest, response: HttpServletResponse,
+		handler: Any): Boolean {
 		if (request.queryString != null) {
-			logger.info("{} {} ? {} ({})", request.method, request.requestURI, request.queryString, authInformation())
+			logger.info("{} {} ? {} ({})", request.method, request.requestURI, request.queryString,
+				authInformation())
 		} else {
 			logger.info("{} {} ({})", request.method, request.requestURI, authInformation())
 		}
@@ -24,15 +26,16 @@ class LoggerRequestInterceptor : HandlerInterceptorAdapter() {
 
 	@Throws(Exception::class)
 	override fun postHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any,
-			modelAndView: ModelAndView?) {
-		logger.info("{} for {} {} ({})", response.status, request.method, request.requestURI, authInformation())
+		modelAndView: ModelAndView?) {
+		logger.info("{} for {} {} ({})", response.status, request.method, request.requestURI,
+			authInformation())
 	}
 
 	private fun authInformation(): String {
 		val auth = SecurityContextHolder.getContext().authentication
 		if (auth is UsernamePasswordAuthenticationToken) {
 			try {
-				return auth.details.toString() + " " + auth.principal.toString()
+				return auth.details.toString() + " " + auth.principal.toString() + " " + auth.authorities
 			} catch (e: IllegalArgumentException) {
 				e.printStackTrace()
 			}

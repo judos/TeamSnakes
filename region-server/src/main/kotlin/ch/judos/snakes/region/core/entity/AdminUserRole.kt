@@ -23,4 +23,7 @@ open class AdminUserRole : BaseEntity(), GrantedAuthority {
 		return this.role.name
 	}
 
+	override fun toString(): String {
+		return authority
+	}
 }

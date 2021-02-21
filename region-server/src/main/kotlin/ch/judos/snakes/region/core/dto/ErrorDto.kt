@@ -1,5 +1,6 @@
 package ch.judos.snakes.region.core.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.ResponseEntity
 import javax.servlet.http.HttpServletResponse
@@ -8,7 +9,7 @@ class ErrorDto constructor(
 	var key: String,
 	var message: String,
 	var details: Any? = null,
-	@Transient val code: Int? = null
+	@JsonIgnore val code: Int? = null
 ) {
 
 	constructor(key: String, message: String, details: Any?) : this(

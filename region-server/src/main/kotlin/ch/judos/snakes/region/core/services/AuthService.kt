@@ -19,9 +19,6 @@ class AuthService @Autowired constructor(
 
 	fun getAdminUser(): AdminUser? {
 		val auth = SecurityContextHolder.getContext().authentication
-		if (auth.details != EUserRole.ADMIN.name) {
-			return null;
-		}
 		val login = auth.principal
 		if (login is Long) {
 			// fetch object with id

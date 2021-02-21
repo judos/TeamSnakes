@@ -1,4 +1,4 @@
-package ch.judos.snakes.region.clients.dto
+package ch.judos.snakes.region.client.dto
 
 import ch.judos.snakes.region.gameserver.dto.LobbyDto
 

@@ -20,6 +20,10 @@ class GameServer(
 	}
 
 	fun isOlderThanS(seconds: Int): Boolean {
-		return Duration.between(LocalDateTime.now(), this.lastUpdate).seconds >= seconds
+		return Duration.between(this.lastUpdate, LocalDateTime.now()).seconds >= seconds
+	}
+
+	override fun toString(): String {
+		return this.url + " " + this.gameModes + " lobbies: " + this.lobbies.size
 	}
 }

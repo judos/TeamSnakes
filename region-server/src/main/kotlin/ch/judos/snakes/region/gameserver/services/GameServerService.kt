@@ -5,11 +5,13 @@ import ch.judos.snakes.region.extension.firstMissingNumber
 import ch.judos.snakes.region.gameserver.dto.LobbyDto
 import ch.judos.snakes.region.gameserver.dto.RegisterDto
 import ch.judos.snakes.region.gameserver.model.GameServer
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
 class GameServerService {
+	private val logger = LoggerFactory.getLogger(javaClass)
 
 	val servers: MutableMap<Long, GameServer> = HashMap()
 
@@ -26,6 +28,7 @@ class GameServerService {
 				val serverNr = getServerNumber()
 				server =
 					GameServer(request.url, request.gameModes, request.currentLoad, serverNr, request.lobbies)
+				request.lobbies.forEach { lobbies[it.name] = it }
 				servers[user.id] = server!!
 			}
 		}
@@ -46,6 +49,7 @@ class GameServerService {
 			while (it.hasNext()) {
 				val server = it.next().value
 				if (server.isOlderThanS(62)) {
+					logger.info("Timeout game-server $server")
 					it.remove()
 					server.lobbies.forEach { lobbies.remove(it.name) }
 				}

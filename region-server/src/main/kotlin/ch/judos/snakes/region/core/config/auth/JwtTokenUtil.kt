@@ -66,7 +66,7 @@ class JwtTokenUtil @Autowired constructor(
 				QAdminUser.adminUser.username.eq(username).and(QAdminUser.adminUser.uuid.eq(uuid)))
 				?: throw UsernameNotFoundException("User not found with username: $tokenClaims.subject")
 		val auth = UsernamePasswordAuthenticationToken(user.id, null, user.authorities)
-		auth.details = EUserRole.ADMIN.name
+		auth.details = user.username
 		return auth
 	}
 
