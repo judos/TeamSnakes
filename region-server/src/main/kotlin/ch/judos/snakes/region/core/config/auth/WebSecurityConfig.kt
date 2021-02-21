@@ -21,8 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig @Autowired constructor(
-		private val userDetailsAdminService: UserDetailsAdminService,
-		private val jwtRequestFilter: JwtRequestFilter
+	private val userDetailsAdminService: UserDetailsAdminService,
+	private val jwtRequestFilter: JwtRequestFilter
 ) : WebSecurityConfigurerAdapter() {
 
 	@Autowired
@@ -55,10 +55,10 @@ class WebSecurityConfig @Autowired constructor(
 		httpSecurity.authorizeRequests().antMatchers("/authenticate").permitAll()
 
 		// App endpoints, some open, some require login
-		httpSecurity.authorizeRequests().antMatchers("/public/**").permitAll()
 		httpSecurity.authorizeRequests().antMatchers("/test/**").permitAll()
+		httpSecurity.authorizeRequests().antMatchers("/clients/**").permitAll()
 		httpSecurity.authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
-		httpSecurity.authorizeRequests().antMatchers("/user/**").hasAuthority("APP")
+		httpSecurity.authorizeRequests().antMatchers("/gameserver/**").hasAuthority("GAME_SERVER")
 
 		httpSecurity.authorizeRequests().antMatchers("/swagger-ui.html").permitAll()
 		httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
@@ -66,7 +66,7 @@ class WebSecurityConfig @Autowired constructor(
 		httpSecurity.authorizeRequests().anyRequest().permitAll()
 
 		httpSecurity.exceptionHandling().authenticationEntryPoint(JwtAuthenticationEntryPoint())
-				.accessDeniedHandler(JwtAccessDeniedHandler())
+			.accessDeniedHandler(JwtAccessDeniedHandler())
 		// make sure we use stateless session; session won't be used to store user's state.
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
