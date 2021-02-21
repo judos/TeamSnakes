@@ -1,8 +1,8 @@
-package ch.judos.snakes.region.core.services.login
+package ch.judos.snakes.region.core.service.login
 
 import ch.judos.snakes.region.core.model.enums.ELoginException
 import ch.judos.snakes.region.core.model.enums.ELoginType
-import ch.judos.snakes.region.core.services.LoginAttemptService
+import ch.judos.snakes.region.core.service.LoginAttemptService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationListener

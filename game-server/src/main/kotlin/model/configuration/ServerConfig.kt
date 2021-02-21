@@ -3,6 +3,11 @@ package model.configuration
 class ServerConfig {
 
 	var port: Int = 0
-	var url: String = ""
+	lateinit var url: String
+	lateinit var region: RegionConfig
+
+	fun getServerAddress(): String {
+		return "$url:$port"
+	}
 
 }

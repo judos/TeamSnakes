@@ -3,7 +3,7 @@ package ch.judos.snakes.region.core.controller
 import ch.judos.snakes.region.core.dto.EncodingDto
 import ch.judos.snakes.region.core.dto.LoginDto
 import ch.judos.snakes.region.core.model.enums.EUserRole
-import ch.judos.snakes.region.core.services.AuthService
+import ch.judos.snakes.region.core.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.slf4j.LoggerFactory

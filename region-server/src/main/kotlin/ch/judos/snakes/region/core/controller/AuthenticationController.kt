@@ -7,7 +7,7 @@ import ch.judos.snakes.region.core.dto.LoginRequestDto
 import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.core.model.enums.ELoginType
 import ch.judos.snakes.region.core.repository.AdminUserRepository
-import ch.judos.snakes.region.core.services.LoginAttemptService
+import ch.judos.snakes.region.core.service.LoginAttemptService
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse

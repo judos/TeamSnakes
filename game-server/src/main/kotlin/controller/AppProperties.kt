@@ -3,14 +3,13 @@ package controller
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper
 import model.configuration.Configuration
 import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import java.io.FileReader
 import java.util.*
 
 class AppProperties {
 
-	private var configuration: Configuration?
-	private val logger: Logger = LogManager.getLogger(javaClass)
+	var configuration: Configuration
+	private val logger = LogManager.getLogger(javaClass)!!
 
 	init {
 		val mapper = JavaPropsMapper()

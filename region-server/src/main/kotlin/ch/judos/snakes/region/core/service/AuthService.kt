@@ -1,7 +1,6 @@
-package ch.judos.snakes.region.core.services
+package ch.judos.snakes.region.core.service
 
 import ch.judos.snakes.region.core.entity.AdminUser
-import ch.judos.snakes.region.core.model.enums.EUserRole
 import ch.judos.snakes.region.core.repository.AdminUserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired

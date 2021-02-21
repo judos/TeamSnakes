@@ -1,4 +1,4 @@
-package ch.judos.snakes.region.core.services
+package ch.judos.snakes.region.core.service
 
 import org.springframework.stereotype.Service
 

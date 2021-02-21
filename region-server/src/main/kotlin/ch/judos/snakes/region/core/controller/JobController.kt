@@ -1,7 +1,7 @@
 package ch.judos.snakes.region.core.controller
 
 import ch.judos.snakes.region.core.model.AsyncJob
-import ch.judos.snakes.region.core.services.AsyncJobService
+import ch.judos.snakes.region.core.service.AsyncJobService
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity

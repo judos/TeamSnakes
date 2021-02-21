@@ -1,4 +1,4 @@
-package ch.judos.snakes.region.core.services.validator
+package ch.judos.snakes.region.core.service.validator
 
 
 import javax.validation.Constraint

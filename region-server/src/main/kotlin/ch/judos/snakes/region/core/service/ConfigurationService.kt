@@ -1,4 +1,4 @@
-package ch.judos.snakes.region.core.services
+package ch.judos.snakes.region.core.service
 
 import ch.judos.snakes.region.core.repository.ConfigurationRepository
 import org.springframework.beans.factory.annotation.Autowired
