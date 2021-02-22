@@ -1,8 +1,8 @@
 package dto
 
 class LoginRequestDto(
-	private val username: String,
-	private val password: String
+	val username: String,
+	val password: String
 ) {
 
 }
