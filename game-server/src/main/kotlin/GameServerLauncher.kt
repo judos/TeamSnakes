@@ -1,5 +1,6 @@
 import controller.AppProperties
-import controller.RegisterServer
+import controller.HttpController
+import controller.RegionController
 import org.apache.logging.log4j.LogManager
 
 
@@ -9,7 +10,9 @@ class GameServerLauncher() {
 
 	init {
 		val properties = AppProperties()
-		val register = RegisterServer(properties.configuration)
+		val http = HttpController(properties.config)
+		val region = RegionController(http, properties.config)
+		region.register()
 	}
 
 }

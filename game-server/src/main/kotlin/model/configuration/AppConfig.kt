@@ -2,7 +2,7 @@ package model.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
-class Configuration {
+class AppConfig {
 
 	lateinit var server: ServerConfig
 
