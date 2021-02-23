@@ -16,7 +16,7 @@ class HttpController(
 
 	init {
 		val client: Client = ClientBuilder.newClient(ClientConfig())
-		this.target = client.target(appConfig.server.region.url)!!
+		this.target = client.target(appConfig.region.url)!!
 	}
 
 	fun <T> post(path: String, obj: Any, returnType: Class<T>): T {

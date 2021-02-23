@@ -6,7 +6,6 @@ class ServerConfig {
 
 	var port: Int = 0
 	lateinit var url: String
-	lateinit var region: RegionConfig
 
 	@JsonIgnore
 	fun getServerAddress(): String {
