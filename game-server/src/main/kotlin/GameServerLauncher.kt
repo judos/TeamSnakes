@@ -54,7 +54,7 @@ class GameServerLauncher() {
 			}
 			if (region.isConnected()) {
 				if (System.currentTimeMillis() - lastLog > 60 * 1000) {
-					logger.info(lobby)
+					logger.info("Connected, lobby state: $lobby")
 					lastLog = System.currentTimeMillis()
 				}
 				region.reportServerStats(lobby)

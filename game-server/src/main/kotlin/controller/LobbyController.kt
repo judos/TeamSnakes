@@ -8,7 +8,7 @@ class LobbyController {
 		// TODO: implement
 	}
 
-	fun getStats(): String {
+	override fun toString(): String {
 		return "0 lobbies"
 	}
 

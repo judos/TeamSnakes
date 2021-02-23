@@ -22,8 +22,8 @@ class GameServerService {
 
 	fun register(user: AdminUser, request: GameserverConnectDto): Int {
 		var server = servers[user.id]
+		logger.info("register server ${user.id}")
 		if (server != null) {
-			logger.info("update server ${user.id}")
 		} else {
 			synchronized(servers) {
 				val serverNr = getServerNumber()
@@ -40,11 +40,17 @@ class GameServerService {
 		val thread = Thread({
 			val socket = Socket(request.host, request.port)
 			val connection = Connection(socket) {}
-			connection.out.println("region:${request.token}")
-			Thread.sleep(30000)
-			connection.out.flush()
-			Thread.sleep(30000)
-			connection.close()
+			try {
+				connection.out.println("region:${request.token}")
+				Thread.sleep(1000)
+				connection.out.flush()
+				while (true) {
+					val line = connection.inp.readLine()
+					logger.info("msg from $server: $line")
+				}
+			} finally {
+				connection.close()
+			}
 		}, "Game Server $server")
 		thread.isDaemon = true
 		thread.start()

@@ -55,6 +55,7 @@ class RegionController(
 				connection.close()
 				return
 			}
+			logger.info("Accepted region connection")
 			this.connection = connection
 			listenToRegionConnection()
 		}
@@ -67,7 +68,7 @@ class RegionController(
 			try {
 				do {
 					input = connection.inp.readLine()
-
+					logger.info("msg from region: $input")
 				} while (true)
 			} finally {
 				synchronized(connectionAccess) {
@@ -86,7 +87,7 @@ class RegionController(
 			}
 			val connection = this.connection!!
 			connection.out.println("stats")
-			connection.out.println(lobby.getStats())
+			connection.out.println(lobby.toString())
 		}
 	}
 
