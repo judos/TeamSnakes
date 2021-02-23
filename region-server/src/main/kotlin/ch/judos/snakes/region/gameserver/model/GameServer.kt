@@ -5,14 +5,18 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class GameServer(
-	var url: String, var gameModes: List<String>, var currentLoad: Double, val serverNr: Int,
-	var lobbies: List<LobbyDto>
+	var host: String,
+	var port: Int,
+	var gameModes: List<String>,
+	val serverNr: Int,
 ) {
+	var lobbies: List<LobbyDto> = listOf()
+	var currentLoad: Double = 1.0
 
 	var lastUpdate: LocalDateTime = LocalDateTime.now()
 
-	fun update(url: String, gameModes: List<String>, currentLoad: Double, lobbies: List<LobbyDto>) {
-		this.url = url
+	fun update(host: String, gameModes: List<String>, currentLoad: Double, lobbies: List<LobbyDto>) {
+		this.host = host
 		this.gameModes = gameModes
 		this.currentLoad = currentLoad
 		this.lobbies = lobbies
@@ -24,6 +28,6 @@ class GameServer(
 	}
 
 	override fun toString(): String {
-		return this.url + " " + this.gameModes + " lobbies: " + this.lobbies.size
+		return this.host + " " + this.gameModes + " lobbies: " + this.lobbies.size
 	}
 }

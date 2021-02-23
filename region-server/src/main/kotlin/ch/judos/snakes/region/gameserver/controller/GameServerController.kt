@@ -1,8 +1,8 @@
 package ch.judos.snakes.region.gameserver.controller
 
+import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.region.core.dto.ErrorDto
 import ch.judos.snakes.region.core.service.AuthService
-import ch.judos.snakes.region.gameserver.dto.RegisterDto
 import ch.judos.snakes.region.gameserver.services.GameServerService
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -25,7 +25,7 @@ class GameServerController @Autowired constructor(
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
-	@PostMapping(path = ["update"])
+	@PostMapping(path = ["connect"])
 	@ApiResponses(
 		value = [
 //		ApiResponse(responseCode = "200",
@@ -37,7 +37,7 @@ class GameServerController @Autowired constructor(
 			)
 		]
 	)
-	fun register(@RequestBody request: RegisterDto): ResponseEntity<Any> {
+	fun connect(@RequestBody request: GameserverConnectDto): ResponseEntity<Any> {
 		val user = this.authService.getAdminUser() ?: return ErrorDto.notLoggedIn.toResponse()
 		val serverNr = this.gameServerService.register(user, request)
 		return ResponseEntity.ok(serverNr)

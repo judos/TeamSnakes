@@ -1,6 +1,6 @@
 package controller
 
-import model.configuration.Connection
+import ch.judos.snakes.common.model.Connection
 
 class LobbyController {
 

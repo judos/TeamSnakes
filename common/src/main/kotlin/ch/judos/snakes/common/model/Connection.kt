@@ -1,4 +1,4 @@
-package model.configuration
+package ch.judos.snakes.common.model
 
 import java.io.BufferedReader
 import java.io.Closeable
@@ -8,7 +8,7 @@ import java.net.Socket
 
 class Connection(
 	socket: Socket,
-	private val close: (Connection) -> Boolean
+	private val close: (Connection) -> Unit
 ) : Closeable {
 
 	var out: PrintWriter

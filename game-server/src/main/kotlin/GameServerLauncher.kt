@@ -1,8 +1,5 @@
-import controller.AppProperties
-import controller.HttpController
-import controller.LobbyController
-import controller.RegionController
-import model.configuration.Connection
+import ch.judos.snakes.common.model.Connection
+import controller.*
 import org.apache.logging.log4j.LogManager
 import service.RandomService
 import java.net.ServerSocket
@@ -14,6 +11,7 @@ class GameServerLauncher() {
 
 	private val logger = LogManager.getLogger(javaClass)!!
 
+	private var game: GameController
 	private var random: RandomService
 	private var lobby: LobbyController
 	private var region: RegionController
@@ -27,7 +25,8 @@ class GameServerLauncher() {
 		this.properties = AppProperties()
 		this.random = RandomService()
 		this.http = HttpController(properties.config)
-		this.region = RegionController(http, properties.config, random)
+		this.game = GameController()
+		this.region = RegionController(http, properties.config, random, game)
 		this.lobby = LobbyController()
 
 		this.acceptIncomingConnections()

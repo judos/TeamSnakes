@@ -2,6 +2,7 @@ package controller
 
 import model.configuration.AppConfig
 import org.glassfish.jersey.client.ClientConfig
+import java.util.*
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.Entity
@@ -12,6 +13,7 @@ class HttpController(
 	private val appConfig: AppConfig
 ) {
 
+	var jwt: String? = null
 	private var target: WebTarget
 
 	init {
@@ -20,11 +22,15 @@ class HttpController(
 	}
 
 	fun <T> post(path: String, obj: Any, returnType: Class<T>): T {
-		val response = target.path(path).request()
+		var builder = target.path(path).request()
 			.accept(MediaType.APPLICATION_JSON)
-			.post(Entity.json(obj))
+		if (jwt != null) {
+			builder = builder.header("Authorization", "Bearer $jwt")
+		}
+		val response = builder.post(Entity.json(obj))
 		if (response.status / 100 != 2) {
-			throw RuntimeException("request failed " + response.status)
+			val error = response.readEntity(HashMap::class.java)
+			throw RuntimeException("request failed ${response.status} returned: $error")
 		}
 		return response.readEntity(returnType)
 	}

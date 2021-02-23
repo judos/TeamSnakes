@@ -1,8 +1,9 @@
 package controller
 
 import ch.judos.snakes.common.dto.AuthSuccessDto
+import ch.judos.snakes.common.dto.GameserverConnectDto
+import ch.judos.snakes.common.model.Connection
 import model.configuration.AppConfig
-import model.configuration.Connection
 import org.apache.logging.log4j.LogManager
 import service.RandomService
 
@@ -10,11 +11,11 @@ import service.RandomService
 class RegionController(
 	private val http: HttpController,
 	private val config: AppConfig,
-	private val random: RandomService
+	private val random: RandomService,
+	private val game: GameController
 ) {
 	private val logger = LogManager.getLogger(javaClass)!!
 
-	private var jwt: String? = null
 	private var regionToken: String = ""
 	private var connection: Connection? = null
 	private val connectionAccess = Object()
@@ -25,10 +26,16 @@ class RegionController(
 		try {
 			logger.info("Connecting to region...")
 			val response = this.http.post("authenticate", data, AuthSuccessDto::class.java)
-			this.jwt = response.jwt
+			this.http.jwt = response.jwt
 			logger.info("Login to region successful, waiting for connection...")
+
+			val data2 = GameserverConnectDto(regionToken, config.server.url, config.server.port,
+				game.getSupportedGameModes())
+			val response2 = this.http.post("gameserver/connect", data2, Integer::class.java)
+			logger.info("Received server nr: $response2")
+
 		} catch (exception: Exception) {
-			throw RuntimeException("Couldn't authenticate to region server", exception)
+			logger.warn("Couldn't authenticate to region server: $exception")
 		}
 	}
 
