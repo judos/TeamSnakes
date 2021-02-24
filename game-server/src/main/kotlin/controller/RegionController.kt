@@ -5,10 +5,12 @@ import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.messages.region.GameUpdate
 import ch.judos.snakes.common.model.Connection
+import com.sun.management.OperatingSystemMXBean
 import model.configuration.AppConfig
 import org.apache.logging.log4j.LogManager
 import service.RandomService
 import java.lang.management.ManagementFactory
+import java.net.SocketException
 
 
 class RegionController(
@@ -72,6 +74,8 @@ class RegionController(
 					data = connection.inp.readUnshared()
 					logger.info("unknown msg from region: $data")
 				} while (true)
+			} catch (e: SocketException) {
+				logger.info("Region connection lost: " + e.message)
 			} finally {
 				this.connection = null
 			}
@@ -82,7 +86,7 @@ class RegionController(
 
 	fun reportServerStats(lobby: LobbyController) {
 		val connection = this.connection ?: return
-		val bean = ManagementFactory.getOperatingSystemMXBean()
+		val bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
 		val loadAvg = if (bean.systemLoadAverage < 0) 0.8 else bean.systemLoadAverage
 		connection.out.writeUnshared(GameUpdate(loadAvg, lobby.getLobbiesInfo()))
 	}

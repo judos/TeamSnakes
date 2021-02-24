@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.net.Socket
+import java.net.SocketException
 
 @Service
 class GameServerService {
@@ -50,6 +51,8 @@ class GameServerService {
 						logger.info("unknown msg from $server: $data")
 					}
 				}
+			} catch (e: SocketException) {
+				logger.info("Game Server $server socket closed")
 			} finally {
 				connection.close()
 				synchronized(this.servers) {
