@@ -21,6 +21,7 @@ class ClientController @Autowired constructor(
 
 	@GetMapping(path = [""])
 	fun getRegion(): ResponseEntity<RegionDto> {
-		return ResponseEntity.ok(RegionDto(appProperties.regionName, appProperties.otherRegions, this.gameServerService.gameModes(), this.gameServerService.lobbies.values))
+		return ResponseEntity.ok(RegionDto(appProperties.regionName, appProperties.otherRegions,
+			this.gameServerService.gameModes(), this.gameServerService.getLobbies()))
 	}
 }

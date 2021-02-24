@@ -1,23 +1,21 @@
 package ch.judos.snakes.region.gameserver.model
 
-import ch.judos.snakes.region.gameserver.dto.LobbyDto
+import ch.judos.snakes.common.messages.region.LobbyInfo
 import java.time.Duration
 import java.time.LocalDateTime
 
 class GameServer(
-	var host: String,
-	var port: Int,
-	var gameModes: List<String>,
+	val host: String,
+	val port: Int,
+	val gameModes: List<String>,
 	val serverNr: Int,
 ) {
-	var lobbies: List<LobbyDto> = listOf()
+	var lobbies: List<LobbyInfo> = listOf()
 	var currentLoad: Double = 1.0
 
 	var lastUpdate: LocalDateTime = LocalDateTime.now()
 
-	fun update(host: String, gameModes: List<String>, currentLoad: Double, lobbies: List<LobbyDto>) {
-		this.host = host
-		this.gameModes = gameModes
+	fun update(currentLoad: Double, lobbies: List<LobbyInfo>) {
 		this.currentLoad = currentLoad
 		this.lobbies = lobbies
 		this.lastUpdate = LocalDateTime.now()
@@ -28,6 +26,6 @@ class GameServer(
 	}
 
 	override fun toString(): String {
-		return this.host + " " + this.gameModes + " lobbies: " + this.lobbies.size
+		return this.host + " [" + this.gameModes + "] lobbies: " + this.lobbies.size
 	}
 }

@@ -1,3 +1,4 @@
+import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.model.Connection
 import controller.*
 import org.apache.logging.log4j.LogManager
@@ -26,8 +27,8 @@ class GameServerLauncher() {
 		this.random = RandomService()
 		this.http = HttpController(properties.config)
 		this.game = GameController()
-		this.region = RegionController(http, properties.config, random, game)
 		this.lobby = LobbyController()
+		this.region = RegionController(http, properties.config, random, game)
 
 		this.acceptIncomingConnections()
 
@@ -82,12 +83,12 @@ class GameServerLauncher() {
 	private fun acceptConnection(socket: Socket) {
 		val connection = Connection(socket, connections::remove)
 		connections.add(connection)
-		val hello = connection.inp.readLine()
+		val hello = connection.inp.readUnshared()
 			?: return logger.warn("Connection dropped before identified")
-		if (hello.startsWith("region")) {
+		if (hello is RegionLogin) {
 			this.region.acceptConnection(connection, hello)
-		} else if (hello.startsWith("lobby")) {
-			this.lobby.acceptConnection(connection, hello)
+//		} else if (hello.startsWith("lobby")) {
+//			this.lobby.acceptConnection(connection, hello)
 		} else {
 			logger.error("Invalid hello string from connection: $hello")
 			connection.close()

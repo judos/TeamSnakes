@@ -1,5 +1,6 @@
 package controller
 
+import ch.judos.snakes.common.messages.region.LobbyInfo
 import ch.judos.snakes.common.model.Connection
 
 class LobbyController {
@@ -10,6 +11,10 @@ class LobbyController {
 
 	override fun toString(): String {
 		return "0 lobbies"
+	}
+
+	fun getLobbiesInfo(): List<LobbyInfo> {
+		return listOf()
 	}
 
 }

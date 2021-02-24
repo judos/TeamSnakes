@@ -1,11 +1,12 @@
 package ch.judos.snakes.region.gameserver.services
 
 import ch.judos.snakes.common.dto.GameserverConnectDto
+import ch.judos.snakes.common.messages.game.RegionLogin
+import ch.judos.snakes.common.messages.region.GameUpdate
+import ch.judos.snakes.common.messages.region.LobbyInfo
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.extension.firstMissingNumber
-import ch.judos.snakes.region.gameserver.dto.LobbyDto
-import ch.judos.snakes.region.gameserver.dto.RegisterDto
 import ch.judos.snakes.region.gameserver.model.GameServer
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -18,60 +19,46 @@ class GameServerService {
 
 	val servers: MutableMap<Long, GameServer> = HashMap()
 
-	val lobbies: HashMap<String, LobbyDto> = HashMap()
-
 	fun register(user: AdminUser, request: GameserverConnectDto): Int {
-		var server = servers[user.id]
-		logger.info("register server ${user.id}")
-		if (server != null) {
-		} else {
-			synchronized(servers) {
-				val serverNr = getServerNumber()
-				server =
-					GameServer(request.host, request.port, request.gameModes, serverNr)
-				servers[user.id] = server!!
-			}
+		var server: GameServer
+		synchronized(servers) {
+			servers.remove(user.id)
+			logger.info("register server ${user.id}")
+			val serverNr = getServerNumber()
+			server =
+				GameServer(request.host, request.port, request.gameModes, serverNr)
+			servers[user.id] = server
 		}
-		listenToGameServer(server!!, request)
-		return server!!.serverNr
+		listenToGameServer(user, server, request)
+		return server.serverNr
 	}
 
-	private fun listenToGameServer(server: GameServer, request: GameserverConnectDto) {
+	private fun listenToGameServer(user: AdminUser, server: GameServer,
+		request: GameserverConnectDto) {
 		val thread = Thread({
 			val socket = Socket(request.host, request.port)
 			val connection = Connection(socket) {}
 			try {
-				connection.out.println("region:${request.token}")
-				Thread.sleep(1000)
+				connection.out.writeUnshared(RegionLogin(request.token))
 				connection.out.flush()
 				while (true) {
-					val line = connection.inp.readLine()
-					logger.info("msg from $server: $line")
+					val data = connection.inp.readObject()
+					if (data is GameUpdate) {
+						logger.info("update from $server: $data")
+						server.update(data.currentLoad, data.lobbies)
+					} else {
+						logger.info("unknown msg from $server: $data")
+					}
 				}
 			} finally {
 				connection.close()
+				synchronized(this.servers) {
+					this.servers.remove(user.id)
+				}
 			}
 		}, "Game Server $server")
 		thread.isDaemon = true
 		thread.start()
-	}
-
-
-	fun update(user: AdminUser, request: RegisterDto) {
-//		var server = servers[user.id]
-//		if (server != null) {
-//			server.lobbies.forEach { lobbies.remove(it.name) }
-//			request.lobbies.forEach { lobbies[it.name] = it }
-//			server.update(request.url, request.gameModes, request.currentLoad, request.lobbies)
-//		} else {
-//			synchronized(servers) {
-//				val serverNr = getServerNumber()
-//				server =
-//					GameServer(request.url, request.gameModes, request.currentLoad, serverNr, request.lobbies)
-//				request.lobbies.forEach { lobbies[it.name] = it }
-//				servers[user.id] = server!!
-//			}
-//		}
 	}
 
 	fun getServerNumber(): Int {
@@ -90,7 +77,6 @@ class GameServerService {
 				if (server.isOlderThanS(62)) {
 					logger.info("Timeout game-server $server")
 					it.remove()
-					server.lobbies.forEach { lobbies.remove(it.name) }
 				}
 			}
 		}
@@ -98,6 +84,10 @@ class GameServerService {
 
 	fun gameModes(): List<String> {
 		return this.servers.values.flatMap { it.gameModes.asIterable() }
+	}
+
+	fun getLobbies(): Collection<LobbyInfo> {
+		return this.servers.flatMap { it.value.lobbies }
 	}
 
 }

@@ -1,9 +1,6 @@
 package ch.judos.snakes.common.model
 
-import java.io.BufferedReader
-import java.io.Closeable
-import java.io.InputStreamReader
-import java.io.PrintWriter
+import java.io.*
 import java.net.Socket
 
 class Connection(
@@ -11,12 +8,12 @@ class Connection(
 	private val close: (Connection) -> Unit
 ) : Closeable {
 
-	var out: PrintWriter
-	var inp: BufferedReader
+	var out: ObjectOutputStream
+	var inp: ObjectInputStream
 
 	init {
-		this.out = PrintWriter(socket.getOutputStream(), true)
-		this.inp = BufferedReader(InputStreamReader(socket.getInputStream()))
+		this.out = ObjectOutputStream(socket.getOutputStream())
+		this.inp = ObjectInputStream(socket.getInputStream())
 	}
 
 	override fun close() {

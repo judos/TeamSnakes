@@ -28,10 +28,11 @@ class GameServerController @Autowired constructor(
 	@PostMapping(path = ["connect"])
 	@ApiResponses(
 		value = [
-//		ApiResponse(responseCode = "200",
-//			content = [Content(schema = Schema(implementation = AuthSuccessDto::class))]),
+			ApiResponse(responseCode = "200",
+				content = [Content(schema = Schema(implementation = Int::class))],
+				description = "Server number"),
 			ApiResponse(
-				responseCode = "400",
+				responseCode = "401",
 				description = "error key may be one of: NOT_LOGGED_IN",
 				content = [Content(schema = Schema(implementation = ErrorDto::class))]
 			)

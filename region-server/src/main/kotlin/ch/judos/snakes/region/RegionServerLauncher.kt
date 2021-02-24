@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableJpaAuditing
 @EnableAsync
 @EnableScheduling
-class SnakesRegionServerApplication : CommandLineRunner {
+class RegionServerLauncher : CommandLineRunner {
 
 	private val logger = LoggerFactory.getLogger(javaClass)!!
 
@@ -23,5 +23,5 @@ class SnakesRegionServerApplication : CommandLineRunner {
 }
 
 fun main(args: Array<String>) {
-	runApplication<SnakesRegionServerApplication>(*args)
+	runApplication<RegionServerLauncher>(*args)
 }
