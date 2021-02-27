@@ -1,21 +1,14 @@
 package controller;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.Point;
+import ch.judos.generic.control.KeyMouseAdapter;
+import model.game.Map;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
-import javax.swing.SwingUtilities;
-
-import ch.judos.generic.control.KeyMouseAdapter;
-import model.game.Map;
-
-/**
- * @author Julian Schelker
- */
 public class InputController extends KeyMouseAdapter {
 
 	private Component component;

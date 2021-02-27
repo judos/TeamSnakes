@@ -1,16 +1,18 @@
-import java.util.Optional;
-
+import ch.judos.generic.control.Log;
 import controller.Game;
 import model.game.Map;
 import model.game.MapGenerator;
 import view.Assets;
 import view.Gui;
 
+import java.util.Optional;
+
 /**
  * @author Julian Schelker
  */
 public class Launcher {
 	public static void main(String[] args) {
+		Log.getInstance().logToFile = false;
 		System.setProperty("sun.java2d.opengl", "True");
 		System.setProperty("sun.java2d.accthreshold", "0");
 
