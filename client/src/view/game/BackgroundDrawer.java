@@ -11,7 +11,7 @@ import controller.game.PlayerControls;
 import model.game.Map;
 import model.game.Options;
 import model.game.SnakeTile;
-import view.Assets;
+import old.Assets;
 
 public class BackgroundDrawer implements Drawable2d {
 

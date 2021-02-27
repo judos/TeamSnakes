@@ -57,9 +57,9 @@
     </orderEntry>
     <orderEntry type="module" module-name="common" />
     <orderEntry type="module-library">
-      <library name="Maven: ch.judos.generic:WaDosUtil:1.4.7">
+      <library name="Maven: ch.judos.generic:WaDosUtil:1.5.1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/WaDosUtil-1.4.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/WaDosUtil-1.5.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -1,19 +1,17 @@
 package controller;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
 import controller.game.PlayerControls;
 import controller.game.PointController;
 import controller.game.SnakeController;
+import core.input.InputController;
 import model.game.Map;
 import model.game.Options;
 import view.Gui;
 import view.game.MapDrawer;
 
-/**
- * @author Julian Schelker
- */
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 public class Game extends KeyAdapter implements GameI {
 
 	public static final int FPS = 60;
@@ -23,8 +21,6 @@ public class Game extends KeyAdapter implements GameI {
 	private InputController inputController;
 	private boolean gameIsPaused;
 	private double gameTime;
-
-	private SynchronousEventController synchronousEventController;
 
 	private SnakeController snakeController;
 
@@ -42,21 +38,15 @@ public class Game extends KeyAdapter implements GameI {
 		this.gameIsPaused = false;
 
 		this.options = new Options();
-		this.synchronousEventController = new SynchronousEventController(this.gui
-			.getInputProvider());
 		this.mapDrawer = new MapDrawer(this.map);
 		this.gui.setDrawable(this.mapDrawer);
 
-		this.inputController = new InputController(this.map, gui.getComponent());
+		this.inputController = new InputController();
 
 		this.playerControls = new PlayerControls(this.map.snakes.get(0), this.inputController);
 		this.pointController = new PointController(this);
 		this.snakeController = new SnakeController(this);
 		this.mapDrawer.setController(this.playerControls);
-
-		this.synchronousEventController.addMouseListener(this.inputController);
-		this.synchronousEventController.addKeyListener(this.inputController);
-		this.synchronousEventController.addKeyListener(this);
 
 		this.gameTime = 0d;
 	}
@@ -74,7 +64,7 @@ public class Game extends KeyAdapter implements GameI {
 	}
 
 	private void updateBeforeDrawing() {
-		this.synchronousEventController.distributeEvents();
+//		this.synchronousEventController.distributeEvents();
 		if (!this.gameIsPaused) {
 			this.playerControls.update();
 			this.snakeController.update();

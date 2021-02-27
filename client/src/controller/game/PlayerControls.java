@@ -1,12 +1,8 @@
 package controller.game;
 
-import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-
 import ch.judos.generic.control.ActionCounter;
-import ch.judos.generic.data.geometry.Angle;
 import ch.judos.generic.data.geometry.PointF;
-import controller.InputController;
+import core.input.InputController;
 import model.game.Snake;
 
 public class PlayerControls {
@@ -30,27 +26,27 @@ public class PlayerControls {
 
 	public void update() {
 		// speed up snake
-		if (this.inputController.isMouseButtonPressed(1)
-			&& this.snake.getSize() >= 10 + decreaseAtOnce) {
-			this.snake.speedupModifier = 2f;
-			if (this.sizeDecrease.action()) {
-				this.snake.changeSize(-decreaseAtOnce);
-			}
-		}
-		else {
-			this.snake.speedupModifier = 1f;
-		}
+//		if (this.inputController.isMouseButtonPressed(1)
+//			&& this.snake.getSize() >= 10 + decreaseAtOnce) {
+//			this.snake.speedupModifier = 2f;
+//			if (this.sizeDecrease.action()) {
+//				this.snake.changeSize(-decreaseAtOnce);
+//			}
+//		}
+//		else {
+//			this.snake.speedupModifier = 1f;
+//		}
 
-		if (this.inputController.isKeyPressed(KeyEvent.VK_SPACE)) {
-			this.snake.changeSize(1);
-		}
+//		if (this.inputController.isKeyPressed(KeyEvent.VK_SPACE)) {
+//			this.snake.changeSize(1);
+//		}
 
 		// turning snake
-		PointF mousePoint = new PointF(this.inputController.getMousePosition());
-		Dimension screenSize = this.inputController.getScreenSize();
-		PointF middleOfScreen = new PointF(screenSize.width / 2, screenSize.height / 2);
-		Angle targetAngle = mousePoint.getAAngleTo(middleOfScreen).turnClockwise(Angle.A_180);
-		this.snake.turnIntoDirection(targetAngle);
+//		PointF mousePoint = new PointF(this.inputController.getMousePosition());
+//		Dimension screenSize = this.inputController.getScreenSize();
+//		PointF middleOfScreen = new PointF(screenSize.width / 2, screenSize.height / 2);
+//		Angle targetAngle = mousePoint.getAAngleTo(middleOfScreen).turnClockwise(Angle.A_180);
+//		this.snake.turnIntoDirection(targetAngle);
 	}
 
 	public PointF getFocusPoint() {

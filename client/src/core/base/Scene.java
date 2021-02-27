@@ -14,8 +14,8 @@ public abstract class Scene implements InputHandler {
 	
 	protected final SceneController sceneController;
 
-	private List<BaseRenderer> renderers;
-	private List<BaseTicker> tickers;
+	private final List<BaseRenderer> renderers;
+	private final List<BaseTicker> tickers;
 
 	public Scene(SceneController sceneController) {
 		this.sceneController = sceneController;

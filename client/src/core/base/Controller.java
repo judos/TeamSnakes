@@ -20,7 +20,6 @@ import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class Controller implements SceneController {
 
@@ -39,7 +38,7 @@ public class Controller implements SceneController {
 	public Controller(GameWindow window) {
 		this.window = window;
 		this.input = window.getInput();
-		this.sceneFactory = new SceneFactory((SceneController) this, window, this.input);
+		this.sceneFactory = new SceneFactory();
 		this.gameClock = new HighPrecisionClock(60, this::tick, "Game Loop");
 
 		profiler = new Profiler(60);
@@ -128,7 +127,10 @@ public class Controller implements SceneController {
 
 	private void handleAllInputEvents() {
 		for (InputEvent event : this.input.popAllEvents()) {
-			if (event.isPressActionAndConsume(InputAction.QUIT_GAME)) System.exit(0);
+			if (event.isPressActionAndConsume(InputAction.QUIT_GAME)) {
+				logger.info("Quit");
+				System.exit(0);
+			}
 			if (event.isPressActionAndConsume(InputAction.TAKE_SCREENSHOT)) {
 				requestScreenshot();
 				continue;
@@ -176,8 +178,8 @@ public class Controller implements SceneController {
 	}
 
 	@Override
-	public Scene loadScene(Class<? extends Scene> sceneClass, Object... args) {
-		Scene scene = this.sceneFactory.createScene(sceneClass, args);
+	public Scene loadScene(Class<? extends Scene> sceneClass) {
+		Scene scene = this.sceneFactory.createScene(sceneClass);
 		if (scene != null) {
 			if (this.currentScene != null) {
 				logger.trace("unloading scene " + this.currentScene);
