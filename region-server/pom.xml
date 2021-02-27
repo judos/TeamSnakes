@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>ch.judos.snakes</groupId>
-	<artifactId>region-server</artifactId>
 	<version>1.0.0</version>
+	<artifactId>region-server</artifactId>
 	<name>region-server</name>
 	<description>TeamSnakes Region-server</description>
 	<packaging>jar</packaging>
@@ -39,6 +39,12 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
