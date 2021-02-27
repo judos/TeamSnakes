@@ -43,7 +43,7 @@ public class Design {
 
 		panelBackground = Color.decode("#FFFFFE");
 		windowBorder = Color.decode("#808080");
-		windowBannerBg = Color.decode("F0F0FF");
+		windowBannerBg = Color.decode("#F0F0FF");
 
 		buttonTextMarginX = 10;
 		buttonTextMarginY = 10;

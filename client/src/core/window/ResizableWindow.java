@@ -17,6 +17,8 @@ public class ResizableWindow implements GameWindow {
 	private BufferStrategy buffer;
 	private boolean resized = false;
 
+	public Runnable onClosed;
+
 	private ComponentListener compListener = new ComponentAdapter() {
 		@Override
 		public void componentResized(ComponentEvent e) {
@@ -66,7 +68,9 @@ public class ResizableWindow implements GameWindow {
 		window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
-				discard();
+				if (onClosed != null) {
+					onClosed.run();
+				}
 			}
 		});
 		window.setFocusTraversalKeysEnabled(false);

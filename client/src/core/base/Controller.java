@@ -36,10 +36,10 @@ public class Controller implements SceneController {
 	private long startOfLastTick = System.currentTimeMillis();
 	private SceneFactory sceneFactory;
 
-	public Controller(GameWindow window) {
+	public Controller(GameWindow window,SceneFactory sceneFactory) {
 		this.window = window;
 		this.input = window.getInput();
-		this.sceneFactory = new SceneFactory();
+		this.sceneFactory = sceneFactory;
 		this.gameClock = new HighPrecisionClock(60, this::tick, "Game Loop");
 
 		profiler = new Profiler(60);
@@ -145,7 +145,8 @@ public class Controller implements SceneController {
 		}
 	}
 
-	private void quit() {
+	@Override
+	public void quit() {
 		this.gameClock.stop();
 		this.window.discard();
 		try {
