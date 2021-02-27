@@ -4,9 +4,7 @@ import core.input.InputController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 
 public class ResizableWindow implements GameWindow {
@@ -32,7 +30,6 @@ public class ResizableWindow implements GameWindow {
 		canvas = new Canvas();
 		canvas.setPreferredSize(new Dimension(x, y));
 		window.add(canvas);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		init();
 	}
 
@@ -66,6 +63,12 @@ public class ResizableWindow implements GameWindow {
 		canvas.addMouseWheelListener(input.getMouse());
 		window.addKeyListener(input.getKeyboard());
 		window.addComponentListener(compListener);
+		window.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				discard();
+			}
+		});
 		window.setFocusTraversalKeysEnabled(false);
 	}
 

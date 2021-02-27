@@ -20,6 +20,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class Controller implements SceneController {
 
@@ -128,8 +129,7 @@ public class Controller implements SceneController {
 	private void handleAllInputEvents() {
 		for (InputEvent event : this.input.popAllEvents()) {
 			if (event.isPressActionAndConsume(InputAction.QUIT_GAME)) {
-				logger.info("Quit");
-				System.exit(0);
+				this.quit();
 			}
 			if (event.isPressActionAndConsume(InputAction.TAKE_SCREENSHOT)) {
 				requestScreenshot();
@@ -143,6 +143,17 @@ public class Controller implements SceneController {
 			if (event.isConsumed) continue;
 			if (event.isPress()) logger.debug("unhandled: " + event);
 		}
+	}
+
+	private void quit() {
+		this.gameClock.stop();
+		this.window.discard();
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException ignored) {
+		}
+		logger.info("Quit");
+		System.exit(0);
 	}
 
 	private void saveScreenshot(Image screenshot) {
