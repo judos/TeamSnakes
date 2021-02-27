@@ -7,6 +7,7 @@ import core.input.InputController;
 import core.input.InputEvent;
 import core.profiler.Profiler;
 import core.profiler.ProfilerI;
+import core.window.GameWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

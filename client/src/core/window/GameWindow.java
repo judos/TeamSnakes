@@ -1,4 +1,6 @@
-package core.base;
+package core.window;
+
+import core.base.Window;
 
 import java.awt.*;
 

@@ -1,4 +1,4 @@
-package core.base
+package core.window
 
 import java.awt.*
 import java.awt.geom.AffineTransform

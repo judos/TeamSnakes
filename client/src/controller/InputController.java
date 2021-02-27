@@ -45,8 +45,7 @@ public class InputController extends KeyMouseAdapter {
 	}
 
 	public boolean isKeyPressed(int vkSpace) {
-		return this.keyButtonsPressed.containsKey(vkSpace) && this.keyButtonsPressed.get(
-			vkSpace);
+		return this.keyButtonsPressed.containsKey(vkSpace) && this.keyButtonsPressed.get(vkSpace);
 	}
 
 	@Override
