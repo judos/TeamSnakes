@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,12 +28,16 @@ class TestController @Autowired constructor(
 	@GetMapping(path = ["/mylogin"])
 	@Operation(summary = "Check if you're logged in and what roles are available for your login")
 	@SecurityRequirement(name = "jwt_auth")
-	fun getMylogin(): LoginDto {
-		val user: UserDetails? = this.authService.getAdminUser()
+	fun getMyLogin(): LoginDto {
 		val result = LoginDto()
-		if (user != null) {
-			result.username = user.username
-			result.roles = user.authorities.map { EUserRole.valueOf(it.authority) }
+		this.authService.getAdminUser()?.let {
+			result.username = it.username
+			result.roles = it.authorities.map { EUserRole.valueOf(it.authority) }
+			result.loggedIn = true
+		}
+		this.authService.getGuestUser()?.let {
+			result.username = it
+			result.roles = listOf(EUserRole.GUEST)
 			result.loggedIn = true
 		}
 		return result

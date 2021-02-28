@@ -1,8 +1,8 @@
 package ch.judos.snakes.region.core.dto
 
 
-class AuthSuccessDto(
-		var jwt: String
+open class AuthSuccessDto(
+		val jwt: String
 ) {
 
 }

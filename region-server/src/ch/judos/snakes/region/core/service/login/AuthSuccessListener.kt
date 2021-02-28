@@ -23,7 +23,7 @@ class AuthSuccessListener @Autowired constructor(
 		if (principal is UserDetails) {
 			principalStr = principal.username
 		}
-		this.loginAttemptService.storeAttempt(ELoginType.ADMIN, null, principalStr)
+		this.loginAttemptService.storeAttempt(ELoginType.USER, null, principalStr)
 	}
 
 

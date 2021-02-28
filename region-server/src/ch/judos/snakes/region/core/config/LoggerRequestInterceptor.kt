@@ -1,8 +1,8 @@
 package ch.judos.snakes.region.core.config
 
+import ch.judos.snakes.region.core.entity.AdminUser
+import ch.judos.snakes.region.core.service.AuthService
 import org.slf4j.LoggerFactory
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
@@ -10,14 +10,17 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class LoggerRequestInterceptor : HandlerInterceptorAdapter() {
+class LoggerRequestInterceptor(
+		private val authService: AuthService
+) : HandlerInterceptorAdapter() {
+
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 	override fun preHandle(request: HttpServletRequest, response: HttpServletResponse,
-		handler: Any): Boolean {
+			handler: Any): Boolean {
 		if (request.queryString != null) {
 			logger.info("{} {} ? {} ({})", request.method, request.requestURI, request.queryString,
-				authInformation())
+					authInformation())
 		} else {
 			logger.info("{} {} ({})", request.method, request.requestURI, authInformation())
 		}
@@ -26,20 +29,16 @@ class LoggerRequestInterceptor : HandlerInterceptorAdapter() {
 
 	@Throws(Exception::class)
 	override fun postHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any,
-		modelAndView: ModelAndView?) {
+			modelAndView: ModelAndView?) {
 		logger.info("{} for {} {} ({})", response.status, request.method, request.requestURI,
-			authInformation())
+				authInformation())
 	}
 
 	private fun authInformation(): String {
-		val auth = SecurityContextHolder.getContext().authentication
-		if (auth is UsernamePasswordAuthenticationToken) {
-			try {
-				return auth.details.toString() + " " + auth.principal.toString() + " " + auth.authorities
-			} catch (e: IllegalArgumentException) {
-				e.printStackTrace()
-			}
-		}
-		return "nologin"
+		return this.authService.getGuestUser()?.let {
+			return "$it [GUEST]"
+		} ?: this.authService.getAdminUser()?.let<AdminUser, String> {
+			return it.username + " (" + it.id + ") " + it.authorities
+		} ?: "nologin"
 	}
 }

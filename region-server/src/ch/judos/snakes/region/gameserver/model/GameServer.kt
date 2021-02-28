@@ -5,10 +5,11 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class GameServer(
-	val host: String,
-	val port: Int,
-	val gameModes: List<String>,
-	val serverNr: Int,
+		val name: String,
+		val host: String,
+		val port: Int,
+		val gameModes: List<String>,
+		val serverNr: Int,
 ) {
 	var lobbies: List<LobbyInfo> = listOf()
 	var currentLoad: Double = 1.0
@@ -26,6 +27,6 @@ class GameServer(
 	}
 
 	override fun toString(): String {
-		return this.host + " [" + this.gameModes + "] lobbies: " + this.lobbies.size
+		return this.name + " [" + this.gameModes + "]"
 	}
 }

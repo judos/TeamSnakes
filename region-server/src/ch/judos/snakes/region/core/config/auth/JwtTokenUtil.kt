@@ -2,7 +2,7 @@ package ch.judos.snakes.region.core.config.auth
 
 import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.core.entity.QAdminUser
-import ch.judos.snakes.region.core.model.enums.EUserRole
+import ch.judos.snakes.region.core.model.enums.ELoginType
 import ch.judos.snakes.region.core.repository.AdminUserRepository
 import ch.judos.snakes.region.extension.containsAllKeys
 import ch.judos.snakes.region.extension.findOneOrNull
@@ -12,8 +12,10 @@ import io.jsonwebtoken.SignatureAlgorithm
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Component
 import java.io.Serializable
@@ -29,38 +31,45 @@ class JwtTokenUtil @Autowired constructor(
 	@Suppress("unused")
 	private val logger = LoggerFactory.getLogger(javaClass)!!
 
-	//for retrieveing any information from token we will need the secret key
-	fun getAllClaimsFromToken(token: String?): Claims {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).body
-	}
-
-	//generate token for user
-	fun generateToken(userDetails: AdminUser): String {
+	fun generateUserToken(userDetails: AdminUser): String {
 		val claims = HashMap<String, Any>()
-		claims[JWT_FIELD_USER_TYPE] = EUserRole.ADMIN.name
+		claims[JWT_FIELD_USER_TYPE] = ELoginType.USER.name
 		claims[JWT_FIELD_USER_UUID] = userDetails.uuid
 		claims[JWT_FIELD_VERSION] = JWT_VERSION
 		return doGenerateToken(claims, userDetails.username)
 	}
 
-	fun readToken(tokenClaims: Claims): Authentication? {
-		if (!tokenClaims.containsAllKeys(JWT_FIELD_VERSION, JWT_FIELD_USER_UUID, JWT_FIELD_USER_TYPE)) {
+	fun generateGuestToken(username: String): String {
+		val claims = HashMap<String, Any>()
+		claims[JWT_FIELD_USER_TYPE] = ELoginType.GUEST.name
+		claims[JWT_FIELD_VERSION] = JWT_VERSION
+		return doGenerateToken(claims, username)
+	}
+
+
+	fun readToken(token: String?): Authentication? {
+		//for retrieveing any information from token we will need the secret key
+		val claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).body
+		if (!claims.containsAllKeys(JWT_FIELD_VERSION, JWT_FIELD_USER_TYPE)) {
 			throw IllegalArgumentException("Missing jwt claims")
 		}
-		val uuid = tokenClaims[JWT_FIELD_USER_UUID] as String
-		val version = tokenClaims[JWT_FIELD_VERSION] as Int
-		val type = tokenClaims[JWT_FIELD_USER_TYPE] as String
+		val version = claims[JWT_FIELD_VERSION] as Int
 		if (version < JWT_VERSION) {
 			throw OutdatedJwtException(
 					"JWT is of version $version, but backend only accepts version $JWT_VERSION")
 		}
-		if (type == EUserRole.ADMIN.name) {
-			return readAdminToken(tokenClaims, uuid)
+		val type = claims[JWT_FIELD_USER_TYPE] as String
+		if (type == ELoginType.USER.name) {
+			val uuid = claims[JWT_FIELD_USER_UUID] as String? ?: throw IllegalArgumentException("Missing jwt claims")
+			return readUserToken(claims, uuid)
+		} else if (type == ELoginType.GUEST.name) {
+			return readGuestToken(claims)
 		}
 		throw IllegalArgumentException("Unknown jwt token type: $type")
 	}
 
-	private fun readAdminToken(tokenClaims: Claims, uuid: String): Authentication {
+
+	private fun readUserToken(tokenClaims: Claims, uuid: String): Authentication {
 		val username = tokenClaims.subject
 		val user = this.adminUserRepo.findOneOrNull(
 				QAdminUser.adminUser.username.eq(username).and(QAdminUser.adminUser.uuid.eq(uuid)))
@@ -68,6 +77,13 @@ class JwtTokenUtil @Autowired constructor(
 		val auth = UsernamePasswordAuthenticationToken(user.id, null, user.authorities)
 		auth.details = user.username
 		return auth
+	}
+
+	private fun readGuestToken(claims: Claims): Authentication {
+		val username = claims.subject
+		//XXX: do we need a key here?
+		val key = "testKeyASDF"
+		return AnonymousAuthenticationToken(key, username, listOf(GrantedAuthority { "GUEST" }))
 	}
 
 	//while creating the token -
@@ -80,7 +96,6 @@ class JwtTokenUtil @Autowired constructor(
 				.setIssuedAt(Date(System.currentTimeMillis()))
 				.signWith(SignatureAlgorithm.HS512, secret).compact()
 	}
-
 
 	companion object {
 		private const val serialVersionUID = -2550185165626007488L

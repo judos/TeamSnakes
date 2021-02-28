@@ -52,7 +52,7 @@ class WebSecurityConfig @Autowired constructor(
 		httpSecurity.cors()
 
 		// Admin UI generally locked, except login method
-		httpSecurity.authorizeRequests().antMatchers("/authenticate").permitAll()
+		httpSecurity.authorizeRequests().antMatchers("/authenticate/**").permitAll()
 
 		// App endpoints, some open, some require login
 		httpSecurity.authorizeRequests().antMatchers("/test/**").permitAll()

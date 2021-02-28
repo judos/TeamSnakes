@@ -2,7 +2,7 @@ import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.model.Connection
 import controller.*
 import org.apache.logging.log4j.LogManager
-import service.RandomService
+import ch.judos.snakes.common.service.RandomService
 import java.net.ServerSocket
 import java.net.Socket
 import kotlin.system.exitProcess

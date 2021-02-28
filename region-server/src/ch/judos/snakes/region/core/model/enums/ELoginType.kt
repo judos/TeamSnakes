@@ -1,8 +1,8 @@
 package ch.judos.snakes.region.core.model.enums
 
 /**
- * Note: Update field in LoginAttempt as well!
+ * Note: Update field in Login as well!
  */
 enum class ELoginType {
-	ADMIN
+	USER, GUEST
 }

@@ -31,9 +31,8 @@ class JwtRequestFilter @Autowired constructor(
 			if (requestTokenHeader.startsWith("Bearer ")) {
 				val jwtToken = requestTokenHeader.substring(7)
 				try {
-					val tokenClaims = jwtTokenUtil.getAllClaimsFromToken(jwtToken)
 					if (SecurityContextHolder.getContext().authentication == null) {
-						val auth = this.jwtTokenUtil.readToken(tokenClaims)
+						val auth = this.jwtTokenUtil.readToken(jwtToken)
 						SecurityContextHolder.getContext().authentication = auth
 					}
 				} catch (e: ExpiredJwtException) {

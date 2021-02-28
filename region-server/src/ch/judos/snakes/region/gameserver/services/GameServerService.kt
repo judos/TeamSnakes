@@ -9,7 +9,6 @@ import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.extension.firstMissingNumber
 import ch.judos.snakes.region.gameserver.model.GameServer
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.net.Socket
 import java.net.SocketException
@@ -27,7 +26,7 @@ class GameServerService {
 			logger.info("register server ${user.id}")
 			val serverNr = getServerNumber()
 			server =
-				GameServer(request.host, request.port, request.gameModes, serverNr)
+				GameServer(user.username, request.host, request.port, request.gameModes, serverNr)
 			servers[user.id] = server
 		}
 		listenToGameServer(user, server, request)
@@ -71,19 +70,19 @@ class GameServerService {
 		}
 	}
 
-	@Scheduled(fixedRate = 30 * 1000)
-	private fun cleanup() {
-		synchronized(servers) {
-			val it = servers.iterator()
-			while (it.hasNext()) {
-				val server = it.next().value
-				if (server.isOlderThanS(62)) {
-					logger.info("Timeout game-server $server")
-					it.remove()
-				}
-			}
-		}
-	}
+//	@Scheduled(fixedRate = 30 * 1000)
+//	private fun cleanup() {
+//		synchronized(servers) {
+//			val it = servers.iterator()
+//			while (it.hasNext()) {
+//				val server = it.next().value
+//				if (server.isOlderThanS(62)) {
+//					logger.info("Timeout game-server $server")
+//					it.remove()
+//				}
+//			}
+//		}
+//	}
 
 	fun gameModes(): List<String> {
 		return this.servers.values.flatMap { it.gameModes.asIterable() }

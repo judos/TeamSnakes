@@ -5,10 +5,10 @@ import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.messages.region.GameUpdate
 import ch.judos.snakes.common.model.Connection
+import ch.judos.snakes.common.service.RandomService
 import com.sun.management.OperatingSystemMXBean
 import model.configuration.AppConfig
 import org.apache.logging.log4j.LogManager
-import service.RandomService
 import java.lang.management.ManagementFactory
 import java.net.SocketException
 

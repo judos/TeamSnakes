@@ -20,7 +20,7 @@ class AuthFailureListener @Autowired constructor(
 		val auth = event.authentication
 		this.logger.warn(
 				"Failed authentication: ${auth::class.simpleName}, principal: ${auth.principal}, Details: ${auth.details}")
-		this.loginAttemptService.storeAttempt(ELoginType.ADMIN, ELoginException.WRONG_CREDENTIALS,
+		this.loginAttemptService.storeAttempt(ELoginType.USER, ELoginException.WRONG_CREDENTIALS,
 				auth.principal.toString())
 	}
 

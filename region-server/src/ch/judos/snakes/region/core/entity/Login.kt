@@ -23,7 +23,7 @@ open class Login {
 	@Enumerated(EnumType.STRING)
 	open var exception: ELoginException? = null
 
-	@Column(nullable = false, columnDefinition = "enum('ADMIN')")
+	@Column(nullable = false, columnDefinition = "enum('USER', 'GUEST')")
 	@Enumerated(EnumType.STRING)
 	open lateinit var loginType: ELoginType
 

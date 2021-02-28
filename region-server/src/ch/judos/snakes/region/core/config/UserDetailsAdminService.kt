@@ -3,6 +3,7 @@ package ch.judos.snakes.region.core.config
 
 import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.core.repository.AdminUserRepository
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service
 class UserDetailsAdminService @Autowired constructor(
 		private val adminUserRepo: AdminUserRepository
 ) : UserDetailsService {
+
+	private val logger = LoggerFactory.getLogger(javaClass)!!
+
 
 	@Throws(UsernameNotFoundException::class)
 	override fun loadUserByUsername(username: String): AdminUser {
