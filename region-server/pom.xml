@@ -223,10 +223,11 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+		<testSourceDirectory>test</testSourceDirectory>
 		<resources>
 			<resource>
 				<filtering>true</filtering>
-				<directory>src/main/resources</directory>
+				<directory>srcResources</directory>
 			</resource>
 		</resources>
 		<plugins>
@@ -256,8 +257,7 @@
 						</goals>
 						<configuration>
 							<sourceDirs>
-								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-								<sourceDir>${project.basedir}/src/main/java</sourceDir>
+								<sourceDir>${project.basedir}/src</sourceDir>
 								<sourceDir>${project.basedir}/target/generated-sources/kapt/compile</sourceDir>
 							</sourceDirs>
 						</configuration>
@@ -270,8 +270,7 @@
 						</goals>
 						<configuration>
 							<sourceDirs>
-								<sourceDir>src/main/kotlin</sourceDir>
-								<sourceDir>src/main/java</sourceDir>
+								<sourceDir>src</sourceDir>
 							</sourceDirs>
 							<annotationProcessorPaths>
 								<annotationProcessorPath>
@@ -290,8 +289,7 @@
 						</goals>
 						<configuration>
 							<sourceDirs>
-								<sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-								<sourceDir>${project.basedir}/src/test/java</sourceDir>
+								<sourceDir>${project.basedir}/src</sourceDir>
 								<sourceDir>${project.basedir}/target/generated-sources/kapt/test</sourceDir>
 							</sourceDirs>
 						</configuration>
