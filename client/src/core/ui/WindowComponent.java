@@ -63,8 +63,9 @@ public class WindowComponent extends BaseComponent {
 		dispose("");
 	}
 
-	public void addComponent(Component c) {
+	public <T extends Component> T addComponent(T c) {
 		this.content.add(c);
+		return c;
 	}
 
 	@Override

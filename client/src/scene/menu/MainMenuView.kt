@@ -16,7 +16,7 @@ class MainMenuView(
 	init {
 		this.title = "Welcome " + this.clientConfig.name
 
-		addComponent(Button("Exit Game", input, this::dispose))
+		addComponent(Button("Exit Game", input, this::dispose)).setWeight(1, 0)
 	}
 
 }

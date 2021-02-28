@@ -18,8 +18,8 @@ public class DesktopComponent extends BaseComponent {
 	/**
 	 * sorted by z-index. Last window will be on top of everything (getting input first)
 	 */
-	private ArrayList<WindowComponent> windows;
-	private InputController input;
+	private final ArrayList<WindowComponent> windows;
+	private final InputController input;
 
 	public DesktopComponent(InputController input) {
 		super();
@@ -30,14 +30,14 @@ public class DesktopComponent extends BaseComponent {
 	public void addWindow(WindowComponent window) {
 		addWindow(window, PositionH.CENTER, PositionV.CENTER);
 	}
-	
+
 	public void addWindow(WindowComponent window, PositionH posH, PositionV posV) {
 		this.windows.add(window);
-		
+
 		Dimension windowSize = window.getPreferedDimension();
-		LayoutPositioning layout = new LayoutPositioning(posH,posV, windowSize);
+		LayoutPositioning layout = new LayoutPositioning(posH, posV, windowSize);
 		Point pos = layout.getPixelPositionBasedOnEnums(this.pos.x, this.pos.y, this.size.width, this.size.height);
-		
+
 		window.layout(pos.x, pos.y, windowSize.width, windowSize.height);
 	}
 
@@ -45,7 +45,7 @@ public class DesktopComponent extends BaseComponent {
 	public void render(Graphics g) {
 		int activateHoveringAt = 0;
 		this.windows.removeIf(window -> window.isDisposed);
-		
+
 		// traverse windows in reverse to check which windows should be able to show hovering on components
 		for (int i = this.windows.size() - 1; i >= 0; i--) {
 			WindowComponent window = this.windows.get(i);
@@ -54,11 +54,11 @@ public class DesktopComponent extends BaseComponent {
 				break;
 			}
 		}
-		
+
 		this.windows.sort((win1, win2) -> win1.zIndex - win2.zIndex);
 		int zIndex = 0;
 		this.input.setHoverEnabled(false);
-		for (int i = 0; i<this.windows.size(); i++) {
+		for (int i = 0; i < this.windows.size(); i++) {
 			if (i == activateHoveringAt)
 				this.input.setHoverEnabled(true);
 			WindowComponent window = this.windows.get(i);
@@ -81,7 +81,7 @@ public class DesktopComponent extends BaseComponent {
 	}
 
 	/**
-	 * does Desktop Component does not have a prefered size
+	 * Desktop Component does not have a preferred size
 	 */
 	@Override
 	public Dimension getPreferedDimension() {
