@@ -6,3 +6,6 @@ target
 
 # Local Environment
 application-local.properties
+
+# Runtime config of application
+client-config.txt

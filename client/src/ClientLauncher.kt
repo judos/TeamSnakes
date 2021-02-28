@@ -4,6 +4,7 @@ import core.base.SceneFactory
 import core.input.InputController
 import core.window.GameWindow
 import core.window.ResizableWindow
+import model.ClientConfig
 import scene.menu.MenuScene
 
 
@@ -15,7 +16,9 @@ class Launcher {
 		val window: GameWindow = view
 		val sceneFactory = SceneFactory()
 		val controller = Controller(window, sceneFactory)
-		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window) }
+		val clientConfig = ClientConfig()
+
+		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window, clientConfig) }
 
 		controller.start()
 		controller.loadScene(MenuScene::class.java)

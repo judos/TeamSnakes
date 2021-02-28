@@ -4,22 +4,19 @@ import core.base.Design
 import core.input.InputController
 import core.ui.Button
 import core.ui.WindowComponent
-import kotlin.system.exitProcess
+import model.ClientConfig
 
 class MainMenuView(
-		private val input: InputController
+		private val input: InputController,
+		private val clientConfig: ClientConfig
 ) : WindowComponent(
 		Design.titleFont, input
 ) {
 
 	init {
-		this.title = "Main Menu"
+		this.title = "Welcome " + this.clientConfig.name
 
-		addComponent(Button("Test", input, {}))
-		addComponent(Button("Exit", input, this::exit))
+		addComponent(Button("Exit Game", input, this::dispose))
 	}
 
-	fun exit() {
-		exitProcess(0)
-	}
 }
