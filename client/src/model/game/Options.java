@@ -1,8 +1,11 @@
 package model.game;
 
-import ch.judos.generic.control.Log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Options {
+
+	private Logger logger = LogManager.getLogger(getClass());
 
 	private boolean debuggingEnabled = false;
 
@@ -12,7 +15,7 @@ public class Options {
 
 	public void toggleDebugOptions() {
 		this.debuggingEnabled = !this.debuggingEnabled;
-		Log.info("Debug " + (this.debuggingEnabled ? "enabled" : "disabled"));
+		logger.info("Debug " + (this.debuggingEnabled ? "enabled" : "disabled"));
 	}
 
 }

@@ -1,7 +1,8 @@
 package old;
 
-import ch.judos.generic.control.Log;
 import ch.judos.generic.control.TimerJS;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,6 +14,9 @@ import java.io.IOException;
  * @author Julian Schelker
  */
 public class Assets {
+
+	private static Logger logger = LogManager.getLogger(Assets.class);
+
 
 	private static boolean isLoaded = false;
 	private static boolean isLoading = false;
@@ -27,8 +31,7 @@ public class Assets {
 			while (!isLoaded) {
 				try {
 					Assets.class.wait();
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
@@ -37,9 +40,8 @@ public class Assets {
 
 	/**
 	 * checked method, synchronous
-	 * 
-	 * @throws IllegalStateException
-	 *             when the assets are already being loaded or loaded
+	 *
+	 * @throws IllegalStateException when the assets are already being loaded or loaded
 	 */
 	public static void load() {
 		synchronized (Assets.class) {
@@ -63,14 +65,13 @@ public class Assets {
 	private static void loadAllAssets() {
 		TimerJS loadAssestsTimer = new TimerJS();
 		font = new Font("Arial", 0, 16);
-		Log.info("loading Assets: " + loadAssestsTimer.getMS() + " ms");
+		logger.info("loading Assets: " + loadAssestsTimer.getMS() + " ms");
 	}
 
 	public static BufferedImage load(String name) {
 		try {
 			return ImageIO.read(new File("data/" + name));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}

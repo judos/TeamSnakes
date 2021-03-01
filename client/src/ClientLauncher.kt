@@ -1,14 +1,17 @@
-import ch.judos.generic.control.Log
 import core.base.Controller
 import core.base.SceneFactory
 import core.input.InputController
 import core.window.GameWindow
 import core.window.ResizableWindow
 import model.ClientConfig
+import org.apache.logging.log4j.LogManager
 import scene.menu.MenuScene
 
 
-class Launcher {
+class ClientLauncher {
+
+	private val logger = LogManager.getLogger(javaClass)!!
+
 	fun init() {
 		val input = InputController()
 		//		GameWindow window = new NativeFullscreen(input);
@@ -26,11 +29,10 @@ class Launcher {
 	}
 }
 
+// TODO: remove old logging, use log4j
 fun main() {
-	Log.getInstance().logToFile = false
-	Log.getInstance().currentLogLevel = Log.Level.INFO
 	System.setProperty("sun.java2d.opengl", "True")
 	System.setProperty("sun.java2d.accthreshold", "0")
-	val launcher = Launcher()
+	val launcher = ClientLauncher()
 	launcher.init()
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class Scene implements InputHandler {
 
-	protected final Logger logger = LogManager.getLogger();
+	protected final Logger logger = LogManager.getLogger(getClass());
 	
 	protected final SceneController sceneController;
 

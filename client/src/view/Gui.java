@@ -7,14 +7,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import model.input.InputProvider;
-import ch.judos.generic.control.Log;
 import ch.judos.generic.graphics.Drawable2d;
 import ch.judos.generic.graphics.fullscreen.FullScreen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Julian Schelker
  */
 public class Gui implements Drawable2d {
+
+	private Logger logger = LogManager.getLogger(getClass());
 
 	GuiFrame frame;
 	private Timer timer;
@@ -175,7 +178,7 @@ public class Gui implements Drawable2d {
 	}
 
 	public void quit() {
-		Log.info("quit");
+		logger.info("quit");
 		this.isRunning = false;
 		if (this.timer != null) {
 			this.timer.cancel();
@@ -183,8 +186,8 @@ public class Gui implements Drawable2d {
 	}
 
 	private void renderingDidEnd() {
-		Log.info("render thread finished");
-		Log.info("disposing frame");
+		logger.info("render thread finished");
+		logger.info("disposing frame");
 		this.frame.setVisible(false);
 		this.frame.dispose();
 	}

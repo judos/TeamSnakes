@@ -7,7 +7,7 @@ import java.util.function.Supplier
 class SceneFactory(
 ) {
 
-	protected val logger = LogManager.getLogger()
+	protected val logger = LogManager.getLogger(javaClass)!!
 	private val generators: HashMap<Class<out Scene>, Supplier<Scene>> = HashMap()
 
 	fun createScene(sceneClass: Class<out Scene>): Scene? {

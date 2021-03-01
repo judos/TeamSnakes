@@ -13,7 +13,7 @@ import java.awt.*;
 
 public class InputField extends Label {
 
-	private static Logger logger = LogManager.getLogger();
+	private Logger logger = LogManager.getLogger(getClass());
 	private int expectedLength;
 	private InputController input;
 	private TextEditing text;

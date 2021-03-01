@@ -28,7 +28,7 @@ public class Controller implements SceneController {
 	protected GameWindow window;
 	protected final InputController input;
 	protected Scene currentScene = null;
-	protected final Logger logger = LogManager.getLogger();
+	protected final Logger logger = LogManager.getLogger(getClass());
 
 	private ProfilerI profiler;
 	private boolean screenshotRequested = false;

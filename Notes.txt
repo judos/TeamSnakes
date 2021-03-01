@@ -1,0 +1,10 @@
+
+
+
+
+
+01.03.2021
+
+aus path gelöscht:
+/c/Program Files (x86)/Common Files/Oracle/Java/javapath/java
+damit java8 nicht in konsole verwendet wird

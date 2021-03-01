@@ -4,13 +4,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import ch.judos.generic.control.ActionCounter;
-import ch.judos.generic.control.Log;
 import ch.judos.generic.data.geometry.PointI;
 import ch.judos.generic.graphics.Drawable2d;
 import controller.GameI;
 import model.game.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EatablePointDrawer implements Drawable2d {
+
+	private Logger logger = LogManager.getLogger(getClass());
 
 	private GameI game;
 	private Map map;
@@ -35,7 +38,7 @@ public class EatablePointDrawer implements Drawable2d {
 			return false;
 		});
 		if (this.loop.action()) {
-			Log.verbose("Points drawn: " + x + " clip: " + g.getClipBounds());
+			logger.info("Points drawn: " + x + " clip: " + g.getClipBounds());
 		}
 	}
 

@@ -14,7 +14,7 @@ import static core.input.InputEvent.InputEventType.*;
 
 public class InputController implements NamedComponent {
 
-	protected final Logger logger = LogManager.getLogger();
+	protected final Logger logger = LogManager.getLogger(getClass());
 
 	// CONSTANTS
 	public static final int MOUSE_LEFT = 0x0001_0000;
