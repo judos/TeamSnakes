@@ -1,6 +1,5 @@
-package controller
+package ch.judos.snakes.common.controller
 
-import configuration.AppConfig
 import org.glassfish.jersey.client.ClientConfig
 import java.util.*
 import javax.ws.rs.client.Client
@@ -9,8 +8,9 @@ import javax.ws.rs.client.Entity
 import javax.ws.rs.client.WebTarget
 import javax.ws.rs.core.MediaType
 
+
 class HttpController(
-		private val appConfig: AppConfig
+		private val url: String
 ) {
 
 	var jwt: String? = null
@@ -18,7 +18,7 @@ class HttpController(
 
 	init {
 		val client: Client = ClientBuilder.newClient(ClientConfig())
-		this.target = client.target(appConfig.region.url)!!
+		this.target = client.target(url)!!
 	}
 
 	fun <T> post(path: String, obj: Any, returnType: Class<T>): T {

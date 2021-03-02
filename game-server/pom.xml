@@ -23,12 +23,14 @@
 	</properties>
 
 	<dependencies>
+		<!-- Common module -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
+		<!-- Kotlin standard libs -->
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
@@ -69,8 +71,7 @@
 			<version>2.6.2</version>
 		</dependency>
 
-		<!-- Properties loading -->
-		<!-- TODO: update version? -->
+		<!-- Properties loading / Jackson Serialization -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>

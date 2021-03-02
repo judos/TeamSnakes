@@ -1,5 +1,6 @@
 package controller
 
+import ch.judos.snakes.common.controller.HttpController
 import ch.judos.snakes.common.dto.AuthSuccessDto
 import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.RegionLogin

@@ -3,7 +3,7 @@ import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.service.RandomService
 import configuration.AppConfig
 import controller.GameController
-import controller.HttpController
+import ch.judos.snakes.common.controller.HttpController
 import controller.LobbyController
 import controller.RegionController
 import org.apache.logging.log4j.LogManager
@@ -29,7 +29,7 @@ class GameServerLauncher() {
 	init {
 		this.config = AppConfig.load()
 		this.random = RandomService()
-		this.http = HttpController(this.config)
+		this.http = HttpController(this.config.region.url)
 		this.game = GameController()
 		this.lobby = LobbyController()
 		this.region = RegionController(http, this.config, random, game)
