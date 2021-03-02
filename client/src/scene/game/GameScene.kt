@@ -1,12 +1,12 @@
 package scene.game
 
-import controller.Game
+import old.controller.Game
 import core.base.Scene
 import core.base.SceneController
 import core.input.InputEvent
-import model.game.MapGenerator
+import old.model.game.MapGenerator
 import old.Assets
-import view.Gui
+import old.view.Gui
 import java.util.*
 
 class GameScene(sceneController: SceneController) : Scene(sceneController) {
