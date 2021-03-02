@@ -1,4 +1,4 @@
-package model.configuration
+package configuration
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import dto.LoginRequestDto

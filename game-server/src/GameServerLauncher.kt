@@ -1,8 +1,12 @@
 import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.model.Connection
-import controller.*
-import org.apache.logging.log4j.LogManager
 import ch.judos.snakes.common.service.RandomService
+import configuration.AppConfig
+import controller.GameController
+import controller.HttpController
+import controller.LobbyController
+import controller.RegionController
+import org.apache.logging.log4j.LogManager
 import java.net.ServerSocket
 import java.net.Socket
 import kotlin.system.exitProcess
@@ -17,18 +21,18 @@ class GameServerLauncher() {
 	private var lobby: LobbyController
 	private var region: RegionController
 	private var http: HttpController
-	private var properties: AppProperties
+	private var config: AppConfig
 	private val connections = hashSetOf<Connection>()
 
 	private var running = true
 
 	init {
-		this.properties = AppProperties()
+		this.config = AppConfig.load()
 		this.random = RandomService()
-		this.http = HttpController(properties.config)
+		this.http = HttpController(this.config)
 		this.game = GameController()
 		this.lobby = LobbyController()
-		this.region = RegionController(http, properties.config, random, game)
+		this.region = RegionController(http, this.config, random, game)
 
 		this.acceptIncomingConnections()
 
@@ -70,7 +74,7 @@ class GameServerLauncher() {
 	}
 
 	fun acceptIncomingConnections() {
-		val socket = ServerSocket(properties.config.server.port)
+		val socket = ServerSocket(this.config.server.port)
 		val listenThread = Thread({
 			while (true) {
 				this.acceptConnection(socket.accept()!!)
@@ -84,7 +88,7 @@ class GameServerLauncher() {
 		val connection = Connection(socket, connections::remove)
 		connections.add(connection)
 		val hello = connection.inp.readUnshared()
-			?: return logger.warn("Connection dropped before identified")
+				?: return logger.warn("Connection dropped before identified")
 		if (hello is RegionLogin) {
 			this.region.acceptConnection(connection, hello)
 //		} else if (hello.startsWith("lobby")) {

@@ -8,4 +8,4 @@ target
 application-local.properties
 
 # Runtime config of application
-client-config.txt
+client/client-config.txt

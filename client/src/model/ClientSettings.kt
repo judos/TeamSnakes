@@ -5,7 +5,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.*
 
-class ClientConfig {
+class ClientSettings {
 
 	private var file: File
 	private var properties: Properties
