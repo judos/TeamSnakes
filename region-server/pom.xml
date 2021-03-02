@@ -280,7 +280,7 @@
 						</goals>
 						<configuration>
 							<sourceDirs>
-								<sourceDir>${project.basedir}/src</sourceDir>
+								<sourceDir>${project.basedir}/test</sourceDir>
 								<sourceDir>${project.basedir}/target/generated-sources/kapt/test</sourceDir>
 							</sourceDirs>
 						</configuration>
