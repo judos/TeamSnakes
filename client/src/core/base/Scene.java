@@ -24,7 +24,7 @@ public abstract class Scene implements InputHandler {
 		this.renderers = new ArrayList<>();
 	}
 
-	protected void addRenderer(BaseRenderer component) {
+	final protected void addRenderer(BaseRenderer component) {
 		renderers.add(component);
 	}
 

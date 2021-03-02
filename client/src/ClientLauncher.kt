@@ -6,6 +6,7 @@ import core.window.ResizableWindow
 import model.ClientConfig
 import model.ClientSettings
 import org.apache.logging.log4j.LogManager
+import scene.menu.LoginScene
 import scene.menu.MenuScene
 
 
@@ -23,10 +24,11 @@ class ClientLauncher {
 		val controller = Controller(window, sceneFactory)
 		val clientConfig = ClientSettings()
 
+		sceneFactory.register(LoginScene::class.java) { LoginScene(controller, input, window, clientConfig) }
 		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window, clientConfig) }
 
 		controller.start()
-		controller.loadScene(MenuScene::class.java)
+		controller.loadScene(LoginScene::class.java)
 		view.onClosed = Runnable { controller.quit() }
 	}
 }
