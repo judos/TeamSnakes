@@ -94,7 +94,7 @@ class GameServerLauncher() {
 //		} else if (hello.startsWith("lobby")) {
 //			this.lobby.acceptConnection(connection, hello)
 		} else {
-			logger.error("Invalid hello string from connection: $hello")
+			logger.error("Invalid hello obj from connection: $hello")
 			connection.close()
 		}
 	}

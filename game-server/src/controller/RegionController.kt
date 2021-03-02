@@ -7,7 +7,7 @@ import ch.judos.snakes.common.messages.region.GameUpdate
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.service.RandomService
 import com.sun.management.OperatingSystemMXBean
-import model.configuration.AppConfig
+import configuration.AppConfig
 import org.apache.logging.log4j.LogManager
 import java.lang.management.ManagementFactory
 import java.net.SocketException
