@@ -1,5 +1,8 @@
 package ch.judos.snakes.region.core.controller
 
+import ch.judos.snakes.common.dto.AuthSuccessDto
+import ch.judos.snakes.common.dto.GuestLoginRequestDto
+import ch.judos.snakes.common.dto.UserAuthSuccessDto
 import ch.judos.snakes.common.service.RandomService
 import ch.judos.snakes.region.core.config.auth.JwtTokenUtil
 import ch.judos.snakes.region.core.dto.*

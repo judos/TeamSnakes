@@ -3,7 +3,7 @@ package ch.judos.snakes.region.gameserver.controller
 import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.region.core.dto.ErrorDto
 import ch.judos.snakes.region.core.service.AuthService
-import ch.judos.snakes.region.gameserver.services.GameServerService
+import ch.judos.snakes.region.gameserver.service.GameServerService
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse

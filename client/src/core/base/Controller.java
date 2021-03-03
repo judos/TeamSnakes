@@ -36,7 +36,9 @@ public class Controller implements SceneController {
 	private long startOfLastTick = System.currentTimeMillis();
 	private SceneFactory sceneFactory;
 
-	public Controller(GameWindow window,SceneFactory sceneFactory) {
+	private final Object sceneChange = new Object();
+
+	public Controller(GameWindow window, SceneFactory sceneFactory) {
 		this.window = window;
 		this.input = window.getInput();
 		this.sceneFactory = sceneFactory;
@@ -201,6 +203,9 @@ public class Controller implements SceneController {
 			logger.trace("loading scene " + scene);
 			scene.loadScene();
 			this.currentScene = scene;
+			synchronized (sceneChange) {
+				sceneChange.notifyAll();
+			}
 		}
 		return this.currentScene;
 	}
@@ -210,4 +215,13 @@ public class Controller implements SceneController {
 		this.screenshotRequested = true;
 	}
 
+	public void awaitSceneChange() {
+		try {
+			synchronized (sceneChange) {
+				sceneChange.wait();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

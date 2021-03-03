@@ -3,9 +3,9 @@ package ch.judos.snakes.common.messages.region
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
-class GameUpdate(
-	val currentLoad: Double,
-	var lobbies: List<LobbyInfo>
+class ClientLogin(
+		val username: String,
+		val token: String
 ) : Serializable {
 
 

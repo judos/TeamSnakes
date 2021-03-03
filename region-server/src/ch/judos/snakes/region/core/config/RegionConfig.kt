@@ -6,9 +6,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties(prefix = "app.settings")
-class AppProperties {
+class RegionConfig {
 
 	var regionName: String = ""
-	var otherRegions: List<String> = listOf()
+	var regionUrl: String = ""
+	var port: Int = 0
 
 }

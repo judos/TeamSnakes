@@ -1,7 +1,5 @@
 node {
 	def version="snapshot"
-	def port=11001
-	def env="test"
 
 	// if root user is needed add '-u root'
 	// maven:3.6-adoptopenjdk-11
@@ -26,9 +24,9 @@ node {
 
 	stage('Deploy') {
 		dir('region-server/docker') {
-			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region build"
-			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region stop"
-			sh "port=${port} version=${version} env=${env} docker-compose -f docker-compose.yml -p snakes-region up -d"
+			sh "version=${version} docker-compose -f docker-compose-test.yml -p snakes-region build"
+			sh "version=${version} docker-compose -f docker-compose-test.yml -p snakes-region stop"
+			sh "version=${version} docker-compose -f docker-compose-test.yml -p snakes-region up -d"
 		}
 	}
 }

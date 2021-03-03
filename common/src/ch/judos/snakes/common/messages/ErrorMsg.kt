@@ -1,11 +1,11 @@
-package ch.judos.snakes.common.messages.region
+package ch.judos.snakes.common.messages
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
-class GameUpdate(
-	val currentLoad: Double,
-	var lobbies: List<LobbyInfo>
+class ErrorMsg(
+		var code: String,
+		var msg: String,
 ) : Serializable {
 
 
@@ -13,5 +13,4 @@ class GameUpdate(
 		val mapper = ObjectMapper()
 		return mapper.writeValueAsString(this)
 	}
-
 }

@@ -1,3 +1,5 @@
+import controller.GameController
+import controller.NetworkController
 import core.base.Controller
 import core.base.SceneFactory
 import core.input.InputController
@@ -6,6 +8,7 @@ import core.window.ResizableWindow
 import model.ClientConfig
 import model.ClientSettings
 import org.apache.logging.log4j.LogManager
+import scene.menu.LoadingScene
 import scene.menu.LoginScene
 import scene.menu.MenuScene
 
@@ -22,14 +25,18 @@ class ClientLauncher {
 		val window: GameWindow = view
 		val sceneFactory = SceneFactory()
 		val controller = Controller(window, sceneFactory)
-		val clientConfig = ClientSettings()
+		val settings = ClientSettings()
 
-		sceneFactory.register(LoginScene::class.java) { LoginScene(controller, input, window, clientConfig) }
-		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window, clientConfig) }
+		sceneFactory.register(LoadingScene::class.java) { LoadingScene(controller, input, window) }
+		sceneFactory.register(LoginScene::class.java) { LoginScene(controller, input, window, settings) }
+		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window, settings) }
 
 		controller.start()
-		controller.loadScene(LoginScene::class.java)
+		controller.loadScene(LoadingScene::class.java)
 		view.onClosed = Runnable { controller.quit() }
+
+		val networkController = NetworkController(settings, config, )
+		val gameController = GameController(controller, settings, networkController)
 	}
 }
 

@@ -41,9 +41,9 @@ class LoginScene(
 
 	private fun nameEntered() {
 		if (inputField.text.isNullOrEmpty())
-			this.sceneController.quit()
+			return
 		this.clientSettings.name = inputField.text
-		this.sceneController.loadScene(MenuScene::class.java)
+		this.sceneController.loadScene(LoadingScene::class.java)
 	}
 
 }

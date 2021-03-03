@@ -1,14 +1,13 @@
+import ch.judos.snakes.common.controller.HttpController
 import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.service.RandomService
 import configuration.AppConfig
 import controller.GameController
-import ch.judos.snakes.common.controller.HttpController
 import controller.LobbyController
 import controller.RegionController
 import org.apache.logging.log4j.LogManager
 import java.net.ServerSocket
-import java.net.Socket
 import kotlin.system.exitProcess
 
 
@@ -77,26 +76,23 @@ class GameServerLauncher() {
 		val socket = ServerSocket(this.config.server.port)
 		val listenThread = Thread({
 			while (true) {
-				this.acceptConnection(socket.accept()!!)
+				val connectionSocket = socket.accept()!!
+
+				val connection = Connection(connectionSocket, connections::remove)
+				connections.add(connection)
+				val hello = connection.inp.readUnshared()
+				if (hello is RegionLogin) {
+					this.region.acceptConnection(connection, hello)
+//		} else if (hello.startsWith("lobby")) {
+//			this.lobby.acceptConnection(connection, hello)
+				} else {
+					logger.error("Invalid hello obj from connection: $hello")
+					connection.close()
+				}
 			}
 		}, "Connection Listener")
 		listenThread.isDaemon = true
 		listenThread.start()
-	}
-
-	private fun acceptConnection(socket: Socket) {
-		val connection = Connection(socket, connections::remove)
-		connections.add(connection)
-		val hello = connection.inp.readUnshared()
-				?: return logger.warn("Connection dropped before identified")
-		if (hello is RegionLogin) {
-			this.region.acceptConnection(connection, hello)
-//		} else if (hello.startsWith("lobby")) {
-//			this.lobby.acceptConnection(connection, hello)
-		} else {
-			logger.error("Invalid hello obj from connection: $hello")
-			connection.close()
-		}
 	}
 
 }

@@ -1,4 +1,4 @@
-package ch.judos.snakes.region.gameserver.services
+package ch.judos.snakes.region.gameserver.service
 
 import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.RegionLogin
