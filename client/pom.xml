@@ -12,7 +12,7 @@
 
 	<!-- See: https://kotlinlang.org/docs/maven.html#generating-documentation -->
 	<properties>
-		<main.class>ClientLauncherKt</main.class>
+		<main.class>ch.judos.snakes.client.ClientLauncherKt</main.class>
 		<java.version>11</java.version>
 		<kotlin.version>1.4.31</kotlin.version>
 		<kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
@@ -31,13 +31,13 @@
 			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>ch.judos.generic</groupId>
-			<artifactId>WaDosUtil</artifactId>
-			<version>1.5.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/WaDosUtil-1.5.1.jar</systemPath>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>ch.judos.generic</groupId>-->
+<!--			<artifactId>WaDosUtil</artifactId>-->
+<!--			<version>1.5.1</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/WaDosUtil-1.5.1.jar</systemPath>-->
+<!--		</dependency>-->
 
 
 		<dependency>
@@ -108,27 +108,12 @@
 			<version>2.9.9</version>
 		</dependency>
 
-		<!-- REST Client -->
-		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>2.33</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.inject</groupId>
-			<artifactId>jersey-hk2</artifactId>
-			<version>2.33</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>2.33</version>
-		</dependency>
-
 	</dependencies>
+
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+		<sourceDirectory>srcJava</sourceDirectory>
 		<resources>
 			<resource>
 				<filtering>true</filtering>
@@ -155,6 +140,7 @@
 						<configuration>
 							<sourceDirs>
 								<sourceDir>${project.basedir}/src</sourceDir>
+								<sourceDir>${project.basedir}/srcJava</sourceDir>
 							</sourceDirs>
 						</configuration>
 					</execution>
@@ -167,6 +153,7 @@
 						<configuration>
 							<sourceDirs>
 								<sourceDir>src</sourceDir>
+								<sourceDir>srcJava</sourceDir>
 							</sourceDirs>
 						</configuration>
 					</execution>

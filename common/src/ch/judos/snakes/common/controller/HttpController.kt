@@ -1,38 +1,46 @@
 package ch.judos.snakes.common.controller
 
-import org.glassfish.jersey.client.ClientConfig
-import java.util.*
-import javax.ws.rs.client.Client
-import javax.ws.rs.client.ClientBuilder
-import javax.ws.rs.client.Entity
-import javax.ws.rs.client.WebTarget
-import javax.ws.rs.core.MediaType
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpRequest.BodyPublishers
+import java.net.http.HttpResponse.BodyHandlers
 
 
 class HttpController(
 		private val url: String
 ) {
 
+	private var client: HttpClient
 	var jwt: String? = null
-	private var target: WebTarget
 
 	init {
-		val client: Client = ClientBuilder.newClient(ClientConfig())
-		this.target = client.target(url)!!
+		this.client = HttpClient.newHttpClient()!!
 	}
 
 	fun <T> post(path: String, obj: Any, returnType: Class<T>): T {
-		var builder = target.path(path).request()
-				.accept(MediaType.APPLICATION_JSON)
+		val objectMapper = ObjectMapper()
+		val str = objectMapper.writeValueAsString(obj)
+		val data = BodyPublishers.ofString(str)
+
+		// create a request
+		var builder = HttpRequest.newBuilder(URI.create("$url/$path"))
+				.header("Content-Type", "application/json")
+				.header("accept", "application/json")
 		if (jwt != null) {
 			builder = builder.header("Authorization", "Bearer $jwt")
 		}
-		val response = builder.post(Entity.json(obj))
-		if (response.status / 100 != 2) {
-			val error = response.readEntity(HashMap::class.java)
-			throw RuntimeException("request failed ${response.status} returned: $error")
+		val request = builder.POST(data)
+				.build()!!
+		// use the client to send the request
+		val response = client.send(request, BodyHandlers.ofString())
+		if (response.statusCode() / 100 != 2) {
+			val error = response.body()
+			throw RuntimeException("request failed ${response.statusCode()} returned: $error")
 		}
-		return response.readEntity(returnType)
+		val responseStr = response.body()
+		return objectMapper.readValue(responseStr, returnType)
 	}
 
 
