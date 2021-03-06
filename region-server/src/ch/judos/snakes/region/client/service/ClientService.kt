@@ -9,49 +9,83 @@ import ch.judos.snakes.region.core.service.UserTokenService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.EOFException
+import java.io.IOException
 import java.net.ServerSocket
+import java.net.Socket
 import java.net.SocketException
+import javax.annotation.PreDestroy
 
 @Service
 class ClientService(
 		private val config: RegionConfig,
 		private val userTokenService: UserTokenService
 ) {
+	private lateinit var test: ServerSocket
 	private val logger = LoggerFactory.getLogger(javaClass)
 
+
+	private var serverSocket: ServerSocket? = null
+	private var running = true
+
 	private val clients = mutableMapOf<String, Connection>()
+
 
 	init {
 		this.listenToNewConnections()
 	}
 
+	@PreDestroy
+	fun destroy() {
+		running = false
+		serverSocket?.close()
+		serverSocket = null
+	}
+
 	private fun listenToNewConnections() {
 		logger.info("Listening for connection on tcp-port: ${this.config.port}")
-		val socket = ServerSocket(this.config.port)
+		this.test = ServerSocket(this.config.port)
 		val listenThread = Thread({
-			while (true) {
-				val connectionSocket = socket.accept()!!
-				logger.info("new connection with timeout ${connectionSocket.soTimeout}")
-				connectionSocket.keepAlive = true
-				connectionSocket.soTimeout = 0
-				val connection = Connection(connectionSocket, {})
-				val hello = connection.inp.readUnshared()
-				logger.info("New connection: $hello")
-				if (hello is ClientLogin) {
-					if (this.userTokenService.isValid(hello.username, hello.token)) {
-						this.acceptClientConnection(connection, hello.username)
-					} else {
-						connection.out.writeUnshared(ErrorMsg("INVALID_TOKEN", "Token or username unknown."))
-						connection.close()
+			while (running) {
+				if (serverSocket == null) {
+					try {
+						this.serverSocket = ServerSocket(this.config.port)
+					} catch(e: IOException) {
+						this.logger.warn("Could not open Serversocket: "+e.message)
+						Thread.sleep(5000)
 					}
-				} else {
-					logger.error("Invalid hello obj from connection: $hello")
-					connection.close()
+				}
+				else {
+					try {
+						val connectionSocket = serverSocket!!.accept()!!
+						this.acceptConnection(connectionSocket)
+					} catch (e: SocketException) {
+						if (this.running) {
+							e.printStackTrace()
+						}
+					}
 				}
 			}
 		}, "Connection Listener")
 		listenThread.isDaemon = true
 		listenThread.start()
+	}
+
+	private fun acceptConnection(connectionSocket: Socket) {
+		logger.info("new connection with timeout ${connectionSocket.soTimeout}")
+		val connection = Connection(connectionSocket, {})
+		val hello = connection.inp.readUnshared()
+		logger.info("New connection: $hello")
+		if (hello is ClientLogin) {
+			if (this.userTokenService.isValid(hello.username, hello.token)) {
+				this.acceptClientConnection(connection, hello.username)
+			} else {
+				connection.out.writeUnshared(ErrorMsg("INVALID_TOKEN", "Token or username unknown."))
+				connection.close()
+			}
+		} else {
+			logger.error("Invalid hello obj from connection: $hello")
+			connection.close()
+		}
 	}
 
 	private fun acceptClientConnection(connection: Connection, username: String) {

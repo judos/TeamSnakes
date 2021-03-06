@@ -4,6 +4,7 @@ import ch.judos.snakes.client.core.base.Controller
 import ch.judos.snakes.client.model.ClientSettings
 import org.apache.logging.log4j.LogManager
 import ch.judos.snakes.client.scene.menu.LoginScene
+import ch.judos.snakes.client.scene.menu.MenuScene
 
 class GameController(
 		private val controller: Controller,
@@ -20,8 +21,7 @@ class GameController(
 			logger.info("Name entered can proceed")
 		}
 		this.networkController.login()
-
-
+		this.controller.loadScene(MenuScene::class.java)
 	}
 
 }
