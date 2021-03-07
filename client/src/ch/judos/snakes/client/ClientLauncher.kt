@@ -9,6 +9,7 @@ import ch.judos.snakes.client.core.window.GameWindow
 import ch.judos.snakes.client.core.window.ResizableWindow
 import ch.judos.snakes.client.model.ClientConfig
 import ch.judos.snakes.client.model.ClientSettings
+import ch.judos.snakes.client.model.LoadingData
 import ch.judos.snakes.client.scene.menu.LoadingScene
 import ch.judos.snakes.client.scene.menu.LoginScene
 import ch.judos.snakes.client.scene.menu.MenuScene
@@ -28,8 +29,9 @@ class ClientLauncher {
 		val sceneFactory = SceneFactory()
 		val controller = Controller(window, sceneFactory)
 		val settings = ClientSettings()
+		val loadingData = LoadingData()
 
-		sceneFactory.register(LoadingScene::class.java) { LoadingScene(controller, input, window) }
+		sceneFactory.register(LoadingScene::class.java) { LoadingScene(controller, input, window, loadingData) }
 		sceneFactory.register(LoginScene::class.java) { LoginScene(controller, input, window, settings) }
 		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window, settings) }
 
@@ -38,7 +40,7 @@ class ClientLauncher {
 		view.onClosed = Runnable { controller.quit() }
 
 		val networkController = NetworkController(settings, config)
-		val gameController = GameController(controller, settings, networkController)
+		val gameController = GameController(controller, settings, networkController, loadingData)
 	}
 }
 

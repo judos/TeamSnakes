@@ -20,7 +20,6 @@ class ClientService(
 		private val config: RegionConfig,
 		private val userTokenService: UserTokenService
 ) {
-	private lateinit var test: ServerSocket
 	private val logger = LoggerFactory.getLogger(javaClass)
 
 
@@ -42,13 +41,12 @@ class ClientService(
 	}
 
 	private fun listenToNewConnections() {
-		logger.info("Listening for connection on tcp-port: ${this.config.port}")
-		this.test = ServerSocket(this.config.port)
 		val listenThread = Thread({
 			while (running) {
 				if (serverSocket == null) {
 					try {
 						this.serverSocket = ServerSocket(this.config.port)
+						logger.info("Listening for connection on tcp-port: ${this.config.port}")
 					} catch(e: IOException) {
 						this.logger.warn("Could not open Serversocket: "+e.message)
 						Thread.sleep(5000)
@@ -101,15 +99,18 @@ class ClientService(
 		val clientListener = Thread({
 			var data: Any
 			try {
-				do {
+				while (true) {
 					data = connection.inp.readUnshared()
 					logger.info("unknown msg from client: $data")
-				} while (true)
+				}
 			} catch (e: SocketException) {
 				logger.info("Client $username connection lost: $e")
 			} catch (e: EOFException) {
 				logger.info("Client $username connection ended")
 			}
+			this.clients.remove(username)
+			val clientList = ClientListMsg(this.clients.keys.toList())
+			this.clients.values.forEach { it.out.writeUnshared(clientList) }
 		}, "Client Connection $username")
 		clientListener.isDaemon = true
 		clientListener.start()

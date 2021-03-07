@@ -2,6 +2,7 @@ package ch.judos.snakes.client.controller
 
 import ch.judos.snakes.client.core.base.Controller
 import ch.judos.snakes.client.model.ClientSettings
+import ch.judos.snakes.client.model.LoadingData
 import org.apache.logging.log4j.LogManager
 import ch.judos.snakes.client.scene.menu.LoginScene
 import ch.judos.snakes.client.scene.menu.MenuScene
@@ -9,7 +10,8 @@ import ch.judos.snakes.client.scene.menu.MenuScene
 class GameController(
 		private val controller: Controller,
 		private val clientSettings: ClientSettings,
-		private val networkController: NetworkController
+		private val networkController: NetworkController,
+		private val loadingData: LoadingData
 ) {
 
 	private val logger = LogManager.getLogger(javaClass)!!
@@ -20,6 +22,7 @@ class GameController(
 			this.controller.awaitSceneChange()
 			logger.info("Name entered can proceed")
 		}
+		loadingData.current = "Connecting to region server..."
 		this.networkController.login()
 		this.controller.loadScene(MenuScene::class.java)
 	}

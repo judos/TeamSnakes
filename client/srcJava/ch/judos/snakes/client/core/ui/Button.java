@@ -61,7 +61,7 @@ public class Button extends Label {
 		g.setFont(Design.textFont);
 		if (this.isEnabled) g.setColor(Design.textColor);
 		else g.setColor(Design.textColorDisabled);
-		g.drawString(this.title, pos.x + Design.buttonTextMarginX, pos.y + Design.buttonTextMarginY + this.size.height / 2);
+		g.drawString(this.text, pos.x + Design.buttonTextMarginX, pos.y + Design.buttonTextMarginY + this.size.height / 2);
 	}
 
 	public Button setInputAction(InputAction hotkeyAction) {
@@ -83,7 +83,7 @@ public class Button extends Label {
 
 	@Override
 	public String toString() {
-		return "Button(" + this.title + ")";
+		return "Button(" + this.text + ")";
 	}
 
 	@Override

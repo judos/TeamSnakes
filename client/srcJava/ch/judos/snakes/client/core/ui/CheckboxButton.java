@@ -41,7 +41,7 @@ public class CheckboxButton extends Label {
 		}
 		g.setFont(Design.textFont);
 		g.setColor(Design.textColor);
-		g.drawString(this.title, 30 + pos.x + Design.buttonTextMarginX,
+		g.drawString(this.text, 30 + pos.x + Design.buttonTextMarginX,
 				pos.y + Design.buttonTextMarginY + this.size.height / 2);
 		g.setStroke(stroke);
 	}

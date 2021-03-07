@@ -8,23 +8,23 @@ import java.awt.*;
 
 public class Label extends BaseComponent {
 
-	protected String title;
+	public String text;
 	protected Font font;
 
-	public Label(String title) {
-		this(title, false);
+	public Label(String text) {
+		this(text, false);
 	}
 
-	public Label(String title, boolean isTitle) {
+	public Label(String text, boolean isTitle) {
 		super();
-		this.title = title;
+		this.text = text;
 		this.font = isTitle ? Design.titleFont : Design.textFont;
 	}
 
 	public void render(Graphics g) {
 		g.setFont(this.font);
 		g.setColor(Design.textColor);
-		g.drawString(this.title, pos.x + Design.buttonTextMarginX,
+		g.drawString(this.text, pos.x + Design.buttonTextMarginX,
 				pos.y + Design.buttonTextMarginY + this.size.height / 2);
 	}
 
@@ -36,7 +36,7 @@ public class Label extends BaseComponent {
 	}
 
 	protected String getTextForSizeCalculation() {
-		return this.title;
+		return this.text;
 	}
 
 	@Override
