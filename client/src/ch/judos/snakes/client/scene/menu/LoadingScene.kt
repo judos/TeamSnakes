@@ -17,21 +17,27 @@ class LoadingScene(
 		private var loadingData: LoadingData,
 ) : BasicScene(sceneController, inputController, window) {
 
+	private var view: WindowComponent? = null
 	private var consumer: Consumer<LoadingData>
 
 	init {
-		val view = WindowComponent(Design.titleFont, this.inputController).apply {
-			this.title = "Loading..."
-		}
-		val label = Label("")
-		label.setWeight(1, 1)
-		view.addComponent(label)
-		this.ui.addWindow(view)
-
 		this.consumer = Consumer<LoadingData> {
-			label.text = it.current
+			update(it)
 		}
 		this.loadingData.subscribe(this.consumer)
+		update(loadingData)
+	}
+
+	private fun update(it: LoadingData) {
+		this.view?.dispose()
+		this.view = WindowComponent(Design.titleFont, this.inputController).apply {
+			this.title = "Loading..."
+		}
+		for (str in it.current) {
+			val label = Label(str).setWeight(1, 1)
+			view!!.addComponent(label)
+		}
+		this.ui.addWindow(view)
 	}
 
 	override fun unloadScene() {

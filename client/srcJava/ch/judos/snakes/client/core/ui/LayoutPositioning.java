@@ -5,13 +5,13 @@ import java.awt.Point;
 
 public class LayoutPositioning {
 
-	public static enum PositionH {
+	public enum PositionH {
 		LEFT,
 		CENTER,
 		RIGHT;
 	}
 
-	public static enum PositionV {
+	public enum PositionV {
 		TOP,
 		CENTER,
 		BOTTOM;

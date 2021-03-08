@@ -7,11 +7,15 @@ class LoadingData {
 	private var subscribers = mutableListOf<Consumer<LoadingData>>()
 
 
-	var current: String = ""
+	var current: List<String> = listOf()
 		set(value) {
 			field = value
 			this.subscribers.forEach { it.accept(this) }
 		}
+
+	fun set(current: String) {
+		this.current = listOf(current)
+	}
 
 	fun subscribe(subscriber: Consumer<LoadingData>) {
 		this.subscribers.add(subscriber)

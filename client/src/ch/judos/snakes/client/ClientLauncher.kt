@@ -5,7 +5,6 @@ import ch.judos.snakes.client.controller.NetworkController
 import ch.judos.snakes.client.core.base.Controller
 import ch.judos.snakes.client.core.base.SceneFactory
 import ch.judos.snakes.client.core.io.InputController
-import ch.judos.snakes.client.core.window.GameWindow
 import ch.judos.snakes.client.core.window.ResizableWindow
 import ch.judos.snakes.client.model.ClientConfig
 import ch.judos.snakes.client.model.ClientSettings
@@ -24,8 +23,7 @@ class ClientLauncher {
 		val config = ClientConfig.load()
 		val input = InputController()
 		//		GameWindow window = new NativeFullscreen(input);
-		val view = ResizableWindow("TeamSnakes", 1650, 1040, input)
-		val window: GameWindow = view
+		val window = ResizableWindow("TeamSnakes", 1650, 1040, input)
 		val sceneFactory = SceneFactory()
 		val controller = Controller(window, sceneFactory)
 		val settings = ClientSettings()
@@ -35,11 +33,12 @@ class ClientLauncher {
 		sceneFactory.register(LoginScene::class.java) { LoginScene(controller, input, window, settings) }
 		sceneFactory.register(MenuScene::class.java) { MenuScene(controller, input, window, settings) }
 
+		loadingData.set("Loading Game")
 		controller.start()
 		controller.loadScene(LoadingScene::class.java)
-		view.onClosed = Runnable { controller.quit() }
+		window.onClosed = Runnable { controller.quit() }
 
-		val networkController = NetworkController(settings, config)
+		val networkController = NetworkController(settings, config, loadingData)
 		val gameController = GameController(controller, settings, networkController, loadingData)
 	}
 }

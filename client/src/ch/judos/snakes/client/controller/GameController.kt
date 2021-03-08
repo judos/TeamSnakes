@@ -22,7 +22,6 @@ class GameController(
 			this.controller.awaitSceneChange()
 			logger.info("Name entered can proceed")
 		}
-		loadingData.current = "Connecting to region server..."
 		this.networkController.login()
 		this.controller.loadScene(MenuScene::class.java)
 	}

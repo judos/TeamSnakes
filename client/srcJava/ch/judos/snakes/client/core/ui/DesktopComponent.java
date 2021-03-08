@@ -5,6 +5,7 @@ import ch.judos.snakes.client.core.io.InputEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static ch.judos.snakes.client.core.ui.LayoutPositioning.PositionH;
 import static ch.judos.snakes.client.core.ui.LayoutPositioning.PositionV;
@@ -19,12 +20,14 @@ public class DesktopComponent extends BaseComponent {
 	 * sorted by z-index. Last window will be on top of everything (getting input first)
 	 */
 	private final ArrayList<WindowComponent> windows;
+	private final HashMap<WindowComponent, WindowData> windowData;
 	private final InputController input;
 
 	public DesktopComponent(InputController input) {
 		super();
 		this.input = input;
 		this.windows = new ArrayList<>();
+		this.windowData = new HashMap<>();
 	}
 
 	public void addWindow(WindowComponent window) {
@@ -33,11 +36,23 @@ public class DesktopComponent extends BaseComponent {
 
 	public void addWindow(WindowComponent window, PositionH posH, PositionV posV) {
 		this.windows.add(window);
+		this.windowData.put(window, new WindowData(posH, posV));
 
 		Dimension windowSize = window.getPreferedDimension();
 		LayoutPositioning layout = new LayoutPositioning(posH, posV, windowSize);
 		Point pos = layout.getPixelPositionBasedOnEnums(this.pos.x, this.pos.y, this.size.width, this.size.height);
 
+		window.layout(pos.x, pos.y, windowSize.width, windowSize.height);
+	}
+
+	public void layoutWindow(WindowComponent window) {
+		if (!this.windowData.containsKey(window)) {
+			return;
+		}
+		WindowData data = this.windowData.get(window);
+		Dimension windowSize = window.getPreferedDimension();
+		LayoutPositioning layout = new LayoutPositioning(data.posH, data.posV, windowSize);
+		Point pos = layout.getPixelPositionBasedOnEnums(this.pos.x, this.pos.y, this.size.width, this.size.height);
 		window.layout(pos.x, pos.y, windowSize.width, windowSize.height);
 	}
 
