@@ -9,13 +9,13 @@ import ch.judos.snakes.client.core.ui.Button
 import ch.judos.snakes.client.core.ui.InputField
 import ch.judos.snakes.client.core.ui.WindowComponent
 import ch.judos.snakes.client.core.window.GameWindow
-import ch.judos.snakes.client.model.ClientSettings
+import ch.judos.snakes.client.model.GameData
 
 class LoginScene(
 		sceneController: SceneController,
 		inputController: InputController,
 		window: GameWindow,
-		private val clientSettings: ClientSettings
+		private val gameData: GameData
 ) : BasicScene(sceneController, inputController, window) {
 
 	var inputField: InputField
@@ -42,7 +42,7 @@ class LoginScene(
 	private fun nameEntered() {
 		if (inputField.text.isNullOrEmpty())
 			return
-		this.clientSettings.name = inputField.text
+		this.gameData.settings.name = inputField.text
 		this.sceneController.loadScene(LoadingScene::class.java)
 	}
 

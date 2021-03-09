@@ -4,8 +4,7 @@ import java.util.function.Consumer
 
 class LoadingData {
 
-	private var subscribers = mutableListOf<Consumer<LoadingData>>()
-
+	var subscribers = mutableListOf<Consumer<LoadingData>>()
 
 	var current: List<String> = listOf()
 		set(value) {
@@ -16,14 +15,5 @@ class LoadingData {
 	fun set(current: String) {
 		this.current = listOf(current)
 	}
-
-	fun subscribe(subscriber: Consumer<LoadingData>) {
-		this.subscribers.add(subscriber)
-	}
-
-	fun unsubscribe(subscriber: Consumer<LoadingData>) {
-		this.subscribers.remove(subscriber)
-	}
-
 
 }

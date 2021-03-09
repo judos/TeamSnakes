@@ -51,7 +51,7 @@ class TestingScene(
 
 	private fun updateElements() {
 		this.list.add("Test" + System.currentTimeMillis())
-		this.slist.update()
+		this.slist.update(this.list)
 	}
 
 

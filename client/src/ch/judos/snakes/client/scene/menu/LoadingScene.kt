@@ -24,7 +24,7 @@ class LoadingScene(
 		this.consumer = Consumer<LoadingData> {
 			update(it)
 		}
-		this.loadingData.subscribe(this.consumer)
+		this.loadingData.subscribers.add(this.consumer)
 		update(loadingData)
 	}
 
@@ -41,7 +41,7 @@ class LoadingScene(
 	}
 
 	override fun unloadScene() {
-		this.loadingData.unsubscribe(this.consumer)
+		this.loadingData.subscribers.remove(this.consumer)
 	}
 
 }

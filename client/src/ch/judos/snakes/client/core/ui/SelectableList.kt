@@ -8,7 +8,7 @@ import java.awt.Graphics2D
 import java.awt.Point
 
 class SelectableList<T>(
-		private var list: List<T>,
+		list: List<T>,
 		private var inputController: InputController
 ) : BaseComponent() {
 
@@ -18,7 +18,9 @@ class SelectableList<T>(
 		set(value) {
 			field?.selected = false
 			field = value
-			field?.selected = true
+			if (value?.selected == true) {
+				field?.selected = true
+			}
 		}
 
 	var selected: T?
@@ -28,10 +30,10 @@ class SelectableList<T>(
 		get() = selectedE?.data
 
 	init {
-		addComponents()
+		addComponents(list)
 	}
 
-	private fun addComponents() {
+	private fun addComponents(list: List<T>) {
 		for (t in list) {
 			val s = Selectable<T>(t.toString(), inputController) {
 				selectedE = it
@@ -41,10 +43,10 @@ class SelectableList<T>(
 		}
 	}
 
-	fun update() {
+	fun update(list: List<T>) {
 		val selected = this.selected
 		this.components.clear()
-		addComponents()
+		addComponents(list)
 		this.selected = selected
 
 		var y2 = this.pos.y
