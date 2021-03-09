@@ -40,7 +40,7 @@ public class DesktopComponent extends BaseComponent {
 
 		Dimension windowSize = window.getPreferedDimension();
 		LayoutPositioning layout = new LayoutPositioning(posH, posV, windowSize);
-		Point pos = layout.getPixelPositionBasedOnEnums(this.pos.x, this.pos.y, this.size.width, this.size.height);
+		Point pos = layout.getPixelPositionInBounds(this.pos.x, this.pos.y, this.size.width, this.size.height);
 
 		window.layout(pos.x, pos.y, windowSize.width, windowSize.height);
 	}
@@ -52,12 +52,12 @@ public class DesktopComponent extends BaseComponent {
 		WindowData data = this.windowData.get(window);
 		Dimension windowSize = window.getPreferedDimension();
 		LayoutPositioning layout = new LayoutPositioning(data.posH, data.posV, windowSize);
-		Point pos = layout.getPixelPositionBasedOnEnums(this.pos.x, this.pos.y, this.size.width, this.size.height);
+		Point pos = layout.getPixelPositionInBounds(this.pos.x, this.pos.y, this.size.width, this.size.height);
 		window.layout(pos.x, pos.y, windowSize.width, windowSize.height);
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics2D g, Point mousePos) {
 		int activateHoveringAt = 0;
 		this.windows.removeIf(window -> window.isDisposed);
 
@@ -78,7 +78,7 @@ public class DesktopComponent extends BaseComponent {
 				this.input.setHoverEnabled(true);
 			WindowComponent window = this.windows.get(i);
 			window.zIndex = zIndex;
-			window.render(g);
+			window.render(g, mousePos);
 			zIndex++;
 		}
 		this.input.setHoverEnabled(true);

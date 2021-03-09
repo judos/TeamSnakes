@@ -56,4 +56,11 @@ public abstract class BaseComponent implements Component {
 		return new Dimension((int) bounds.getWidth(), (int) bounds.getHeight());
 	}
 
+	public Dimension getSize() {
+		return size;
+	}
+
+	public Point getPos() {
+		return pos;
+	}
 }

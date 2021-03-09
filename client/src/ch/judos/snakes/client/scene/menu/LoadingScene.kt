@@ -30,7 +30,7 @@ class LoadingScene(
 
 	private fun update(it: LoadingData) {
 		this.view?.dispose()
-		this.view = WindowComponent(Design.titleFont, this.inputController).apply {
+		this.view = WindowComponent(Design.titleFont).apply {
 			this.title = "Loading..."
 		}
 		for (str in it.current) {

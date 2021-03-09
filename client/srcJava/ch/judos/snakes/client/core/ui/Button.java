@@ -1,9 +1,8 @@
 package ch.judos.snakes.client.core.ui;
 
-import ch.judos.snakes.client.core.io.InputAction;
-import ch.judos.snakes.client.core.io.InputController;
-import ch.judos.snakes.client.core.io.InputEvent;
 import ch.judos.snakes.client.core.base.Design;
+import ch.judos.snakes.client.core.io.InputAction;
+import ch.judos.snakes.client.core.io.InputEvent;
 
 import java.awt.*;
 import java.util.Objects;
@@ -11,19 +10,17 @@ import java.util.Objects;
 public class Button extends Label {
 
 	public enum Colored {
-		DEFAULT, CAUTION;
+		DEFAULT, CAUTION
 	}
 
 	public final Runnable action;
-	public final InputController input;
 	protected boolean isEnabled;
 	protected InputAction hotkeyAction = null;
 	protected Color bg;
 	protected Color hover;
 
-	public Button(String title, InputController input, Runnable action) {
+	public Button(String title, Runnable action) {
 		super(title);
-		this.input = input;
 		this.action = action;
 		this.isEnabled = true;
 		setColored(Colored.DEFAULT);
@@ -45,23 +42,16 @@ public class Button extends Label {
 		return this;
 	}
 
-	public void render(Graphics g) {
+	public void render(Graphics2D g, Point mousePos) {
 		g.setColor(this.bg);
-		if (this.isEnabled && isPointInside(this.input.getMousePosition())) {
+		if (this.isEnabled && isPointInside(mousePos)) {
 			g.setColor(this.hover);
 		}
 		if (!this.isEnabled) g.setColor(Design.buttonDisabled);
 		g.fillRect(pos.x, pos.y, size.width, size.height);
 		g.setColor(Design.buttonBorder);
-		g.drawRect(pos.x, pos.y, size.width, size.height);
-		renderText(g);
-	}
-
-	protected void renderText(Graphics g) {
-		g.setFont(Design.textFont);
-		if (this.isEnabled) g.setColor(Design.textColor);
-		else g.setColor(Design.textColorDisabled);
-		g.drawString(this.text, pos.x + Design.buttonTextMarginX, pos.y + Design.buttonTextMarginY + this.size.height / 2);
+		g.drawRect(pos.x, pos.y, size.width - 1, size.height - 1);
+		this.renderTextWithColor(g, this.isEnabled ? Design.textColor : Design.textColorDisabled);
 	}
 
 	public Button setInputAction(InputAction hotkeyAction) {
@@ -76,8 +66,8 @@ public class Button extends Label {
 			this.action.run();
 			return;
 		}
-		if (this.hotkeyAction != null && event.isPressActionConsumeAndRun(this.hotkeyAction, this.action)) {
-			return;
+		if (this.hotkeyAction != null) {
+			event.isPressActionConsumeAndRun(this.hotkeyAction, this.action);
 		}
 	}
 
@@ -92,11 +82,12 @@ public class Button extends Label {
 		if (o == null || getClass() != o.getClass()) return false;
 		Button button = (Button) o;
 		return isEnabled == button.isEnabled && Objects.equals(action, button.action) &&
-				Objects.equals(input, button.input) && hotkeyAction == button.hotkeyAction &&
+				hotkeyAction == button.hotkeyAction &&
 				Objects.equals(bg, button.bg) && Objects.equals(hover, button.hover);
 	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(action, input, isEnabled, hotkeyAction, bg, hover);
+		return Objects.hash(action, isEnabled, hotkeyAction, bg, hover);
 	}
 }

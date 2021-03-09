@@ -11,19 +11,7 @@ public enum InputAction implements InputActionI {
 	PAN_RIGHT(VK_D, VK_RIGHT),
 	PAN_UP(VK_W, VK_UP),
 	PAN_DOWN(VK_S, VK_DOWN),
-	MOUSE_ZOOM(InputController.MOUSE_SCROLL),
-
-	// TOOLS
-	DROP_TOOL(VK_ESCAPE),
-	BT_BUILD_TILE(InputController.MOUSE_LEFT),
-	BT_DELETE_TILE(InputController.MOUSE_RIGHT),
-	BT_ROTATE_LEFT(VK_Q),
-	BT_ROTATE_RIGHT(VK_E),
-	BT_MIRROR(VK_TAB),
-
-	// SIGNAL TOOL
-	ST_BUILD_SIGNAL(InputController.MOUSE_LEFT),
-	ST_DELETE_SIGNAL(InputController.MOUSE_RIGHT),
+	MOUSE_SCROLL(InputController.MOUSE_SCROLL),
 
 	// TOOLBAR
 	TOOLBAR_0(VK_MINUS, 16777383), // "§" left of number 1
@@ -42,18 +30,21 @@ public enum InputAction implements InputActionI {
 	SELECT(InputController.MOUSE_LEFT),
 	DESELECT(VK_ESCAPE),
 	SELECT2(InputController.MOUSE_RIGHT),
+
 	INPUT_GUIDE(VK_F1),
 	DEBUG_TOOL(VK_F2),
 	TAKE_SCREENSHOT(VK_F3),
-	PROFILER(VK_F6),
+	PROFILER(VK_F4),
 	QUIT_GAME(VK_F12),
+
 	BACKSPACE(VK_BACK_SPACE),
 	LEFT(VK_LEFT),
 	RIGHT(VK_RIGHT),
 	DELETE(VK_DELETE),
 	HOME(VK_HOME),
 	END(VK_END),
-	CONFIRM(VK_ENTER),;
+	CONFIRM(VK_ENTER),
+	;
 
 	public static InputAction getToolbarActionByNumber(int number) {
 		if (number < 0 || number > 10)

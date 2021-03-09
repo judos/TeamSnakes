@@ -83,10 +83,13 @@ class InputController : NamedComponent {
 	/**
 	 * @return mouse coordinate, DO NOT MODIFY THIS OBJECT!
 	 */
-	val mousePosition: Point
-		get() = if (!hoveringEnabled) {
+	fun getMousePosition(): Point {
+		return if (!hoveringEnabled) {
 			Point(-2, -2)
-		} else currentMousePosition
+		} else {
+			currentMousePosition
+		}
+	}
 
 	fun setFocus(handler: InputHandler?) {
 		currentlyFocused = handler

@@ -24,7 +24,7 @@ public class Spacer extends BaseComponent {
 	}
 
 	@Override
-	public void render(Graphics graphics) {
+	public void render(Graphics2D graphics, Point mousePos) {
 	}
 
 }

@@ -85,6 +85,9 @@ public class Controller implements SceneController {
 
 		window.flipFrame();
 		Graphics2D graphics = window.getGraphics();
+		// TODO: scaling factor is set by windows
+		// set transform to scale 1/1, IMPORTANT: mouse position needs to be fixed in this case
+		// graphics.setTransform(AffineTransform.getTranslateInstance(0, 0));
 
 		// clip makes everyone aware of the available screen size
 		graphics.clipRect(0, 0, window.getScreenSize().width, window.getScreenSize().height);
@@ -94,14 +97,15 @@ public class Controller implements SceneController {
 			this.currentScene.screenResized(this.window.getScreenSize());
 		}
 
+		Point mousePos = input.getMousePosition();
 		for (BaseRenderer renderer : this.currentScene.getRenderers()) {
 			profiler.startSample(renderer);
 //			GraphicsStack stack = graphics.getStack();
-			renderer.render(graphics);
+			renderer.render(graphics, mousePos);
 //			graphics.setStack(stack);
 			if (snapshotGraphics != null) {
 //				GraphicsStack stack2 = snapshotGraphics.getStack();
-				renderer.render(snapshotGraphics);
+				renderer.render(snapshotGraphics, mousePos);
 //				snapshotGraphics.setStack(stack2);
 			}
 			profiler.endSample(renderer);
@@ -115,9 +119,9 @@ public class Controller implements SceneController {
 			profiler.endSample(ticker);
 		}
 
-		this.profiler.render(graphics);
+		this.profiler.render(graphics, mousePos);
 		if (snapshotGraphics != null) {
-			this.profiler.render(snapshotGraphics);
+			this.profiler.render(snapshotGraphics, mousePos);
 		}
 
 		if (snapshot != null) {

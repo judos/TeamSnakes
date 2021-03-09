@@ -1,9 +1,8 @@
 package ch.judos.snakes.client.core.ui;
 
-import ch.judos.snakes.client.core.io.InputAction;
-import ch.judos.snakes.client.core.io.InputController;
-import ch.judos.snakes.client.core.io.InputEvent;
 import ch.judos.snakes.client.core.base.Design;
+import ch.judos.snakes.client.core.io.InputAction;
+import ch.judos.snakes.client.core.io.InputEvent;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -24,21 +23,19 @@ public class WindowComponent extends BaseComponent {
 	 */
 	public Consumer<String> onClose;
 
-	protected BasePanel content = new BasePanel();
+	protected BasePanel content = (BasePanel) new BasePanel().setWeight(1, 0);
 
 	protected int bannerHeight;
 	protected int baselineDelta;
 	protected boolean moving;
 	protected Point movingMouseInitialPos;
-	protected InputController input;
 	protected Font font;
 	protected Point movingWindowInitialPos;
 	protected boolean isDisposed;
 
-	public WindowComponent(Font font, InputController input) {
+	public WindowComponent(Font font) {
 		super();
 		this.font = font;
-		this.input = input;
 
 		Canvas c = new Canvas();
 		FontMetrics fm = c.getFontMetrics(font);
@@ -69,31 +66,30 @@ public class WindowComponent extends BaseComponent {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics2D g, Point mousePos) {
 		if (!this.isVisible) {
 			return;
 		}
 		if (this.moving) {
-			updateChildPositionsWhileMoving(g);
+			updateChildPositionsWhileMoving(g, mousePos);
 		}
 
-		this.content.render(g);
+		this.content.render(g, mousePos);
 		if (!this.isHeadless) {
 			g.setColor(Design.windowBannerBg);
 			g.fillRect(this.pos.x, this.pos.y, this.size.width, this.bannerHeight);
-			g.setColor(Design.windowBorder);
-			g.drawRect(this.pos.x, this.pos.y, this.size.width, this.size.height);
+		}
+		g.setColor(Design.windowBorder);
+		g.drawRect(this.pos.x, this.pos.y, this.size.width - 1, this.size.height - 1);
+		if (!this.isHeadless) {
 			g.setFont(this.font);
 			g.setColor(Design.textColor);
-			g.drawString(this.title, this.pos.x + Design.buttonTextMarginX, this.pos.y + this.baselineDelta);
+			g.drawString(this.title, this.pos.x + Design.textMarginX, this.pos.y + this.baselineDelta);
 		}
-
-
 	}
 
-	private void updateChildPositionsWhileMoving(Graphics g) {
-		Point mousepos = this.input.getMousePosition();
-		Point delta = new Point(mousepos.x - movingMouseInitialPos.x, mousepos.y - movingMouseInitialPos.y);
+	private void updateChildPositionsWhileMoving(Graphics g, Point mousePos) {
+		Point delta = new Point(mousePos.x - movingMouseInitialPos.x, mousePos.y - movingMouseInitialPos.y);
 		this.pos = new Point(this.movingWindowInitialPos);
 		this.pos.translate(delta.x, delta.y);
 		stayInsideClip(g);
@@ -178,7 +174,7 @@ public class WindowComponent extends BaseComponent {
 		}
 		Dimension size = this.content.getPreferedDimension();
 		size.height += bannerHeight; // top nav and border bottom
-		int titleWidth = 2 * Design.buttonTextMarginX + measureTextSize(this.font, this.title).width;
+		int titleWidth = 2 * Design.textMarginX + measureTextSize(this.font, this.title).width;
 		size.width = Math.max(titleWidth, size.width);
 		return size;
 	}

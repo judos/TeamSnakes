@@ -30,19 +30,20 @@ class MenuScene(
 		panel.add(Spacer(1,100))
 
 		val buttonPanel = BasePanel(isVertical = false)
-		buttonPanel.add(Button("Create New Game", inputController) {
+		buttonPanel.add(Button("Create New Game") {
 			// TODO: implement
 		})
 		buttonPanel.add(Spacer(100,1))
-		buttonPanel.add(Button("Join Game", inputController) {
+		buttonPanel.add(Button("Join Game") {
 			// TODO:
 		})
 		buttonPanel.add(Spacer(100,1))
-		buttonPanel.add(Button("Quit", inputController) {
+		buttonPanel.add(Button("Quit") {
 			this.sceneController.quit()
 		})
+		panel.add(buttonPanel)
 
-		val view = WindowComponent(Design.titleFont, this.inputController)
+		val view = WindowComponent(Design.titleFont)
 		view.isHeadless = true
 		view.isMovable = false
 		view.addComponent(panel)

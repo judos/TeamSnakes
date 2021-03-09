@@ -21,17 +21,17 @@ class LoginScene(
 	var inputField: InputField
 
 	init {
-		val view = WindowComponent(Design.titleFont, this.inputController).apply {
+		val view = WindowComponent(Design.titleFont).apply {
 			this.title = "Enter your player name"
 			inputField = InputField(30, inputController)
 			inputField.focus()
 			addComponent(inputField)
 
 			val panel = BasePanel(isVertical = false)
-			panel.add(Button("Ok", inputController) {
+			panel.add(Button("Ok") {
 				nameEntered()
 			})
-			panel.add(Button("Exit", inputController) {
+			panel.add(Button("Exit") {
 				sceneController.quit()
 			})
 			addComponent(panel)

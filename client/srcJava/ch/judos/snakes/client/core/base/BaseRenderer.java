@@ -5,6 +5,6 @@ import java.awt.*;
 @FunctionalInterface
 public interface BaseRenderer extends NamedComponent {
 
-	void render(Graphics graphics);
+	void render(Graphics2D graphics, Point mouse);
 
 }

@@ -10,10 +10,10 @@ import java.util.Set;
  */
 public class InputEvent {
 
-	public static enum InputEventType {
+	public enum InputEventType {
 		PRESS,
 		RELEASE,
-		CHANGE;
+		CHANGE
 	}
 
 	public boolean isConsumed;
@@ -31,12 +31,7 @@ public class InputEvent {
 	}
 
 	/**
-	 * @param keyCode
-	 * @param type
-	 * @param changeValue
 	 * @param holdKeyCodes general other keyCodes currently hold down
-	 * @param currentMousePos
-	 * @param c
 	 */
 	public InputEvent(int keyCode, InputEventType type, double changeValue, Set<Integer> holdKeyCodes,
 			Point currentMousePos, Character c) {
@@ -55,7 +50,9 @@ public class InputEvent {
 
 	public boolean isPressActionConsumeAndRun(InputAction action, Runnable run) {
 		if (isPressActionAndConsume(action)) {
-			run.run();
+			if (run != null) {
+				run.run();
+			}
 			return true;
 		}
 		return false;
@@ -116,9 +113,6 @@ public class InputEvent {
 
 	/**
 	 * is any other action input hold down while this action was generated
-	 * 
-	 * @param action
-	 * @return
 	 */
 	public boolean isActionHold(InputAction action) {
 		for (int possibleKeyCode : action.getKeyCodes()) {
@@ -134,11 +128,11 @@ public class InputEvent {
 
 	@Override
 	public String toString() {
-		StringBuffer buf = new StringBuffer(
+		StringBuilder buf = new StringBuilder(
 				"InputEvent [" + type + ", " + KeyEvent.getKeyText(this.keyCode) + ", holdKeyCodes=" + holdKeyCodes
 						+ ", mousePos=" + currentMousePosition.x+"/"+currentMousePosition.y + ", text=" + text + ", keycode=" + this.keyCode);
 		if (this.changeValue != 0)
-			buf.append(", changeValue=" + changeValue);
+			buf.append(", changeValue=").append(changeValue);
 		buf.append("]");
 		return buf.toString();
 	}

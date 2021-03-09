@@ -1,7 +1,7 @@
 package ch.judos.snakes.client.core.ui;
 
-import ch.judos.snakes.client.core.io.InputHandler;
 import ch.judos.snakes.client.core.base.BaseRenderer;
+import ch.judos.snakes.client.core.io.InputHandler;
 
 import java.awt.*;
 
@@ -23,5 +23,9 @@ public interface Component extends InputHandler, BaseRenderer {
 	public int getStretchWeightX();
 
 	public int getStretchWeightY();
+
+	public Dimension getSize();
+
+	public Point getPos();
 
 }

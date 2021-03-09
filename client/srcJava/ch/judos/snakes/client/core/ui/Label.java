@@ -1,7 +1,7 @@
 package ch.judos.snakes.client.core.ui;
 
-import ch.judos.snakes.client.core.io.InputEvent;
 import ch.judos.snakes.client.core.base.Design;
+import ch.judos.snakes.client.core.io.InputEvent;
 
 import java.awt.*;
 
@@ -21,18 +21,22 @@ public class Label extends BaseComponent {
 		this.font = isTitle ? Design.titleFont : Design.textFont;
 	}
 
-	public void render(Graphics g) {
+	public void render(Graphics2D g, Point mousePos) {
+		this.renderTextWithColor(g, Design.textColor);
+	}
+
+	protected void renderTextWithColor(Graphics g, Color c) {
 		g.setFont(this.font);
-		g.setColor(Design.textColor);
-		g.drawString(this.text, pos.x + Design.buttonTextMarginX,
-				pos.y + Design.buttonTextMarginY + this.size.height / 2);
+		g.setColor(c);
+		g.drawString(this.text, pos.x + Design.textMarginX,
+				pos.y + Design.TextMarginY + this.size.height / 2);
 	}
 
 	@Override
 	public Dimension getPreferedDimension() {
 		Dimension textSize = measureTextSize(this.font, getTextForSizeCalculation());
-		return new Dimension(textSize.width + 2 * Design.buttonTextMarginX,
-				textSize.height + 2 * Design.buttonTextMarginY);
+		return new Dimension(textSize.width + 2 * Design.textMarginX,
+				textSize.height + 2 * Design.TextMarginY);
 	}
 
 	protected String getTextForSizeCalculation() {

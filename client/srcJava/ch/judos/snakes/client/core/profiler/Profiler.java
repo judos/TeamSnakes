@@ -86,16 +86,18 @@ public final class Profiler implements ProfilerI {
 
 	private void digest() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(1000 / (frameDuration / frame) + " FPS\n");
-		sb.append((frameActiveDuration / frame) + "ms (" + ((100 * frameActiveDuration) / frameDuration) + "% load)\n");
-		sb.append("\n");
+		sb.append(1000 / (frameDuration / frame)).append(" FPS\n");
+		sb.append(frameActiveDuration / frame)
+				.append("ms (")
+				.append((100 * frameActiveDuration) / frameDuration)
+				.append("% load)\n\n");
 
 		long sum = 0;
 		for (Entry<NamedComponent, Long> c : this.activeTimeOfComponents.entrySet()) {
-			sb.append(" - " + c.getKey().getName() + ": " + (c.getValue() / frame) + "ms\n");
+			sb.append(" - ").append(c.getKey().getName()).append(": ").append(c.getValue() / frame).append("ms\n");
 			sum += c.getValue();
 		}
-		sb.append("Components: " + (sum / frame) + "ms\n");
+		sb.append("Components: ").append(sum / frame).append("ms\n");
 		digest = sb.toString();
 	}
 
@@ -105,7 +107,7 @@ public final class Profiler implements ProfilerI {
 	}
 
 	@Override
-	public void render(Graphics graphics) {
+	public void render(Graphics2D graphics, Point mousePos) {
 		if (!this.show) return;
 		FontMetrics metrics = graphics.getFontMetrics();
 		int sh = metrics.getHeight();

@@ -4,61 +4,76 @@ import ch.judos.snakes.client.core.base.Design
 import ch.judos.snakes.client.core.io.InputEvent
 import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionH
 import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionV
+import ch.judos.snakes.common.extensions.maxSum
+import ch.judos.snakes.common.extensions.sumMax
 import java.awt.Dimension
-import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.Point
 import java.util.stream.Collectors
 
-class BasePanel @JvmOverloads constructor(
+open class BasePanel @JvmOverloads constructor(
 		private val positionH: PositionH = PositionH.CENTER,
 		private val positionV: PositionV = PositionV.CENTER,
-		var isVertical: Boolean = true
+		var isVertical: Boolean = true,
+		var drawBorder: Boolean = false
 ) : BaseComponent() {
 
-	private val components = mutableListOf<Component>()
+	protected val components = mutableListOf<Component>()
 
 	fun add(vararg components: Component): BasePanel {
 		this.components.addAll(components)
 		return this
 	}
 
-	override fun render(g: Graphics) {
+	protected fun renderPanel(g: Graphics2D) {
 		g.color = Design.panelBackground
 		g.fillRect(pos.x, pos.y, size.width, size.height)
-		g.color = Design.grayBorder
-		g.drawRect(pos.x, pos.y, size.width, size.height)
+		if (this.drawBorder) {
+			g.color = Design.grayBorder
+			g.drawRect(pos.x, pos.y, size.width - 1, size.height - 1)
+		}
+	}
+
+	override fun render(g: Graphics2D, mousePos: Point) {
+		this.renderPanel(g)
 		for (b in components) {
-			b.render(g)
+			b.render(g, mousePos)
 		}
 	}
 
 	override fun layout(x: Int, y: Int, w: Int, h: Int) {
+		super.layout(x, y, w, h)
 		val prefered = this.preferedDimension
-		val stretchX = getStretchWeightX()
-		val stretchY = getStretchWeightY()
-		size = Dimension(w, h)
-		if (stretchX == 0) size.width = prefered.width
-		if (stretchY == 0) size.height = prefered.height
-		val layout = LayoutPositioning(positionH, positionV, size)
-		pos = layout.getPixelPositionBasedOnEnums(x, y, w, h)
-		var currentOffset = 0
 		var addedPerStretch = 0
 		if (isVertical) {
+			var currentPos = y
+			val stretch = getStretchWeightY()
 			val remaining = h - prefered.height
-			if (stretchY > 0) addedPerStretch = remaining / stretchY
+			if (stretch > 0) addedPerStretch = remaining / stretch
 			for (c in components) {
+				val layout = LayoutPositioning(positionH, positionV, c.preferedDimension)
+						.setStretch(c.stretchWeightX > 0, c.stretchWeightY > 0)
 				val componentSize = c.preferedDimension
 				val add = c.stretchWeightY * addedPerStretch
-				c.layout(pos.x, pos.y + currentOffset, size.width, componentSize.height + add)
-				currentOffset += componentSize.height + add
+
+				val l = layout.getInBounds(x, currentPos, w, componentSize.height + add)
+				c.layout(l[0], l[1], l[2], l[3])
+				currentPos += l[3];
 			}
 		} else {
+			var currentPos = x
+			val stretch = getStretchWeightX()
 			val remaining = w - prefered.width
-			if (stretchX > 0) addedPerStretch = remaining / stretchX
+			if (stretch > 0) addedPerStretch = remaining / stretch
 			for (c in components) {
+				val layout = LayoutPositioning(positionH, positionV, c.preferedDimension)
+						.setStretch(c.stretchWeightX > 0, c.stretchWeightY > 0)
 				val componentSize = c.preferedDimension
 				val add = c.stretchWeightX * addedPerStretch
-				c.layout(pos.x + currentOffset, pos.y, componentSize.width + add, size.height)
-				currentOffset += componentSize.width + add
+
+				val l = layout.getInBounds(currentPos, y, componentSize.width + add, h)
+				c.layout(l[0], l[1], l[2], l[3])
+				currentPos += l[2];
 			}
 		}
 	}
@@ -72,19 +87,10 @@ class BasePanel @JvmOverloads constructor(
 	}
 
 	override fun getPreferedDimension(): Dimension {
-		var width = 0
-		var height = 0
-		for (b in components) {
-			val d = b.preferedDimension
-			if (isVertical) {
-				width = Math.max(width, d.width)
-				height += d.height
-			} else {
-				width += d.width
-				height = Math.max(height, d.height)
-			}
-		}
-		return Dimension(width, height)
+		return if (isVertical)
+			this.components.map { it.preferedDimension }.maxSum()
+		else
+			this.components.map { it.preferedDimension }.sumMax()
 	}
 
 	override fun handleInput(event: InputEvent) {

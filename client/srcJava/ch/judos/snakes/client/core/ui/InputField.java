@@ -1,11 +1,11 @@
 package ch.judos.snakes.client.core.ui;
 
 import ch.judos.generic.data.StringUtils;
+import ch.judos.snakes.client.core.base.Design;
 import ch.judos.snakes.client.core.io.InputAction;
 import ch.judos.snakes.client.core.io.InputController;
 import ch.judos.snakes.client.core.io.InputEvent;
 import ch.judos.snakes.client.core.io.TextEditing;
-import ch.judos.snakes.client.core.base.Design;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +28,7 @@ public class InputField extends Label {
 		this.expectedLength = expectedLength;
 		this.focused = false;
 	}
-	
+
 	public InputField setNumbersOnly() {
 		this.text.setNumbersOnly();
 		return this;
@@ -60,13 +60,13 @@ public class InputField extends Label {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics2D g, Point mousePos) {
 		g.setColor(Design.textFieldBg);
 		if (this.focused)
 			g.setColor(Design.textFieldFocus);
 		g.fillRect(this.pos.x, this.pos.y, this.size.width, this.size.height);
 		g.setColor(Design.textFieldBorder);
-		g.drawRect(this.pos.x, this.pos.y, this.size.width, this.size.height);
+		g.drawRect(this.pos.x, this.pos.y, this.size.width - 1, this.size.height - 1);
 		if (this.focused) {
 			g.setColor(Design.textFieldBorderFocus);
 			g.drawRect(this.pos.x + 1, this.pos.y + 1, this.size.width - 2, this.size.height - 2);
@@ -74,12 +74,12 @@ public class InputField extends Label {
 		g.setFont(Design.textFont);
 		if (!this.focused && this.text.getText().isEmpty()) {
 			g.setColor(Design.textColorDisabled);
-			g.drawString(".......", pos.x + Design.buttonTextMarginX,
-					pos.y + Design.buttonTextMarginY + this.size.height / 2);
+			g.drawString(".......", pos.x + Design.textMarginX,
+					pos.y + Design.TextMarginY + this.size.height / 2);
 		} else {
 			g.setColor(Design.textColor);
-			g.drawString(this.text.getTextWithCursor(this.focused), pos.x + Design.buttonTextMarginX,
-					pos.y + Design.buttonTextMarginY + this.size.height / 2);
+			g.drawString(this.text.getTextWithCursor(this.focused), pos.x + Design.textMarginX,
+					pos.y + Design.TextMarginY + this.size.height / 2);
 		}
 	}
 
@@ -95,17 +95,17 @@ public class InputField extends Label {
 	public String getText() {
 		return this.text.getText();
 	}
-	
+
 	public int getNumber() {
 		return Integer.valueOf(getText());
 	}
-	
+
 	public void setText(String text) {
 		this.text.setText(text);
 	}
-	
+
 	public void setText(int number) {
-		this.text.setText(""+number);
+		this.text.setText("" + number);
 	}
 
 }
