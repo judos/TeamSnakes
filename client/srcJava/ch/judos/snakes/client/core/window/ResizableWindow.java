@@ -53,6 +53,7 @@ public class ResizableWindow implements GameWindow {
 		window.setIgnoreRepaint(true);
 		canvas.setIgnoreRepaint(true);
 		window.pack();
+		this.centerOnScreen();
 		window.setVisible(true);
 
 		canvas.createBufferStrategy(2);
@@ -74,6 +75,16 @@ public class ResizableWindow implements GameWindow {
 			}
 		});
 		window.setFocusTraversalKeysEnabled(false);
+	}
+
+	private void centerOnScreen() {
+		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] screens = env.getScreenDevices();
+		int screenNr = Math.min(0, screens.length);
+		Rectangle bounds = screens[screenNr].getDefaultConfiguration().getBounds();
+		int windowPosX = ((bounds.width - window.getWidth()) / 2) + bounds.x;
+		int windowPosY = ((bounds.height - window.getHeight()) / 2) + bounds.y;
+		window.setLocation(windowPosX, windowPosY);
 	}
 
 	@Override
