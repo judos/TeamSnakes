@@ -14,30 +14,44 @@ class TestingScene(
 		window: GameWindow
 ) : BasicScene(sceneController, inputController, window) {
 
+	private val list: MutableList<String> = mutableListOf()
+	private val slist: SelectableList<String> = SelectableList(this.list, inputController)
+
 	init {
 		val view = WindowComponent(Design.titleFont)
 		view.title = "Testing Scene"
 
-		val list = SelectableList(listOf("Test", "Test2", "Test3", "Test4", "Test5"), inputController)
-				.setWeight(1,0)
-		val scroll = ScrollPanel(Dimension(100, 100))
-		scroll.add(list)
+		this.slist.setWeight(1, 0)
+		val scroll = ScrollPanel(Dimension(100, 200))
+		scroll.add(slist)
 
-		view.addComponent(Spacer(1,150))
+		view.addComponent(Spacer(1, 75))
 		view.addComponent(scroll)
-		view.addComponent(Spacer(1,150))
+		view.addComponent(Spacer(1, 75))
 		val buttonPanel = BasePanel(isVertical = false)
 
 		buttonPanel.add(Button("Quit") {
 			this.sceneController.quit()
-		}.setWeight(0,0))
+		}.setWeight(0, 0))
 		buttonPanel.add(Button("Quit2") {
 			this.sceneController.quit()
-		}.setWeight(0,0))
+		}.setWeight(0, 0))
 
 		view.addComponent(buttonPanel)
 
 		this.ui.addWindow(view)
+
+		Thread({
+			while (true) {
+				Thread.sleep(300)
+				updateElements()
+			}
+		}, "Updating list").start()
+	}
+
+	private fun updateElements() {
+		this.list.add("Test" + System.currentTimeMillis())
+		this.slist.update()
 	}
 
 

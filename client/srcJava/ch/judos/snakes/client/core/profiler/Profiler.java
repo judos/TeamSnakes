@@ -1,5 +1,6 @@
 package ch.judos.snakes.client.core.profiler;
 
+import ch.judos.snakes.client.core.base.Design;
 import ch.judos.snakes.client.core.io.InputAction;
 import ch.judos.snakes.client.core.io.InputEvent;
 import ch.judos.snakes.client.core.base.NamedComponent;
@@ -107,17 +108,18 @@ public final class Profiler implements ProfilerI {
 	}
 
 	@Override
-	public void render(Graphics2D graphics, Point mousePos) {
+	public void render(Graphics2D g, Point mousePos) {
 		if (!this.show) return;
-		FontMetrics metrics = graphics.getFontMetrics();
+		g.setFont(Design.textFont);
+		FontMetrics metrics = g.getFontMetrics();
 		int sh = metrics.getHeight();
 		String[] digest = this.getProfilerOutput();
 
-		graphics.setColor(new Color(255, 255, 255, 200));
-		graphics.fillRect(0, 0, 200, sh * (digest.length + 2));
-		graphics.setColor(Color.BLACK);
+		g.setColor(new Color(255, 255, 255, 200));
+		g.fillRect(0, 0, 200, sh * (digest.length + 2));
+		g.setColor(Color.BLACK);
 		for (int i = 0; i < digest.length; i++) {
-			graphics.drawString(digest[i], 5, (i + 1) * sh);
+			g.drawString(digest[i], 5, (i + 1) * sh);
 		}
 	}
 

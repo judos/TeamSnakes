@@ -19,7 +19,6 @@ open class ScrollPanel(
 
 	protected val logger = LogManager.getLogger(javaClass)
 
-	protected var contentPreferedSize: Dimension? = null
 	var scrollPos = 0.0
 	var targetScrollPos = 0
 
@@ -47,12 +46,13 @@ open class ScrollPanel(
 
 	private fun updateScrollPos() {
 		val diff = targetScrollPos - scrollPos
-		val change = sign(diff) * min(min(max(2.0, 0.2 * abs(diff)), 25.0), abs(diff))
-		scrollPos += change
+		if (diff != 0.0) {
+			val change = sign(diff) * min(min(max(2.0, 0.2 * abs(diff)), 20.0), abs(diff))
+			scrollPos += change
+		}
 	}
 
 	override fun layout(x: Int, y: Int, w: Int, h: Int) {
-		contentPreferedSize = super.getPreferedDimension()
 		super.layout(x, y, w, h)
 	}
 
@@ -62,12 +62,11 @@ open class ScrollPanel(
 		if (event.isActionAndConsume(InputAction.MOUSE_SCROLL)) {
 			targetScrollPos += 32 * event.changeValue.toInt()
 			if (targetScrollPos < 0) targetScrollPos = 0
-			val upper = max(0, (contentPreferedSize?.height ?: 0) - this.size.height)
+			val contentPreferedSize = super.getPreferedDimension()
+			val upper = max(0, contentPreferedSize.height - this.size.height)
 			if (targetScrollPos > upper) {
 				targetScrollPos = upper
 			}
-
-			logger.info("scrollPos: $targetScrollPos $scrollPos")
 			return
 		}
 

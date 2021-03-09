@@ -28,11 +28,31 @@ class SelectableList<T>(
 		get() = selectedE?.data
 
 	init {
-		for ((index, t) in list.withIndex()) {
-			components.add(Selectable(t.toString(), inputController) {
+		addComponents()
+	}
+
+	private fun addComponents() {
+		for (t in list) {
+			val s = Selectable<T>(t.toString(), inputController) {
 				selectedE = it
-			})
+			}
+			s.data = t
+			components.add(s)
 		}
+	}
+
+	fun update() {
+		val selected = this.selected
+		this.components.clear()
+		addComponents()
+		this.selected = selected
+
+		var y2 = this.pos.y
+		for (c in components) {
+			c.layout(this.pos.x, y2, this.size.width, c.preferedDimension.height)
+			y2 += c.preferedDimension.height
+		}
+		this.size.height = y2
 	}
 
 	override fun layout(x: Int, y: Int, w: Int, h: Int) {
@@ -60,4 +80,5 @@ class SelectableList<T>(
 	override fun getPreferedDimension(): Dimension {
 		return this.components.map { it.preferedDimension }.maxSum()
 	}
+
 }
