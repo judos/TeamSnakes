@@ -10,6 +10,7 @@ import java.awt.Dimension
 import java.awt.Graphics2D
 import java.awt.Point
 import java.util.stream.Collectors
+import kotlin.math.max
 
 open class BasePanel @JvmOverloads constructor(
 		private val positionH: PositionH = PositionH.CENTER,
@@ -19,6 +20,16 @@ open class BasePanel @JvmOverloads constructor(
 ) : BaseComponent() {
 
 	protected val components = mutableListOf<Component>()
+
+	/**
+	 * border outside components
+	 */
+	var margin = 0
+
+	/**
+	 * between every 2 components
+	 */
+	var padding = 0
 
 	fun add(vararg components: Component): BasePanel {
 		this.components.addAll(components)
@@ -46,7 +57,7 @@ open class BasePanel @JvmOverloads constructor(
 		val prefered = this.preferedDimension
 		var addedPerStretch = 0
 		if (isVertical) {
-			var currentPos = y
+			var currentPos = y + margin
 			val stretch = getStretchWeightY()
 			val remaining = h - prefered.height
 			if (stretch > 0) addedPerStretch = remaining / stretch
@@ -56,12 +67,12 @@ open class BasePanel @JvmOverloads constructor(
 				val componentSize = c.preferedDimension
 				val add = c.stretchWeightY * addedPerStretch
 
-				val l = layout.getInBounds(x, currentPos, w, componentSize.height + add)
+				val l = layout.getInBounds(x + margin, currentPos, w - 2 * margin, componentSize.height + add)
 				c.layout(l[0], l[1], l[2], l[3])
-				currentPos += l[3];
+				currentPos += l[3] + padding
 			}
 		} else {
-			var currentPos = x
+			var currentPos = x + margin
 			val stretch = getStretchWeightX()
 			val remaining = w - prefered.width
 			if (stretch > 0) addedPerStretch = remaining / stretch
@@ -71,9 +82,9 @@ open class BasePanel @JvmOverloads constructor(
 				val componentSize = c.preferedDimension
 				val add = c.stretchWeightX * addedPerStretch
 
-				val l = layout.getInBounds(currentPos, y, componentSize.width + add, h)
+				val l = layout.getInBounds(currentPos, y + margin, componentSize.width + add, h - 2 * margin)
 				c.layout(l[0], l[1], l[2], l[3])
-				currentPos += l[2];
+				currentPos += l[2] + padding
 			}
 		}
 	}
@@ -87,10 +98,18 @@ open class BasePanel @JvmOverloads constructor(
 	}
 
 	override fun getPreferedDimension(): Dimension {
-		return if (isVertical)
-			this.components.map { it.preferedDimension }.maxSum()
-		else
-			this.components.map { it.preferedDimension }.sumMax()
+		val prefered = if (isVertical) {
+			val size = this.components.map { it.preferedDimension }.maxSum()
+			size.height += max(0, this.components.size - 1) * padding
+			size
+		} else {
+			val size = this.components.map { it.preferedDimension }.sumMax()
+			size.width += max(0, this.components.size - 1) * padding
+			size
+		}
+		prefered.width += 2 * margin
+		prefered.height += 2 * margin
+		return prefered
 	}
 
 	override fun handleInput(event: InputEvent) {

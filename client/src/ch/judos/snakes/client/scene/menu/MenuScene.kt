@@ -5,6 +5,8 @@ import ch.judos.snakes.client.core.base.Design
 import ch.judos.snakes.client.core.base.SceneController
 import ch.judos.snakes.client.core.io.InputController
 import ch.judos.snakes.client.core.ui.*
+import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionH
+import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionV
 import ch.judos.snakes.client.core.window.GameWindow
 import ch.judos.snakes.client.model.GameData
 import ch.judos.snakes.client.model.PlayerData
@@ -18,6 +20,7 @@ class MenuScene(
 		private val gameData: GameData
 ) : BasicScene(sceneController, inputController, window) {
 
+	private lateinit var joinGameButton: Button
 	private var playerListener: Consumer<PlayerData>? = null
 	private lateinit var playerList: SelectableList<String>
 	private lateinit var lobbyList: SelectableList<String>
@@ -38,14 +41,25 @@ class MenuScene(
 		this.gameData.playerData.subscribers.remove(this.playerListener!!)
 	}
 
+	private fun joinGame() {
+
+	}
+
+	private fun createGame() {
+
+	}
+
 	private fun initUI() {
 		val panel = BasePanel()
+		panel.padding = 40
+		panel.margin = 40
 		panel.add(Label("Welcome " + this.gameData.settings.name, true))
-		panel.add(Spacer(1, 40))
 
 		val lobbyPlayerPanel = BasePanel(isVertical = false)
 
-		this.lobbyList = SelectableList(listOf<String>("Lobby1", "Lobby2"), inputController)
+		this.lobbyList = SelectableList(listOf("Lobby1", "Lobby2"), inputController) {
+			this.joinGameButton.setEnabled(it != null)
+		}
 		this.lobbyList.setWeight(1, 0)
 		val scrollLobby = ScrollPanel(Dimension(150, 300))
 		scrollLobby.add(this.lobbyList)
@@ -61,16 +75,13 @@ class MenuScene(
 		val playerPanel = BasePanel().add(Label("Players online:")).add(scrollPlayer)
 		lobbyPlayerPanel.add(playerPanel)
 		panel.add(lobbyPlayerPanel)
-		panel.add(Spacer(1, 40))
 
 		val buttonPanel = BasePanel(isVertical = false)
-		buttonPanel.add(Button("Create New Game") {
-			// TODO: implement
-		})
+		buttonPanel.add(Button("Create New Game", this::createGame))
 		buttonPanel.add(Spacer(50, 1))
-		buttonPanel.add(Button("Join Game") {
-			// TODO:
-		})
+		this.joinGameButton = Button("Join Game", this::joinGame)
+		this.joinGameButton.setEnabled(false)
+		buttonPanel.add(this.joinGameButton)
 		buttonPanel.add(Spacer(50, 1))
 		buttonPanel.add(Button("Quit") {
 			this.sceneController.quit()
@@ -81,7 +92,7 @@ class MenuScene(
 		view.isHeadless = true
 		view.isMovable = false
 		view.addComponent(panel)
-		this.ui.addWindow(view)
+		this.ui.addWindow(view, PositionH.LEFT, PositionV.TOP)
 	}
 
 }

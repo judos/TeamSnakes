@@ -20,14 +20,17 @@ class TestingScene(
 	init {
 		val view = WindowComponent(Design.titleFont)
 		view.title = "Testing Scene"
+		view.isHeadless = true
+
+		val basePanel = BasePanel()
+		basePanel.margin = 40
+		basePanel.padding = 40
 
 		this.slist.setWeight(1, 0)
 		val scroll = ScrollPanel(Dimension(100, 200))
 		scroll.add(slist)
 
-		view.addComponent(Spacer(1, 75))
-		view.addComponent(scroll)
-		view.addComponent(Spacer(1, 75))
+		basePanel.add(scroll)
 		val buttonPanel = BasePanel(isVertical = false)
 
 		buttonPanel.add(Button("Quit") {
@@ -37,13 +40,14 @@ class TestingScene(
 			this.sceneController.quit()
 		}.setWeight(0, 0))
 
-		view.addComponent(buttonPanel)
+		basePanel.add(buttonPanel)
 
-		this.ui.addWindow(view)
+		view.addComponent(basePanel)
+		this.ui.addWindow(view, LayoutPositioning.PositionH.LEFT, LayoutPositioning.PositionV.TOP)
 
 		Thread({
 			while (true) {
-				Thread.sleep(300)
+				Thread.sleep(2000)
 				updateElements()
 			}
 		}, "Updating list").start()

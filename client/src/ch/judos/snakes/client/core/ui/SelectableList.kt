@@ -6,10 +6,12 @@ import ch.judos.snakes.common.extensions.maxSum
 import java.awt.Dimension
 import java.awt.Graphics2D
 import java.awt.Point
+import java.util.function.Consumer
 
 class SelectableList<T>(
 		list: List<T>,
-		private var inputController: InputController
+		private var inputController: InputController,
+		private var selectionListener: Consumer<T?>? = null
 ) : BaseComponent() {
 
 	private val components = mutableListOf<Selectable<T>>()
@@ -18,9 +20,7 @@ class SelectableList<T>(
 		set(value) {
 			field?.selected = false
 			field = value
-			if (value?.selected == true) {
-				field?.selected = true
-			}
+			this.selectionListener?.accept(field?.data)
 		}
 
 	var selected: T?
@@ -36,7 +36,7 @@ class SelectableList<T>(
 	private fun addComponents(list: List<T>) {
 		for (t in list) {
 			val s = Selectable<T>(t.toString(), inputController) {
-				selectedE = it
+				selectedE = if (it.selected) it else null
 			}
 			s.data = t
 			components.add(s)
@@ -81,6 +81,10 @@ class SelectableList<T>(
 
 	override fun getPreferedDimension(): Dimension {
 		return this.components.map { it.preferedDimension }.maxSum()
+	}
+
+	override fun toString(): String {
+		return "SelectableList"
 	}
 
 }

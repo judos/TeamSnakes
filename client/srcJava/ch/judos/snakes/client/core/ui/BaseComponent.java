@@ -46,6 +46,8 @@ public abstract class BaseComponent implements Component {
 	 * @return true if the position is inside the rectangle of the button
 	 */
 	public boolean isPointInside(Point pos) {
+		if (pos == null)
+			return false;
 		return pos.x >= this.pos.x && pos.y >= this.pos.y && pos.x < this.pos.x + this.size.getWidth()
 				&& pos.y < this.pos.y + this.size.getHeight();
 	}
