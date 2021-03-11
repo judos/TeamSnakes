@@ -20,6 +20,7 @@ class SelectableList<T>(
 		set(value) {
 			field?.selected = false
 			field = value
+			field?.selected = true
 			this.selectionListener?.accept(field?.data)
 		}
 

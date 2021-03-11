@@ -43,7 +43,7 @@ class TestingScene(
 		basePanel.add(buttonPanel)
 
 		view.addComponent(basePanel)
-		this.ui.addWindow(view, LayoutPositioning.PositionH.LEFT, LayoutPositioning.PositionV.TOP)
+		this.ui.addWindow(view)
 
 		Thread({
 			while (true) {
