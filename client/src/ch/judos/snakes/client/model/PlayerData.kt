@@ -4,7 +4,7 @@ import java.util.function.Consumer
 
 class PlayerData {
 
-	var subscribers = mutableListOf<Consumer<PlayerData>>()
+	val subscribers = mutableListOf<Consumer<PlayerData>>()
 
 	var playerList: List<String> = listOf()
 		set(value) {

@@ -3,12 +3,10 @@ package ch.judos.snakes.common.messages.region
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
-class LobbyInfo(
+open class LobbyCreateMsg(
 	var name: String,
 	var mode: String,
-	var players: List<String>
 ) : Serializable {
-
 
 
 

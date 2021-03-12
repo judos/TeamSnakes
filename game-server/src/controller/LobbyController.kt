@@ -1,7 +1,7 @@
 package controller
 
-import ch.judos.snakes.common.messages.region.LobbyInfo
 import ch.judos.snakes.common.model.Connection
+import ch.judos.snakes.common.model.Lobby
 
 class LobbyController {
 
@@ -13,7 +13,7 @@ class LobbyController {
 		return "0 lobbies"
 	}
 
-	fun getLobbiesInfo(): List<LobbyInfo> {
+	fun getLobbiesInfo(): List<Lobby> {
 		return listOf()
 	}
 

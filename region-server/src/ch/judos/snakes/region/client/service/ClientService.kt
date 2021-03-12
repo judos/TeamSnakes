@@ -2,10 +2,16 @@ package ch.judos.snakes.region.client.service
 
 import ch.judos.snakes.common.messages.ErrorMsg
 import ch.judos.snakes.common.messages.client.ClientListMsg
+import ch.judos.snakes.common.messages.game.GameLobbyCreateMsg
 import ch.judos.snakes.common.messages.region.ClientLogin
+import ch.judos.snakes.common.messages.region.LobbyCreateMsg
+import ch.judos.snakes.common.model.Client
 import ch.judos.snakes.common.model.Connection
+import ch.judos.snakes.common.model.Lobby
+import ch.judos.snakes.common.service.RandomService
 import ch.judos.snakes.region.core.config.RegionConfig
 import ch.judos.snakes.region.core.service.UserTokenService
+import ch.judos.snakes.region.gameserver.service.GameServerService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.EOFException
@@ -18,7 +24,9 @@ import javax.annotation.PreDestroy
 @Service
 class ClientService(
 		private val config: RegionConfig,
-		private val userTokenService: UserTokenService
+		private val userTokenService: UserTokenService,
+		private val gameServerService: GameServerService,
+		private val randomService: RandomService
 ) {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -26,7 +34,7 @@ class ClientService(
 	private var serverSocket: ServerSocket? = null
 	private var running = true
 
-	private val clients = mutableMapOf<String, Connection>()
+	private val clients = mutableMapOf<String, Client>()
 
 
 	init {
@@ -69,10 +77,8 @@ class ClientService(
 	}
 
 	private fun acceptConnection(connectionSocket: Socket) {
-		logger.info("new connection with timeout ${connectionSocket.soTimeout}")
 		val connection = Connection(connectionSocket, {})
 		val hello = connection.inp.readUnshared()
-		logger.info("New connection: $hello")
 		if (hello is ClientLogin) {
 			if (this.userTokenService.isValid(hello.username, hello.token)) {
 				this.acceptClientConnection(connection, hello.username)
@@ -87,33 +93,46 @@ class ClientService(
 	}
 
 	private fun acceptClientConnection(connection: Connection, username: String) {
-		this.clients[username] = connection
+		logger.info("Client logged in: $username")
+		val client = Client(connection, username)
+		this.clients[username] = client
 		// send list to all players
 		val clientList = ClientListMsg(this.clients.keys.toList())
-		this.clients.values.forEach { it.out.writeUnshared(clientList) }
+		this.clients.values.forEach { it.connection.out.writeUnshared(clientList) }
 
-		this.listenToClientConnection(connection, username)
+		this.listenToClientConnection(client)
 	}
 
-	private fun listenToClientConnection(connection: Connection, username: String) {
+	private fun listenToClientConnection(client: Client) {
 		val clientListener = Thread({
 			var data: Any
 			try {
 				while (true) {
-					data = connection.inp.readUnshared()
+					data = client.connection.inp.readUnshared()
+					if (data is LobbyCreateMsg) {
+						createLobby(client, data)
+					}
 					logger.info("unknown msg from client: $data")
 				}
 			} catch (e: SocketException) {
-				logger.info("Client $username connection lost: $e")
+				logger.info("Client ${client.name} connection lost: $e")
 			} catch (e: EOFException) {
-				logger.info("Client $username connection ended")
+				logger.info("Client ${client.name} connection ended")
 			}
-			this.clients.remove(username)
+			this.clients.remove(client.name)
 			val clientList = ClientListMsg(this.clients.keys.toList())
-			this.clients.values.forEach { it.out.writeUnshared(clientList) }
-		}, "Client Connection $username")
+			this.clients.values.forEach { it.connection.out.writeUnshared(clientList) }
+		}, "Client Connection ${client.name}")
 		clientListener.isDaemon = true
 		clientListener.start()
+	}
+
+	private fun createLobby(client: Client, data: LobbyCreateMsg) {
+		val gameServer = this.gameServerService.chooseServerForLobby(data.mode)
+		val lobbyId = this.randomService.generateToken(32)
+		gameServer.connection!!.out.writeUnshared(GameLobbyCreateMsg(data.name, data.mode, lobbyId))
+		val lobbyInfo = Lobby(data.name, lobbyId, gameServer.host, gameServer.port)
+		client.connection.out.writeUnshared(lobbyInfo)
 	}
 
 }

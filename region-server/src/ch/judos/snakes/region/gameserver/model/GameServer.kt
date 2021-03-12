@@ -1,6 +1,7 @@
 package ch.judos.snakes.region.gameserver.model
 
-import ch.judos.snakes.common.messages.region.LobbyInfo
+import ch.judos.snakes.common.model.Connection
+import ch.judos.snakes.common.model.Lobby
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -11,12 +12,13 @@ class GameServer(
 		val gameModes: List<String>,
 		val serverNr: Int,
 ) {
-	var lobbies: List<LobbyInfo> = listOf()
+	var lobbies: List<Lobby> = listOf()
 	var currentLoad: Double = 1.0
+	var connection: Connection? = null
 
 	var lastUpdate: LocalDateTime = LocalDateTime.now()
 
-	fun update(currentLoad: Double, lobbies: List<LobbyInfo>) {
+	fun update(currentLoad: Double, lobbies: List<Lobby>) {
 		this.currentLoad = currentLoad
 		this.lobbies = lobbies
 		this.lastUpdate = LocalDateTime.now()

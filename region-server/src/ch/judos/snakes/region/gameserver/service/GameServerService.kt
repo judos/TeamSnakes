@@ -3,13 +3,14 @@ package ch.judos.snakes.region.gameserver.service
 import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.messages.region.GameUpdate
-import ch.judos.snakes.common.messages.region.LobbyInfo
 import ch.judos.snakes.common.model.Connection
+import ch.judos.snakes.common.model.Lobby
 import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.extension.firstMissingNumber
 import ch.judos.snakes.region.gameserver.model.GameServer
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import java.net.Socket
 import java.net.SocketException
 
@@ -38,13 +39,13 @@ class GameServerService {
 		val thread = Thread({
 			val socket = Socket(request.host, request.port)
 			val connection = Connection(socket) {}
+			server.connection = connection
 			try {
 				connection.out.writeUnshared(RegionLogin(request.token))
 				connection.out.flush()
 				while (true) {
 					val data = connection.inp.readObject()
 					if (data is GameUpdate) {
-						logger.info("update from $server: $data")
 						server.update(data.currentLoad, data.lobbies)
 					} else {
 						logger.info("unknown msg from $server: $data")
@@ -72,24 +73,21 @@ class GameServerService {
 
 //	@Scheduled(fixedRate = 30 * 1000)
 //	private fun cleanup() {
-//		synchronized(servers) {
-//			val it = servers.iterator()
-//			while (it.hasNext()) {
-//				val server = it.next().value
-//				if (server.isOlderThanS(62)) {
-//					logger.info("Timeout game-server $server")
-//					it.remove()
-//				}
-//			}
-//		}
 //	}
 
 	fun gameModes(): List<String> {
 		return this.servers.values.flatMap { it.gameModes.asIterable() }
 	}
 
-	fun getLobbies(): Collection<LobbyInfo> {
+	fun getLobbies(): Collection<Lobby> {
 		return this.servers.flatMap { it.value.lobbies }
+	}
+
+	fun chooseServerForLobby(mode: String): GameServer {
+		if (this.servers.size == 0)
+			throw RuntimeException("No server available to create lobby")
+		// TODO: implement load balancing & check mode
+		return this.servers.entries.first().value
 	}
 
 }

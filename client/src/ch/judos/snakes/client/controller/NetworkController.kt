@@ -7,12 +7,16 @@ import ch.judos.snakes.common.dto.GuestLoginRequestDto
 import ch.judos.snakes.common.dto.UserAuthSuccessDto
 import ch.judos.snakes.common.messages.client.ClientListMsg
 import ch.judos.snakes.common.messages.region.ClientLogin
+import ch.judos.snakes.common.messages.region.LobbyCreateMsg
 import ch.judos.snakes.common.model.Connection
+import ch.judos.snakes.common.model.Lobby
 import org.apache.logging.log4j.LogManager
 import java.io.EOFException
+import java.lang.RuntimeException
 import java.net.ConnectException
 import java.net.Socket
 import java.net.SocketException
+import java.util.function.Consumer
 
 class NetworkController(
 		private val config: ClientConfig,
@@ -20,6 +24,8 @@ class NetworkController(
 ) {
 
 	private val logger = LogManager.getLogger(javaClass)!!
+
+	private var lobbyCreateListener: Consumer<Lobby>? = null
 	private var regionConnection: Connection? = null
 
 
@@ -37,6 +43,8 @@ class NetworkController(
 					data = regionConnection.inp.readUnshared()
 					if (data is ClientListMsg) {
 						this.gameData.playerData.playerList = data.players
+					} else if (data is Lobby) {
+						this.lobbyCreateListener?.accept(data)
 					} else {
 						logger.info("unknown msg from region: ${data.javaClass} $data")
 					}
@@ -75,6 +83,16 @@ class NetworkController(
 				}
 			}
 		} while (!connected)
+	}
+
+	fun createLobby(lobbyName: String, mode: String, consumer: Consumer<Lobby>) {
+		val msg = LobbyCreateMsg(lobbyName, mode)
+		if (this.regionConnection == null)
+			throw RuntimeException("No connection to region server")
+		if (this.lobbyCreateListener != null)
+			throw RuntimeException("Lobby creation already in progress")
+		this.lobbyCreateListener = consumer
+		this.regionConnection!!.out.writeUnshared(msg)
 	}
 
 }

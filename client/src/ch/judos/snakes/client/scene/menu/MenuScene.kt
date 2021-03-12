@@ -1,5 +1,6 @@
 package ch.judos.snakes.client.scene.menu
 
+import ch.judos.snakes.client.controller.GameController
 import ch.judos.snakes.client.core.base.BasicScene
 import ch.judos.snakes.client.core.base.Design
 import ch.judos.snakes.client.core.base.SceneController
@@ -10,6 +11,7 @@ import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionV
 import ch.judos.snakes.client.core.window.GameWindow
 import ch.judos.snakes.client.model.GameData
 import ch.judos.snakes.client.model.PlayerData
+import ch.judos.snakes.common.model.Lobby
 import java.awt.Dimension
 import java.util.function.Consumer
 
@@ -17,13 +19,14 @@ class MenuScene(
 		sceneController: SceneController,
 		inputController: InputController,
 		window: GameWindow,
-		private val gameData: GameData
+		private val gameData: GameData,
+		private val gameController: GameController
 ) : BasicScene(sceneController, inputController, window) {
 
 	private lateinit var joinGameButton: Button
 	private var playerListener: Consumer<PlayerData>? = null
 	private lateinit var playerList: SelectableList<String>
-	private lateinit var lobbyList: SelectableList<String>
+	private lateinit var lobbyList: SelectableList<Lobby>
 
 	init {
 		initUI()
@@ -46,7 +49,10 @@ class MenuScene(
 	}
 
 	private fun createGame() {
-
+		this.gameController.createLobby()
+		val dialog = WindowComponent(Design.textFont)
+		dialog.title = "Creating Lobby..."
+		this.ui.addWindow(dialog)
 	}
 
 	private fun initUI() {
@@ -57,7 +63,7 @@ class MenuScene(
 
 		val lobbyPlayerPanel = BasePanel(isVertical = false)
 
-		this.lobbyList = SelectableList(listOf("Lobby1", "Lobby2"), inputController) {
+		this.lobbyList = SelectableList(gameData.lobbyData.lobbyList, inputController) {
 			this.joinGameButton.setEnabled(it != null)
 		}
 		this.lobbyList.setWeight(1, 0)
@@ -85,14 +91,14 @@ class MenuScene(
 		buttonPanel.add(Spacer(50, 1))
 		buttonPanel.add(Button("Quit") {
 			this.sceneController.quit()
-		})
+		}.setColored(Button.Colored.CAUTION))
 		panel.add(buttonPanel)
 
 		val view = WindowComponent(Design.titleFont)
 		view.isHeadless = true
 		view.isMovable = false
 		view.addComponent(panel)
-		this.ui.addWindow(view, PositionH.LEFT, PositionV.TOP)
+		this.ui.addWindow(view)
 	}
 
 }

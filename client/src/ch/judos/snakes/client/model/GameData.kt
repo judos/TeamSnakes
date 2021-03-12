@@ -5,9 +5,9 @@ class GameData {
 	val loadingData = LoadingData()
 
 	val playerData = PlayerData()
+	val lobbyData = LobbyData()
 
 	val settings = ClientSettings()
-
 
 
 }

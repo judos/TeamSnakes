@@ -1,11 +1,12 @@
 package ch.judos.snakes.common.messages.region
 
+import ch.judos.snakes.common.model.Lobby
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
 class GameUpdate(
 	val currentLoad: Double,
-	var lobbies: List<LobbyInfo>
+	var lobbies: List<Lobby>
 ) : Serializable {
 
 
