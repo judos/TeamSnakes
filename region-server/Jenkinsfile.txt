@@ -11,13 +11,13 @@ node {
 		}
 
 		stage('Build') {
-			dir('region-server') {
+			dir('') {
 				sh 'pwd'
 				sh 'ls -lah'
 				// sh 'which mvn'
 				sh 'chmod +x mvnw'
-				sh './mvnw package'
-				sh 'cp target/region-server.jar docker/'
+				sh './mvnw -pl region-server -am clean install package'
+				sh 'cp region-server/target/region-server.jar region-server/docker/'
 			}
 		}
 	}
