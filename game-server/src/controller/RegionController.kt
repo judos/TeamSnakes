@@ -73,7 +73,7 @@ class RegionController(
 			try {
 				do {
 					data = connection.inp.readUnshared()
-					logger.info("unknown msg from region: $data")
+					logger.info("unknown msg from region: ${data::class.java} $data")
 				} while (true)
 			} catch (e: SocketException) {
 				logger.info("Region connection lost: " + e.message)

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
 	<Appenders>
-		# See https://www.baeldung.com/java-logging-intro
-		# Console appender
+		<!-- See https://www.baeldung.com/java-logging-intro -->
+		<!-- Console appender-->
 		<Console name="stdout" target="SYSTEM_OUT">
-			# Pattern of log message for console appender
-			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %p %m%n"/>
+			<!-- Pattern of log message for console appender-->
+			<!-- See: https://logging.apache.org/log4j/log4j-2.0/manual/layouts.html -->
+			<!-- replace is a workaround to truncate file+line as one string, replace does not replace anything here -->
+			<PatternLayout pattern="%d{HH:mm:ss} %highlight{%-5p}.%-30.30replace{(%file:%line)}{}{} %m%n"/>
 		</Console>
 	</Appenders>
 

@@ -112,7 +112,9 @@ class ClientService(
 					if (data is LobbyCreateMsg) {
 						createLobby(client, data)
 					}
-					logger.info("unknown msg from client: $data")
+					else {
+						logger.info("unknown msg from client: $data")
+					}
 				}
 			} catch (e: SocketException) {
 				logger.info("Client ${client.name} connection lost: $e")
