@@ -13,6 +13,7 @@ import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
 import org.apache.logging.log4j.LogManager
 import java.io.EOFException
+import java.io.IOException
 import java.net.ConnectException
 import java.net.Socket
 import java.net.SocketException
@@ -41,7 +42,8 @@ class NetworkController(
 			var data: Any
 			try {
 				do {
-					data = regionConnection.inp.readUnshared()
+					data = regionConnection.inp.readObject()
+					logger.info("received ${data::class.simpleName}: $data")
 					if (data is ClientListMsg) {
 						this.gameData.playerData.playerList = data.players
 					} else if (data is Lobby) {
@@ -79,13 +81,18 @@ class NetworkController(
 
 				val socket = Socket(config.region.url, config.region.tcpPort)
 				val regionConnection = Connection(socket) {}
-				regionConnection.out.writeUnshared(ClientLogin(gameData.settings.name!!, this.tokens.removeAt(0)))
+				regionConnection.writeObject(ClientLogin(gameData.settings.name!!, this.tokens.removeAt(0)))
 				this.listenToRegionConnection(regionConnection)
 				connected = true
-			} catch (e: ConnectException) {
-				for (i in 3 downTo 1) {
-					gameData.loadingData.current = listOf("Connection to region server failed", "Trying again in ${i}s...")
-					Thread.sleep(1000)
+			} catch (e: Exception) {
+				when (e) {
+					is IOException, is ConnectException -> {
+						for (i in 3 downTo 1) {
+							gameData.loadingData.current = listOf("Connection to region server failed", "Trying again in ${i}s...")
+							Thread.sleep(1000)
+						}
+					}
+					else -> throw e
 				}
 			}
 		} while (!connected)
@@ -98,7 +105,7 @@ class NetworkController(
 		if (this.lobbyCreateListener != null)
 			throw RuntimeException("Lobby creation already in progress")
 		this.lobbyCreateListener = consumer
-		this.regionConnection!!.out.writeUnshared(msg)
+		this.regionConnection!!.writeObject(msg)
 	}
 
 }

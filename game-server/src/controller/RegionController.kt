@@ -74,7 +74,7 @@ class RegionController(
 			var data: Any
 			try {
 				do {
-					data = connection.inp.readUnshared()
+					data = connection.inp.readObject()
 					if (data is GameLobbyCreateMsg) {
 						this.lobby.createLobby(data)
 					} else {
@@ -95,7 +95,9 @@ class RegionController(
 		val connection = this.connection ?: return
 		val bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
 		val loadAvg = if (bean.systemLoadAverage < 0) 0.8 else bean.systemLoadAverage
-		connection.out.writeUnshared(GameUpdate(loadAvg, this.lobby.getLobbiesInfo()))
+		val msg = GameUpdate(loadAvg, this.lobby.getLobbiesInfo())
+		connection.writeObject(msg)
+		logger.info("writing $msg")
 	}
 
 }

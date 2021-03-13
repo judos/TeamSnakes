@@ -8,7 +8,7 @@ class Connection(
 	private val close: (Connection) -> Unit
 ) : Closeable {
 
-	var out: ObjectOutputStream
+	private var out: ObjectOutputStream
 	var inp: ObjectInputStream
 
 	init {
@@ -21,4 +21,11 @@ class Connection(
 		this.inp.close()
 		this.close.run { this }
 	}
+
+	fun writeObject(obj: Any) {
+		this.out.writeObject(obj)
+		this.out.reset()
+		this.out.flush()
+	}
+
 }

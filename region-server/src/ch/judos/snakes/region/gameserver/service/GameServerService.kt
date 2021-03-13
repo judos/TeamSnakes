@@ -11,7 +11,6 @@ import ch.judos.snakes.region.extension.firstMissingNumber
 import ch.judos.snakes.region.gameserver.model.GameServer
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import java.net.Socket
 import java.net.SocketException
 
@@ -29,7 +28,7 @@ class GameServerService {
 			val serverNr = getServerNumber()
 			logger.info("register server ${user.id} with server number $serverNr")
 			server =
-				GameServer(user.username, request.host, request.port, request.gameModes, serverNr)
+					GameServer(user.username, request.host, request.port, request.gameModes, serverNr)
 			servers[user.id] = server
 		}
 		listenToGameServer(user, server, request)
@@ -37,17 +36,17 @@ class GameServerService {
 	}
 
 	private fun listenToGameServer(user: AdminUser, server: GameServer,
-		request: GameserverConnectDto) {
+			request: GameserverConnectDto) {
 		val thread = Thread({
 			val socket = Socket(request.host, request.port)
 			val connection = Connection(socket) {}
 			server.connection = connection
 			try {
-				connection.out.writeUnshared(RegionLogin(request.token))
-				connection.out.flush()
+				connection.writeObject(RegionLogin(request.token))
 				while (true) {
 					val data = connection.inp.readObject()
 					if (data is GameUpdate) {
+						logger.info("received GameUpdate with ${data} lobbies")
 						val updated = server.update(data.currentLoad, data.lobbies)
 						if (updated) {
 							this.clientService?.sendLobbyUpdates()

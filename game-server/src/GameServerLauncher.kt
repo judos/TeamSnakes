@@ -78,7 +78,7 @@ class GameServerLauncher() {
 
 				val connection = Connection(connectionSocket, connections::remove)
 				connections.add(connection)
-				val hello = connection.inp.readUnshared()
+				val hello = connection.inp.readObject()
 				if (hello is RegionLogin) {
 					this.region.acceptConnection(connection, hello)
 //		} else if (hello.startsWith("lobby")) {

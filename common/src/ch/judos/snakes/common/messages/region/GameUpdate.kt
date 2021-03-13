@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
 class GameUpdate(
-	val currentLoad: Double,
-	var lobbies: List<Lobby>
+		val currentLoad: Double,
+		var lobbies: List<Lobby>
 ) : Serializable {
 
 

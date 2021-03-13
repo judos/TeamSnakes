@@ -57,12 +57,11 @@ class ClientService(
 					try {
 						this.serverSocket = ServerSocket(this.config.port)
 						logger.info("Listening for connection on tcp-port: ${this.config.port}")
-					} catch(e: IOException) {
-						this.logger.warn("Could not open Serversocket: "+e.message)
+					} catch (e: IOException) {
+						this.logger.warn("Could not open Serversocket: " + e.message)
 						Thread.sleep(5000)
 					}
-				}
-				else {
+				} else {
 					try {
 						val connectionSocket = serverSocket!!.accept()!!
 						this.acceptConnection(connectionSocket)
@@ -80,12 +79,12 @@ class ClientService(
 
 	private fun acceptConnection(connectionSocket: Socket) {
 		val connection = Connection(connectionSocket, {})
-		val hello = connection.inp.readUnshared()
+		val hello = connection.inp.readObject()
 		if (hello is ClientLogin) {
 			if (this.userTokenService.isValid(hello.username, hello.token)) {
 				this.acceptClientConnection(connection, hello.username)
 			} else {
-				connection.out.writeUnshared(ErrorMsg("INVALID_TOKEN", "Token or username unknown."))
+				connection.writeObject(ErrorMsg("INVALID_TOKEN", "Token or username unknown."))
 				connection.close()
 			}
 		} else {
@@ -100,7 +99,7 @@ class ClientService(
 		this.clients[username] = client
 		// send list to all players
 		val clientList = ClientListMsg(this.clients.keys.toList())
-		this.clients.values.forEach { it.connection.out.writeUnshared(clientList) }
+		this.clients.values.forEach { it.connection.writeObject(clientList) }
 
 		this.listenToClientConnection(client)
 	}
@@ -110,11 +109,10 @@ class ClientService(
 			var data: Any
 			try {
 				while (true) {
-					data = client.connection.inp.readUnshared()
+					data = client.connection.inp.readObject()
 					if (data is LobbyCreateMsg) {
 						createLobby(client, data)
-					}
-					else {
+					} else {
 						logger.info("unknown msg from client: ${data::class.simpleName} $data")
 					}
 				}
@@ -125,24 +123,25 @@ class ClientService(
 			}
 			this.clients.remove(client.name)
 			val clientList = ClientListMsg(this.clients.keys.toList())
-			this.clients.values.forEach { it.connection.out.writeUnshared(clientList) }
+			this.clients.values.forEach { it.connection.writeObject(clientList) }
 		}, "Client Connection ${client.name}")
 		clientListener.isDaemon = true
 		clientListener.start()
 	}
 
 	private fun createLobby(client: Client, data: LobbyCreateMsg) {
+		logger.info("Lobby creation requested from ${client.name} with name ${data.name}")
 		val gameServer = this.gameServerService.chooseServerForLobby(data.mode)
 		val lobbyId = this.randomService.generateToken(32)
-		gameServer.connection!!.out.writeUnshared(GameLobbyCreateMsg(data.name, data.mode, lobbyId))
+		gameServer.connection!!.writeObject(GameLobbyCreateMsg(data.name, data.mode, lobbyId))
 		val lobbyInfo = Lobby(data.name, lobbyId, gameServer.host, gameServer.port)
-		client.connection.out.writeUnshared(lobbyInfo)
+		client.connection.writeObject(lobbyInfo)
 	}
 
 	fun sendLobbyUpdates() {
 		val lobbyList = LobbyListMsg(this.gameServerService.getLobbies())
 		for ((_, client) in this.clients) {
-			client.connection.out.writeUnshared(lobbyList)
+			client.connection.writeObject(lobbyList)
 		}
 	}
 

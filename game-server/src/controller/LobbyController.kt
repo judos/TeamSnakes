@@ -3,9 +3,11 @@ package controller
 import ch.judos.snakes.common.messages.game.GameLobbyCreateMsg
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
+import org.apache.logging.log4j.LogManager
 
 class LobbyController(
 ) {
+	private val logger = LogManager.getLogger(javaClass)!!
 
 	val lobbies = mutableListOf<Lobby>()
 
@@ -14,7 +16,7 @@ class LobbyController(
 	}
 
 	override fun toString(): String {
-		return "${this.lobbies.size} lobbies"
+		return "${this.lobbies.size} lobbies: ${this.lobbies}"
 	}
 
 	fun getLobbiesInfo(): List<Lobby> {
@@ -22,6 +24,7 @@ class LobbyController(
 	}
 
 	fun createLobby(data: GameLobbyCreateMsg) {
+		logger.info("Create lobby ${data.name}")
 		// TODO: remove server/port from this model
 		val lobby = Lobby(data.name, data.lobbyId, "", 0)
 		this.lobbies.add(lobby)
