@@ -6,12 +6,16 @@ import org.apache.logging.log4j.LogManager
 import java.awt.Point
 import java.awt.event.*
 import java.util.*
+import java.util.concurrent.PriorityBlockingQueue
 
 class InputController : NamedComponent {
 	protected val logger = LogManager.getLogger(javaClass)
 
 	// EVENT PROCESSING
 	private var queuedInputEvents: MutableList<InputEvent> = ArrayList()
+	private var queuedEvents: PriorityBlockingQueue<Pair<Long, Runnable>> = PriorityBlockingQueue(10) { a: Pair<Long, Runnable>, b: Pair<Long, Runnable> ->
+		(a.first - b.first).toInt()
+	}
 	private var hoveringEnabled: Boolean = true
 
 	// CACHE
@@ -20,10 +24,21 @@ class InputController : NamedComponent {
 	var currentlyFocused: InputHandler? = null
 		private set
 
-	fun popAllEvents(): List<InputEvent> {
+	fun popAllInputEvents(): List<InputEvent> {
 		val result: List<InputEvent> = queuedInputEvents
 		queuedInputEvents = ArrayList()
 		return result
+	}
+
+	fun executeScheduledEvents() {
+		val current = System.currentTimeMillis()
+		while (this.queuedEvents.size > 0 && this.queuedEvents.peek().first <= current) {
+			this.queuedEvents.poll().second.run()
+		}
+	}
+
+	fun schedule(delay: Int, runnable: Runnable) {
+		this.queuedEvents.add(Pair(System.currentTimeMillis() + delay, runnable))
 	}
 
 	// ADAPTERS

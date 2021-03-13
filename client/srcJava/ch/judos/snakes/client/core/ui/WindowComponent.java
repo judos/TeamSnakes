@@ -32,6 +32,7 @@ public class WindowComponent extends BaseComponent {
 	protected Font font;
 	protected Point movingWindowInitialPos;
 	protected boolean isDisposed;
+	public boolean enabled = true;
 
 	public WindowComponent(Font font) {
 		super();
@@ -124,7 +125,7 @@ public class WindowComponent extends BaseComponent {
 
 	@Override
 	public void handleInput(InputEvent event) {
-		if (!this.isVisible) {
+		if (!this.isVisible || !this.enabled) {
 			return;
 		}
 		if (event.isAction(InputAction.SELECT)) {

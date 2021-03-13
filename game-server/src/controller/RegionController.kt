@@ -5,7 +5,7 @@ import ch.judos.snakes.common.dto.AuthSuccessDto
 import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.GameLobbyCreateMsg
 import ch.judos.snakes.common.messages.game.RegionLogin
-import ch.judos.snakes.common.messages.region.GameUpdate
+import ch.judos.snakes.common.messages.region.LobbyUpdateList
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.service.RandomService
 import com.sun.management.OperatingSystemMXBean
@@ -77,6 +77,7 @@ class RegionController(
 					data = connection.inp.readObject()
 					if (data is GameLobbyCreateMsg) {
 						this.lobby.createLobby(data)
+						reportServerStats()
 					} else {
 						logger.info("unknown msg from region: ${data::class.simpleName} $data")
 					}
@@ -95,9 +96,8 @@ class RegionController(
 		val connection = this.connection ?: return
 		val bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
 		val loadAvg = if (bean.systemLoadAverage < 0) 0.8 else bean.systemLoadAverage
-		val msg = GameUpdate(loadAvg, this.lobby.getLobbiesInfo())
+		val msg = LobbyUpdateList(loadAvg, this.lobby.getLobbiesInfo())
 		connection.writeObject(msg)
-		logger.info("writing $msg")
 	}
 
 }

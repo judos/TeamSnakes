@@ -3,10 +3,11 @@ package ch.judos.snakes.client.controller
 import ch.judos.snakes.client.core.base.Controller
 import ch.judos.snakes.client.model.GameData
 import ch.judos.snakes.client.scene.menu.LoadingScene
-import ch.judos.snakes.client.scene.menu.LobbyScene
 import ch.judos.snakes.client.scene.menu.LoginScene
 import ch.judos.snakes.client.scene.menu.MenuScene
+import ch.judos.snakes.common.model.Lobby
 import org.apache.logging.log4j.LogManager
+import java.util.concurrent.Executors
 import java.util.function.Consumer
 
 class GameController(
@@ -19,13 +20,11 @@ class GameController(
 		networkController.regionConnectionLost = this::start
 	}
 
-	fun createLobby(done: Runnable) {
+	fun createLobby(done: Consumer<Pair<Lobby?, String?>>) {
 		val lobbyName = this.gameData.settings.name + "'s Game"
 		// XXX: let user choose mode when creating lobby
 		val mode = "snakes"
-		this.networkController.createLobby(lobbyName, mode) {
-			done.run()
-		}
+		this.networkController.createLobby(lobbyName, mode, done)
 	}
 
 	private val logger = LogManager.getLogger(javaClass)!!

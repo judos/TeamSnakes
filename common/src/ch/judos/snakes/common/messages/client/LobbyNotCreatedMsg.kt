@@ -1,18 +1,14 @@
-package ch.judos.snakes.common.messages.region
+package ch.judos.snakes.common.messages.client
 
-import ch.judos.snakes.common.model.Lobby
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
-class GameUpdate(
-		val currentLoad: Double,
-		var lobbies: List<Lobby>
+class LobbyNotCreatedMsg(
+		val msg: String
 ) : Serializable {
-
 
 	override fun toString(): String {
 		val mapper = ObjectMapper()
 		return mapper.writeValueAsString(this)
 	}
-
 }

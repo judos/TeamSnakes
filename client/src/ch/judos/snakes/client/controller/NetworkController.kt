@@ -2,15 +2,19 @@ package ch.judos.snakes.client.controller
 
 import ch.judos.snakes.client.model.ClientConfig
 import ch.judos.snakes.client.model.GameData
+import ch.judos.snakes.client.model.event.RegionConnectionLost
 import ch.judos.snakes.common.controller.HttpController
 import ch.judos.snakes.common.dto.GuestLoginRequestDto
 import ch.judos.snakes.common.dto.UserAuthSuccessDto
 import ch.judos.snakes.common.messages.client.ClientListMsg
 import ch.judos.snakes.common.messages.client.LobbyListMsg
+import ch.judos.snakes.common.messages.client.LobbyNotCreatedMsg
 import ch.judos.snakes.common.messages.region.ClientLogin
 import ch.judos.snakes.common.messages.region.LobbyCreateMsg
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
+import ch.judos.snakes.common.service.Observable
+import ch.judos.snakes.common.service.ObservableI
 import org.apache.logging.log4j.LogManager
 import java.io.EOFException
 import java.io.IOException
@@ -20,16 +24,16 @@ import java.net.SocketException
 import java.util.function.Consumer
 
 class NetworkController(
-		private val config: ClientConfig,
-		private val gameData: GameData
-) {
+		private val gameData: GameData,
+		// not intended to set from outside
+		private val observable: ObservableI = ObservableI()
+) : Observable by observable {
 
+	private val config = gameData.config
 	private val logger = LogManager.getLogger(javaClass)!!
 
 	var regionConnectionLost: (() -> Unit)? = null
-	private var lobbyCreateListener: Consumer<Lobby>? = null
 	private var regionConnection: Connection? = null
-
 
 	private var tokens = mutableListOf<String>()
 	private val http = HttpController(config.region.run {
@@ -46,20 +50,22 @@ class NetworkController(
 					logger.info("received ${data::class.simpleName}: $data")
 					if (data is ClientListMsg) {
 						this.gameData.playerData.playerList = data.players
-					} else if (data is Lobby) {
-						this.lobbyCreateListener?.accept(data)
-						this.lobbyCreateListener = null
 					} else if (data is LobbyListMsg) {
 						this.gameData.lobbyData.lobbyList = data.lobbies
 					} else {
-						logger.info("unknown msg from region: ${data.javaClass} $data")
+						val handled = this.observable.notifySubscriber(data)
+						if (!handled) {
+							logger.info("unknown msg from region: ${data::class.simpleName} $data")
+						}
 					}
 				} while (true)
 			} catch (e: SocketException) {
 				logger.info("Region connection lost: $e")
+				this.observable.notifySubscriber(RegionConnectionLost())
 				regionConnectionLost?.invoke()
 			} catch (e: EOFException) {
 				logger.info("Region connection ended")
+				this.observable.notifySubscriber(RegionConnectionLost())
 				regionConnectionLost?.invoke()
 			}
 		}, "Region Connection")
@@ -98,13 +104,17 @@ class NetworkController(
 		} while (!connected)
 	}
 
-	fun createLobby(lobbyName: String, mode: String, consumer: Consumer<Lobby>) {
+	fun createLobby(lobbyName: String, mode: String, consumer: Consumer<Pair<Lobby?, String?>>) {
 		val msg = LobbyCreateMsg(lobbyName, mode)
 		if (this.regionConnection == null)
 			throw RuntimeException("No connection to region server")
-		if (this.lobbyCreateListener != null)
-			throw RuntimeException("Lobby creation already in progress")
-		this.lobbyCreateListener = consumer
+		this.observable.subscribe(true, {
+			when (it) {
+				is Lobby -> consumer.accept(Pair(it, null))
+				is LobbyNotCreatedMsg -> consumer.accept(Pair(null, it.msg))
+				is RegionConnectionLost -> consumer.accept(Pair(null, "Region connection lost"))
+			}
+		}, LobbyNotCreatedMsg::class.java, Lobby::class.java, RegionConnectionLost::class.java)
 		this.regionConnection!!.writeObject(msg)
 	}
 

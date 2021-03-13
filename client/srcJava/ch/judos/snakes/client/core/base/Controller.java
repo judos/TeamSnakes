@@ -25,11 +25,11 @@ import java.io.IOException;
 
 public class Controller implements SceneController {
 
+	protected final Logger logger = LogManager.getLogger(getClass());
 	private HighPrecisionClock gameClock;
 	protected GameWindow window;
 	protected final InputController input;
 	protected Scene currentScene = null;
-	protected final Logger logger = LogManager.getLogger(getClass());
 
 	private ProfilerI profiler;
 	private boolean screenshotRequested = false;
@@ -70,6 +70,7 @@ public class Controller implements SceneController {
 		this.profiler.startSample(this.input);
 
 		handleAllInputEvents();
+		this.input.executeScheduledEvents();
 
 		this.profiler.endSample(this.input);
 
@@ -134,7 +135,7 @@ public class Controller implements SceneController {
 	}
 
 	private void handleAllInputEvents() {
-		for (InputEvent event : this.input.popAllEvents()) {
+		for (InputEvent event : this.input.popAllInputEvents()) {
 			if (event.isPressActionAndConsume(InputAction.QUIT_GAME)) {
 				this.quit();
 			}

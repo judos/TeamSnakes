@@ -29,14 +29,13 @@ class ClientLauncher {
 	}
 
 	fun init() {
-		val config = ClientConfig.load()
 		val input = InputController()
 		//		GameWindow window = new NativeFullscreen(input);
 		val window = ResizableWindow("TeamSnakes", 800, 600, input)
 		val sceneFactory = SceneFactory()
 		val controller = Controller(window, sceneFactory)
 		val gameData = GameData()
-		val networkController = NetworkController(config, gameData)
+		val networkController = NetworkController(gameData)
 		val gameController = GameController(controller, networkController, gameData)
 
 		sceneFactory.register(LoadingScene::class.java) { LoadingScene(controller, input, window, gameData.loadingData) }

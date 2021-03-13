@@ -8,6 +8,7 @@ class GameData {
 	val lobbyData = LobbyData()
 
 	val settings = ClientSettings()
+	val config = ClientConfig.load()
 
 
 }

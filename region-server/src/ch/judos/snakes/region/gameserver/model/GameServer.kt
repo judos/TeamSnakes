@@ -1,5 +1,6 @@
 package ch.judos.snakes.region.gameserver.model
 
+import ch.judos.snakes.common.extensions.equalsHashing
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
 import java.time.Duration
@@ -20,10 +21,13 @@ class GameServer(
 
 	fun update(currentLoad: Double, lobbies: List<Lobby>): Boolean {
 		this.currentLoad = currentLoad
-		this.lobbies = lobbies
 		this.lastUpdate = LocalDateTime.now()
 
-		// XXX: check if lobbies have actually changed, otherwise update is sent out always to clients
+		if (this.lobbies.equalsHashing(lobbies) { it.lobbyId + it.players.size }) {
+			// XXX: if same count of players but other users lobby is considered equal
+			return false
+		}
+		this.lobbies = lobbies
 		return true
 	}
 

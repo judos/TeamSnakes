@@ -36,7 +36,6 @@ class GameServerLauncher() {
 		this.acceptIncomingConnections()
 
 		var failedConnectingAttempts = 0
-		var lastLog = System.currentTimeMillis()
 		while (running) {
 			if (!region.isConnected()) {
 				region.register()
@@ -56,18 +55,9 @@ class GameServerLauncher() {
 				}
 			}
 			if (region.isConnected()) {
-				if (System.currentTimeMillis() - lastLog > 60 * 1000) {
-					lastLog = System.currentTimeMillis()
-				}
-				region.reportServerStats()
 				Thread.sleep(5000)
 			}
 		}
-		shutdown()
-	}
-
-	private fun shutdown() {
-
 	}
 
 	fun acceptIncomingConnections() {

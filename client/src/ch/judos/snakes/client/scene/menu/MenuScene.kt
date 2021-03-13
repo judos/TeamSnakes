@@ -12,6 +12,8 @@ import ch.judos.snakes.client.model.LobbyData
 import ch.judos.snakes.client.model.PlayerData
 import ch.judos.snakes.common.model.Lobby
 import java.awt.Dimension
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 class MenuScene(
@@ -22,6 +24,7 @@ class MenuScene(
 		private val gameController: GameController
 ) : BasicScene(sceneController, inputController, window) {
 
+	private lateinit var mainWindow: WindowComponent
 	private var lobbyListener: Consumer<LobbyData>? = null
 	private lateinit var joinGameButton: Button
 	private var playerListener: Consumer<PlayerData>? = null
@@ -50,14 +53,26 @@ class MenuScene(
 	}
 
 	private fun joinGame() {
-
+		// TODO: implement
 	}
 
+
 	private fun createGame() {
-		val dialog = WindowComponent(Design.textFont)
-		dialog.title = "Creating Lobby..."
-		this.gameController.createLobby {
+		this.mainWindow.enabled = false
+		val dialog = WindowComponent(Design.titleFont)
+		dialog.title = "Loading"
+		dialog.addComponent(BasePanel().apply { margin = 20; add(Label("Lobby is being created...")) })
+		this.gameController.createLobby { (lobby, msg) ->
+			if (lobby != null) {
+				// TODO: join game lobby
+			} else {
+				val dialog = WindowComponent(Design.titleFont).apply { title = "Error" }
+				dialog.addComponent(BasePanel().apply { margin = 20; add(Label(msg ?: "unknown")) })
+				this.ui.addWindow(dialog)
+				this.inputController.schedule(3000) { dialog.dispose() }
+			}
 			dialog.dispose()
+			this.mainWindow.enabled = true
 		}
 		this.ui.addWindow(dialog)
 	}
@@ -101,11 +116,11 @@ class MenuScene(
 		}.setColored(Button.Colored.CAUTION))
 		panel.add(buttonPanel)
 
-		val view = WindowComponent(Design.titleFont)
-		view.isHeadless = true
-		view.isMovable = false
-		view.addComponent(panel)
-		this.ui.addWindow(view)
+		this.mainWindow = WindowComponent(Design.titleFont)
+		mainWindow.isHeadless = true
+		mainWindow.isMovable = false
+		mainWindow.addComponent(panel)
+		this.ui.addWindow(mainWindow)
 	}
 
 }

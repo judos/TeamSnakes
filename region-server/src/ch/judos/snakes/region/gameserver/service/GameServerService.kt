@@ -2,7 +2,7 @@ package ch.judos.snakes.region.gameserver.service
 
 import ch.judos.snakes.common.dto.GameserverConnectDto
 import ch.judos.snakes.common.messages.game.RegionLogin
-import ch.judos.snakes.common.messages.region.GameUpdate
+import ch.judos.snakes.common.messages.region.LobbyUpdateList
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
 import ch.judos.snakes.region.client.service.ClientService
@@ -45,8 +45,7 @@ class GameServerService {
 				connection.writeObject(RegionLogin(request.token))
 				while (true) {
 					val data = connection.inp.readObject()
-					if (data is GameUpdate) {
-						logger.info("received GameUpdate with ${data} lobbies")
+					if (data is LobbyUpdateList) {
 						val updated = server.update(data.currentLoad, data.lobbies)
 						if (updated) {
 							this.clientService?.sendLobbyUpdates()
@@ -62,6 +61,7 @@ class GameServerService {
 				synchronized(this.servers) {
 					this.servers.remove(user.id)
 				}
+				this.clientService?.sendLobbyUpdates()
 			}
 		}, "Game Server $server")
 		thread.isDaemon = true
@@ -87,9 +87,9 @@ class GameServerService {
 		return this.servers.flatMap { it.value.lobbies }
 	}
 
-	fun chooseServerForLobby(mode: String): GameServer {
+	fun chooseServerForLobby(mode: String): GameServer? {
 		if (this.servers.size == 0)
-			throw RuntimeException("No server available to create lobby")
+			return null
 		// TODO: implement load balancing & check mode
 		return this.servers.entries.first().value
 	}

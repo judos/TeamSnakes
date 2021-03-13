@@ -3,6 +3,7 @@ package ch.judos.snakes.region.client.service
 import ch.judos.snakes.common.messages.ErrorMsg
 import ch.judos.snakes.common.messages.client.ClientListMsg
 import ch.judos.snakes.common.messages.client.LobbyListMsg
+import ch.judos.snakes.common.messages.client.LobbyNotCreatedMsg
 import ch.judos.snakes.common.messages.game.GameLobbyCreateMsg
 import ch.judos.snakes.common.messages.region.ClientLogin
 import ch.judos.snakes.common.messages.region.LobbyCreateMsg
@@ -100,6 +101,8 @@ class ClientService(
 		// send list to all players
 		val clientList = ClientListMsg(this.clients.keys.toList())
 		this.clients.values.forEach { it.connection.writeObject(clientList) }
+		// send lobby list to new client
+		connection.writeObject(LobbyListMsg(this.gameServerService.getLobbies()))
 
 		this.listenToClientConnection(client)
 	}
@@ -132,6 +135,10 @@ class ClientService(
 	private fun createLobby(client: Client, data: LobbyCreateMsg) {
 		logger.info("Lobby creation requested from ${client.name} with name ${data.name}")
 		val gameServer = this.gameServerService.chooseServerForLobby(data.mode)
+		if (gameServer == null) {
+			client.connection.writeObject(LobbyNotCreatedMsg("No game server available"))
+			return
+		}
 		val lobbyId = this.randomService.generateToken(32)
 		gameServer.connection!!.writeObject(GameLobbyCreateMsg(data.name, data.mode, lobbyId))
 		val lobbyInfo = Lobby(data.name, lobbyId, gameServer.host, gameServer.port)

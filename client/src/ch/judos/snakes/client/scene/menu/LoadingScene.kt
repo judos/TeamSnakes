@@ -4,6 +4,7 @@ import ch.judos.snakes.client.core.base.BasicScene
 import ch.judos.snakes.client.core.base.Design
 import ch.judos.snakes.client.core.base.SceneController
 import ch.judos.snakes.client.core.io.InputController
+import ch.judos.snakes.client.core.ui.BasePanel
 import ch.judos.snakes.client.core.ui.Label
 import ch.judos.snakes.client.core.ui.WindowComponent
 import ch.judos.snakes.client.core.window.GameWindow
@@ -33,10 +34,12 @@ class LoadingScene(
 		this.view = WindowComponent(Design.titleFont).apply {
 			this.title = "Loading..."
 		}
+		val panel = BasePanel().apply { margin = 20; padding = 10 }
 		for (str in it.current) {
 			val label = Label(str).setWeight(1, 1)
-			view!!.addComponent(label)
+			panel.add(label)
 		}
+		view!!.addComponent(panel)
 		this.ui.addWindow(view)
 	}
 

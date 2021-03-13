@@ -48,6 +48,9 @@ public abstract class BaseComponent implements Component {
 	public boolean isPointInside(Point pos) {
 		if (pos == null)
 			return false;
+		if (this.pos == null || this.size == null) {
+			return false;
+		}
 		return pos.x >= this.pos.x && pos.y >= this.pos.y && pos.x < this.pos.x + this.size.getWidth()
 				&& pos.y < this.pos.y + this.size.getHeight();
 	}
