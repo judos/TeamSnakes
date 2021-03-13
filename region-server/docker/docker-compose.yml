@@ -13,4 +13,5 @@ services:
       - /home/environments/snakes/application.properties:/application.properties
     ports:
       - "${port}:8080"
+      - "${port2}:8081"
     restart: unless-stopped

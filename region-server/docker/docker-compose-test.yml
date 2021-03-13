@@ -12,6 +12,6 @@ services:
     volumes:
       - /home/environments/snakes/application.properties:/application.properties
     ports:
-      - "11001:8080"
-      - "11002:8081"
+      - "11011:8080"
+      - "11012:8081"
     restart: unless-stopped
