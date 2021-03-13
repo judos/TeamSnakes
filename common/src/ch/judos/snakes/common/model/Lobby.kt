@@ -11,6 +11,7 @@ class Lobby(
 
 	var players: List<String> = listOf()
 	var mode: String = ""
+	val created: Long = System.currentTimeMillis()
 
 	override fun toString(): String {
 		return "${this.lobbyName} (${players.size})"

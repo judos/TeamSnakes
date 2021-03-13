@@ -32,6 +32,7 @@ class GameServerLauncher() {
 		this.game = GameController()
 		this.lobby = LobbyController()
 		this.region = RegionController(http, this.config, random, game, lobby)
+		this.lobby.region = this.region
 
 		this.acceptIncomingConnections()
 
@@ -56,6 +57,7 @@ class GameServerLauncher() {
 			}
 			if (region.isConnected()) {
 				Thread.sleep(5000)
+				this.lobby.cleanup()
 			}
 		}
 	}

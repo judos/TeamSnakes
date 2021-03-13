@@ -60,7 +60,9 @@ class MenuScene(
 		val dialog = WindowComponent(Design.titleFont)
 		dialog.title = "Loading"
 		dialog.addComponent(BasePanel().apply { margin = 20; add(Label("Lobby is being created...")) })
+		var showDialog = true
 		this.gameController.createLobby { (lobby, msg) ->
+			showDialog = false
 			if (lobby != null) {
 				this.joinGame(lobby)
 			} else {
@@ -72,7 +74,11 @@ class MenuScene(
 			dialog.dispose()
 			this.mainWindow.enabled = true
 		}
-		this.ui.addWindow(dialog)
+		this.inputController.schedule(100) {
+			if (showDialog) {
+				this.ui.addWindow(dialog)
+			}
+		}
 	}
 
 	private fun initUI() {
