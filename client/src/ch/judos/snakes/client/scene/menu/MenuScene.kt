@@ -12,8 +12,6 @@ import ch.judos.snakes.client.model.LobbyData
 import ch.judos.snakes.client.model.PlayerData
 import ch.judos.snakes.common.model.Lobby
 import java.awt.Dimension
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 class MenuScene(
@@ -52,7 +50,7 @@ class MenuScene(
 		this.gameData.lobbyData.subscribers.remove(this.lobbyListener!!)
 	}
 
-	private fun joinGame() {
+	private fun joinGame(lobby: Lobby) {
 		// TODO: implement
 	}
 
@@ -64,7 +62,7 @@ class MenuScene(
 		dialog.addComponent(BasePanel().apply { margin = 20; add(Label("Lobby is being created...")) })
 		this.gameController.createLobby { (lobby, msg) ->
 			if (lobby != null) {
-				// TODO: join game lobby
+				this.joinGame(lobby)
 			} else {
 				val dialog = WindowComponent(Design.titleFont).apply { title = "Error" }
 				dialog.addComponent(BasePanel().apply { margin = 20; add(Label(msg ?: "unknown")) })
@@ -107,7 +105,9 @@ class MenuScene(
 		val buttonPanel = BasePanel(isVertical = false)
 		buttonPanel.add(Button("Create New Game", this::createGame))
 		buttonPanel.add(Spacer(50, 1))
-		this.joinGameButton = Button("Join Game", this::joinGame)
+		this.joinGameButton = Button("Join Game") {
+			this.lobbyList.selected?.let { this.joinGame(it) }
+		}
 		this.joinGameButton.setEnabled(false)
 		buttonPanel.add(this.joinGameButton)
 		buttonPanel.add(Spacer(50, 1))

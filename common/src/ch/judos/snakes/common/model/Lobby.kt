@@ -5,8 +5,8 @@ import java.io.Serializable
 class Lobby(
 		val lobbyName: String,
 		val lobbyId: String,
-		val server: String,
-		val serverPort: Int
+		var server: String,
+		var serverPort: Int
 ) : Serializable {
 
 	var players: List<String> = listOf()

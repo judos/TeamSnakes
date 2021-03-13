@@ -27,7 +27,11 @@ class GameServer(
 			// XXX: if same count of players but other users lobby is considered equal
 			return false
 		}
-		this.lobbies = lobbies
+		this.lobbies = lobbies.map {
+			it.server = this.host
+			it.serverPort = this.port
+			it
+		}
 		return true
 	}
 
