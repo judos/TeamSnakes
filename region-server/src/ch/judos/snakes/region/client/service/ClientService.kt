@@ -2,6 +2,7 @@ package ch.judos.snakes.region.client.service
 
 import ch.judos.snakes.common.messages.ErrorMsg
 import ch.judos.snakes.common.messages.client.ClientListMsg
+import ch.judos.snakes.common.messages.client.LobbyListMsg
 import ch.judos.snakes.common.messages.game.GameLobbyCreateMsg
 import ch.judos.snakes.common.messages.region.ClientLogin
 import ch.judos.snakes.common.messages.region.LobbyCreateMsg
@@ -39,6 +40,7 @@ class ClientService(
 
 	init {
 		this.listenToNewConnections()
+		gameServerService.clientService = this
 	}
 
 	@PreDestroy
@@ -113,7 +115,7 @@ class ClientService(
 						createLobby(client, data)
 					}
 					else {
-						logger.info("unknown msg from client: $data")
+						logger.info("unknown msg from client: ${data::class.simpleName} $data")
 					}
 				}
 			} catch (e: SocketException) {
@@ -135,6 +137,13 @@ class ClientService(
 		gameServer.connection!!.out.writeUnshared(GameLobbyCreateMsg(data.name, data.mode, lobbyId))
 		val lobbyInfo = Lobby(data.name, lobbyId, gameServer.host, gameServer.port)
 		client.connection.out.writeUnshared(lobbyInfo)
+	}
+
+	fun sendLobbyUpdates() {
+		val lobbyList = LobbyListMsg(this.gameServerService.getLobbies())
+		for ((_, client) in this.clients) {
+			client.connection.out.writeUnshared(lobbyList)
+		}
 	}
 
 }

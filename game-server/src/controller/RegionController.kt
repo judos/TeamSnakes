@@ -3,6 +3,7 @@ package controller
 import ch.judos.snakes.common.controller.HttpController
 import ch.judos.snakes.common.dto.AuthSuccessDto
 import ch.judos.snakes.common.dto.GameserverConnectDto
+import ch.judos.snakes.common.messages.game.GameLobbyCreateMsg
 import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.messages.region.GameUpdate
 import ch.judos.snakes.common.model.Connection
@@ -15,10 +16,11 @@ import java.net.SocketException
 
 
 class RegionController(
-	private val http: HttpController,
-	private val config: AppConfig,
-	private val random: RandomService,
-	private val game: GameController
+		private val http: HttpController,
+		private val config: AppConfig,
+		private val random: RandomService,
+		private val game: GameController,
+		private val lobby: LobbyController
 ) {
 	private val logger = LogManager.getLogger(javaClass)!!
 
@@ -37,7 +39,7 @@ class RegionController(
 			logger.info("Login to region successful, waiting for connection...")
 
 			val data2 = GameserverConnectDto(regionToken, config.server.url, config.server.port,
-				game.getSupportedGameModes())
+					game.getSupportedGameModes())
 			this.serverNr = this.http.post("gameserver/connect", data2, Int::class.java)
 			logger.info("Received server nr: ${this.serverNr}")
 
@@ -73,7 +75,11 @@ class RegionController(
 			try {
 				do {
 					data = connection.inp.readUnshared()
-					logger.info("unknown msg from region: ${data::class.java} $data")
+					if (data is GameLobbyCreateMsg) {
+						this.lobby.createLobby(data)
+					} else {
+						logger.info("unknown msg from region: ${data::class.simpleName} $data")
+					}
 				} while (true)
 			} catch (e: SocketException) {
 				logger.info("Region connection lost: " + e.message)
@@ -85,11 +91,11 @@ class RegionController(
 		regionListener.start()
 	}
 
-	fun reportServerStats(lobby: LobbyController) {
+	fun reportServerStats() {
 		val connection = this.connection ?: return
 		val bean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
 		val loadAvg = if (bean.systemLoadAverage < 0) 0.8 else bean.systemLoadAverage
-		connection.out.writeUnshared(GameUpdate(loadAvg, lobby.getLobbiesInfo()))
+		connection.out.writeUnshared(GameUpdate(loadAvg, this.lobby.getLobbiesInfo()))
 	}
 
 }

@@ -18,10 +18,13 @@ class GameServer(
 
 	var lastUpdate: LocalDateTime = LocalDateTime.now()
 
-	fun update(currentLoad: Double, lobbies: List<Lobby>) {
+	fun update(currentLoad: Double, lobbies: List<Lobby>): Boolean {
 		this.currentLoad = currentLoad
 		this.lobbies = lobbies
 		this.lastUpdate = LocalDateTime.now()
+
+		// XXX: check if lobbies have actually changed, otherwise update is sent out always to clients
+		return true
 	}
 
 	fun isOlderThanS(seconds: Int): Boolean {

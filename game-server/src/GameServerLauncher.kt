@@ -31,7 +31,7 @@ class GameServerLauncher() {
 		this.http = HttpController(this.config.region.url)
 		this.game = GameController()
 		this.lobby = LobbyController()
-		this.region = RegionController(http, this.config, random, game)
+		this.region = RegionController(http, this.config, random, game, lobby)
 
 		this.acceptIncomingConnections()
 
@@ -39,9 +39,8 @@ class GameServerLauncher() {
 		var lastLog = System.currentTimeMillis()
 		while (running) {
 			if (!region.isConnected()) {
-				logger.info("Not connected to region")
 				region.register()
-				for (i in 1 until 30) {
+				for (i in 1 until 5) {
 					Thread.sleep(1000)
 					if (region.isConnected()) {
 						failedConnectingAttempts = 0
@@ -50,7 +49,7 @@ class GameServerLauncher() {
 				}
 				if (!region.isConnected()) {
 					failedConnectingAttempts++
-					if (failedConnectingAttempts >= 5) {
+					if (failedConnectingAttempts >= 12) {
 						logger.error("Failed to connect to region server")
 						exitProcess(1)
 					}
@@ -58,10 +57,9 @@ class GameServerLauncher() {
 			}
 			if (region.isConnected()) {
 				if (System.currentTimeMillis() - lastLog > 60 * 1000) {
-					logger.info("Connected, lobby state: $lobby")
 					lastLog = System.currentTimeMillis()
 				}
-				region.reportServerStats(lobby)
+				region.reportServerStats()
 				Thread.sleep(5000)
 			}
 		}

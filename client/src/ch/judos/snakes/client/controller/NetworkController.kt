@@ -6,13 +6,13 @@ import ch.judos.snakes.common.controller.HttpController
 import ch.judos.snakes.common.dto.GuestLoginRequestDto
 import ch.judos.snakes.common.dto.UserAuthSuccessDto
 import ch.judos.snakes.common.messages.client.ClientListMsg
+import ch.judos.snakes.common.messages.client.LobbyListMsg
 import ch.judos.snakes.common.messages.region.ClientLogin
 import ch.judos.snakes.common.messages.region.LobbyCreateMsg
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
 import org.apache.logging.log4j.LogManager
 import java.io.EOFException
-import java.lang.RuntimeException
 import java.net.ConnectException
 import java.net.Socket
 import java.net.SocketException
@@ -25,6 +25,7 @@ class NetworkController(
 
 	private val logger = LogManager.getLogger(javaClass)!!
 
+	var regionConnectionLost: (() -> Unit)? = null
 	private var lobbyCreateListener: Consumer<Lobby>? = null
 	private var regionConnection: Connection? = null
 
@@ -45,14 +46,19 @@ class NetworkController(
 						this.gameData.playerData.playerList = data.players
 					} else if (data is Lobby) {
 						this.lobbyCreateListener?.accept(data)
+						this.lobbyCreateListener = null
+					} else if (data is LobbyListMsg) {
+						this.gameData.lobbyData.lobbyList = data.lobbies
 					} else {
 						logger.info("unknown msg from region: ${data.javaClass} $data")
 					}
 				} while (true)
 			} catch (e: SocketException) {
 				logger.info("Region connection lost: $e")
+				regionConnectionLost?.invoke()
 			} catch (e: EOFException) {
 				logger.info("Region connection ended")
+				regionConnectionLost?.invoke()
 			}
 		}, "Region Connection")
 		clientListener.isDaemon = true

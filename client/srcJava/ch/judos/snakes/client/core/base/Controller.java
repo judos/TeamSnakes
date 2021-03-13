@@ -10,6 +10,7 @@ import ch.judos.snakes.client.core.profiler.ProfilerI;
 import ch.judos.snakes.client.core.window.GameWindow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -195,6 +196,13 @@ public class Controller implements SceneController {
 		this.screenshotRequested = false;
 	}
 
+
+	public void loadSceneIfNotPresent(@NotNull Class<? extends Scene> sceneClass) {
+		if (sceneClass != this.currentScene.getClass()) {
+			this.loadScene(sceneClass);
+		}
+	}
+
 	@Override
 	public Scene loadScene(Class<? extends Scene> sceneClass) {
 		Scene scene = this.sceneFactory.createScene(sceneClass);
@@ -229,4 +237,5 @@ public class Controller implements SceneController {
 		}
 		return this.currentScene;
 	}
+
 }

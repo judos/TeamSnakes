@@ -5,6 +5,7 @@ import ch.judos.snakes.common.messages.game.RegionLogin
 import ch.judos.snakes.common.messages.region.GameUpdate
 import ch.judos.snakes.common.model.Connection
 import ch.judos.snakes.common.model.Lobby
+import ch.judos.snakes.region.client.service.ClientService
 import ch.judos.snakes.region.core.entity.AdminUser
 import ch.judos.snakes.region.extension.firstMissingNumber
 import ch.judos.snakes.region.gameserver.model.GameServer
@@ -18,14 +19,15 @@ import java.net.SocketException
 class GameServerService {
 	private val logger = LoggerFactory.getLogger(javaClass)
 
+	var clientService: ClientService? = null
 	val servers: MutableMap<Long, GameServer> = HashMap()
 
 	fun register(user: AdminUser, request: GameserverConnectDto): Int {
 		var server: GameServer
 		synchronized(servers) {
 			servers.remove(user.id)
-			logger.info("register server ${user.id}")
 			val serverNr = getServerNumber()
+			logger.info("register server ${user.id} with server number $serverNr")
 			server =
 				GameServer(user.username, request.host, request.port, request.gameModes, serverNr)
 			servers[user.id] = server
@@ -46,7 +48,10 @@ class GameServerService {
 				while (true) {
 					val data = connection.inp.readObject()
 					if (data is GameUpdate) {
-						server.update(data.currentLoad, data.lobbies)
+						val updated = server.update(data.currentLoad, data.lobbies)
+						if (updated) {
+							this.clientService?.sendLobbyUpdates()
+						}
 					} else {
 						logger.info("unknown msg from $server: $data")
 					}
@@ -79,7 +84,7 @@ class GameServerService {
 		return this.servers.values.flatMap { it.gameModes.asIterable() }
 	}
 
-	fun getLobbies(): Collection<Lobby> {
+	fun getLobbies(): List<Lobby> {
 		return this.servers.flatMap { it.value.lobbies }
 	}
 

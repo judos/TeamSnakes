@@ -2,6 +2,7 @@ package ch.judos.snakes.client.controller
 
 import ch.judos.snakes.client.core.base.Controller
 import ch.judos.snakes.client.model.GameData
+import ch.judos.snakes.client.scene.menu.LoadingScene
 import ch.judos.snakes.client.scene.menu.LobbyScene
 import ch.judos.snakes.client.scene.menu.LoginScene
 import ch.judos.snakes.client.scene.menu.MenuScene
@@ -14,12 +15,16 @@ class GameController(
 		private val gameData: GameData
 ) {
 
-	fun createLobby() {
+	init {
+		networkController.regionConnectionLost = this::start
+	}
+
+	fun createLobby(done: Runnable) {
 		val lobbyName = this.gameData.settings.name + "'s Game"
 		// XXX: let user choose mode when creating lobby
 		val mode = "snakes"
 		this.networkController.createLobby(lobbyName, mode) {
-			this.controller.loadScene(LobbyScene::class.java)
+			done.run()
 		}
 	}
 
@@ -31,6 +36,7 @@ class GameController(
 			this.controller.awaitSceneChange()
 			logger.info("Name entered can proceed")
 		}
+		this.controller.loadSceneIfNotPresent(LoadingScene::class.java)
 		this.networkController.login()
 		this.controller.loadScene(MenuScene::class.java)
 	}

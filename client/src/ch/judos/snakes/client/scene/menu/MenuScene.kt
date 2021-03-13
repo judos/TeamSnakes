@@ -6,10 +6,9 @@ import ch.judos.snakes.client.core.base.Design
 import ch.judos.snakes.client.core.base.SceneController
 import ch.judos.snakes.client.core.io.InputController
 import ch.judos.snakes.client.core.ui.*
-import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionH
-import ch.judos.snakes.client.core.ui.LayoutPositioning.PositionV
 import ch.judos.snakes.client.core.window.GameWindow
 import ch.judos.snakes.client.model.GameData
+import ch.judos.snakes.client.model.LobbyData
 import ch.judos.snakes.client.model.PlayerData
 import ch.judos.snakes.common.model.Lobby
 import java.awt.Dimension
@@ -23,6 +22,7 @@ class MenuScene(
 		private val gameController: GameController
 ) : BasicScene(sceneController, inputController, window) {
 
+	private var lobbyListener: Consumer<LobbyData>? = null
 	private lateinit var joinGameButton: Button
 	private var playerListener: Consumer<PlayerData>? = null
 	private lateinit var playerList: SelectableList<String>
@@ -30,18 +30,23 @@ class MenuScene(
 
 	init {
 		initUI()
-		listenToPlayerUpdates()
+		listenToUpdates()
 	}
 
-	private fun listenToPlayerUpdates() {
+	private fun listenToUpdates() {
 		this.playerListener = Consumer {
 			this.playerList.update(it.playerList)
 		}
+		this.lobbyListener = Consumer {
+			this.lobbyList.update(it.lobbyList)
+		}
 		this.gameData.playerData.subscribers.add(this.playerListener!!)
+		this.gameData.lobbyData.subscribers.add(this.lobbyListener!!)
 	}
 
 	override fun unloadScene() {
 		this.gameData.playerData.subscribers.remove(this.playerListener!!)
+		this.gameData.lobbyData.subscribers.remove(this.lobbyListener!!)
 	}
 
 	private fun joinGame() {
@@ -49,9 +54,11 @@ class MenuScene(
 	}
 
 	private fun createGame() {
-		this.gameController.createLobby()
 		val dialog = WindowComponent(Design.textFont)
 		dialog.title = "Creating Lobby..."
+		this.gameController.createLobby {
+			dialog.dispose()
+		}
 		this.ui.addWindow(dialog)
 	}
 
